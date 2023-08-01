@@ -1,7 +1,7 @@
 {
   "name": "nodetwitter",
   "version": "1.0.0",
-  "description": "",
+  "description": "개요",
   "main": "app.js",
   "scripts": {
     "start": "nodemon app"
@@ -26,5 +26,13 @@
     "passport-local": "^1.0.0",
     "sequelize": "^6.32.1",
     "sequelize-cli": "^6.6.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/docodocod/node_twitter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/docodocod/node_twitter/issues"
+  },
+  "homepage": "https://github.com/docodocod/node_twitter#readme"
 }
