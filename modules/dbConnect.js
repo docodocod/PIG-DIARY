@@ -4,7 +4,7 @@ const conn = {  // mysql 접속 설정
     port: '3306',
     user: 'root',
     password: 'answlrl1',
-    database: 'node_twitter'
+    database: 'nodetwitter'
 };
 
 let connection = mysql.createConnection(conn); // DB 커넥션 생성
