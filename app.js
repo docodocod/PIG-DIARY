@@ -11,20 +11,23 @@ const pageRouter=require('./src/routes/page');
 const {sequelize}=require('./models');
 
 const app=express();
+
+const maria= require('./modules/maria');
+maria.connect(); //마리아 db 연결
+
 app.set('port',process.env.PORT || 8001); //process.env.PORT를 앞에 붙여준 이유는 배포와 개발할때 서로 다른 포트를 사용할거라서
 app.set('view engine','html');
 nunjucks.configure('views',{ //nunjucks 설정방법
     express:app,
     watch:true,
 });
-sequelize.sync({force: false})
+/*sequelize.sync({force: false})
     .then(()=>{
         console.log("데이터 베이스 연결 성공");
     })
     .catch((err)=>{
         console.error(err);
-    });
-
+    });*/
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname,'public')));
 app.use(express.json());
