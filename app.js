@@ -7,7 +7,7 @@ const nunjucks=require('nunjucks');
 const dotenv=require('dotenv');
 
 dotenv.config();
-const pageRouter=require('./src/routes/page');
+const indexRouter=require('./src/routes');
 const {sequelize}=require('./models');
 
 const app=express();
@@ -43,18 +43,21 @@ app.use(session({
     },
 }));
 
-app.use('/', pageRouter);
+app.use('/', indexRouter);
 
 app.use((req,res,next)=>{
     const error=new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
     error.status=404;
     next(error);
 });
-        
-app.use((err,req,res,next)=>{
-    res.locals.message=err.message;
-    res.locals.error=process.env.NODE_ENV!=='production' ? err:{};
-    res.status(err.status ||500);
+
+app.use((err, req, res, next)=>{
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    // render the error page
+    res.status(err.status || 500);
     res.render('error');
 });
 
