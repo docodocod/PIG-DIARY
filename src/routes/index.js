@@ -1,14 +1,9 @@
 import {Router} from "express";
-import mysql from "../../mysql.js";
+import mariadb from "./modules/maria";
 
 
 const router = Router();
 
-
-const data1 = '동안'
-const result = await mysql.asyncFunction(`select * from user where 이름 = ${data1}`);
-
-console.log(result);
 
 router.use((req, res, next) => {
     res.locals.user = null;
@@ -18,12 +13,10 @@ router.use((req, res, next) => {
     next();
 });
 
-router.get('/profile', (req, res) => {
-    res.render('profile', {title: '내 정보 - NodeTwitter'});
-});
-
-router.get('/join', (req, res) => {
-    res.render('join', {title: '회원가입 -NodeTwitter'});
+router.get('/profile', async (req, res,email) => {
+    const user=`select email,nick from user where email=${email}`;
+    const result = await mariadb.getSelection(user);
+    res.render("회원 정보:",result);
 });
 
 router.get('/', (req, res, next) => {

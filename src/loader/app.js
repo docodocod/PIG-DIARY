@@ -1,5 +1,6 @@
 import express from "express";
 import nunjucks from "nunjucks";
+import mariadb from "./modules/maria.js";
 
 // 우선 config파일을 불러온다
 import config from "../../config/config.json" assert {type: "json"} ;
@@ -14,8 +15,8 @@ import indexRouter from "../routes/index.js";
 const app = express();
 
 dbLoader();
-// const maria = require('./modules/maria');
-// maria.connect(); //마리아 db 연결
+
+mariadb.getConnection(); //db접속
 
 app.set('port', Config.PORT || 8001); //Config.PORT를 앞에 붙여준 이유는 배포와 개발할때 서로 다른 포트를 사용할거라서
 app.set('view engine', 'html');
@@ -28,6 +29,8 @@ nunjucks.configure('views', { //nunjucks 설정방법
 app.use(express.json());
 
 app.use(express.urlencoded({extended: true}));
+
+
 
 // app.use(cookieParser(Config.COOKIE_SECRET));
 
@@ -43,7 +46,7 @@ app.use(express.urlencoded({extended: true}));
 }));*/
 
 app.use("/", indexRouter);
-
+app.use(mariadb());
 app.use((req, res, next) => {
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
     error.status = 404;
