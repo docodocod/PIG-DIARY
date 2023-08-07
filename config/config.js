@@ -7,7 +7,6 @@ const development = {
     host: process.env.DB_HOST,
     port:3306,
     dialect: "mysql",
-    //port: env.MYSQL_PORT
 };
 
 const production = {
@@ -17,7 +16,6 @@ const production = {
     host: process.env.DB_HOST,
     port:3306,
     dialect: "mysql",
-    //port: env.MYSQL_PORT
 };
 
 const test = {
@@ -27,7 +25,6 @@ const test = {
     host: process.env.DB_HOST,
     port:3306,
     dialect: "mysql",
-    //port: env.MYSQL_PORT
 };
 
 module.exports = { development, production, test };
