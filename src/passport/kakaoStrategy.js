@@ -1,7 +1,6 @@
 const passport=require('passport');
 const KakaoStrategy=require('passport-kakao').Strategy;
 
-const User=require('../models/user'); //maria db로 바꿀 예정
 
 module.exports=()=>{
     passport.use(new KakaoStrategy({
