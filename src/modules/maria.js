@@ -76,6 +76,7 @@ export async function postInsert(insert){
     } finally{
         if (connection){
             await connection.release();
+            await connection.commit();
             await connection.end();
         }
     }
