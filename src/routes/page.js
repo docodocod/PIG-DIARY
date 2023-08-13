@@ -1,6 +1,15 @@
 import {Router} from "express";
 const router = Router();
 import {getSelection, postInsert, postUpdate} from "../modules/maria.js";
+const localStrategy=require('../passport/localStrategy.js');
+
+
+router.get("/login",function(req,res){
+    const {email,password}=req.body;
+    const xUser=`select email,password form user where email=${email}`;
+
+
+})
 
 router.get("/profile/:id", function(req,res){
     const p=req.params.id;

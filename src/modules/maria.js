@@ -27,6 +27,7 @@ async function getConnection() {
     }
 }
 
+
 export async function getSelection(select) {
     const connection = await getConnection();
     console.log(connection);
