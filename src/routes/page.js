@@ -1,32 +1,22 @@
 import {Router} from "express";
+import sql from "mysql";
+import {getUserData,postUserJoin} from '../dao/user.js';
 const router = Router();
 import {getSelection, postInsert, postUpdate} from "../modules/maria.js";
-const localStrategy=require('../passport/localStrategy.js');
+import {join} from "../controllers/auth.js";
 
-
-router.get("/login",function(req,res){
-    const {email,password}=req.body;
-    const xUser=`select email,password form user where email=${email}`;
-
-
-})
-
-router.get("/profile/:id", function(req,res){
-    const p=req.params.id;
-/*    const profile = `select email,nick from user where email=${p.email}`;
-    console.log(profile);
-    const resultSet = getSelection(profile);*/
-    res.send("성공");
-});
-router.post("/join",function(req,res){
-    const {email,nick,password}=req.body;
-    const newUser=`insert into user (email,nick,password) values(${email},${nick},${password})`;
-    console.log(newUser);
-    const resultSet=postInsert(newUser);
+router.get("/userCheck/:id",async function (req, res) {
+    const email = req.query.email;
+    const query = getUserData(email);
+    const result = await getSelection(query);
+    console.log(result);
+    return result;
     res.send("성공");
 });
 
-router.post("/profileUpdate",function(res,req){
+router.post("/join",join);
+
+router.post("/",function(res,req){
     const {email,nick,password}=req.body;
     const modifyUser=`update user set (nick,password)=(${nick},${password}) where email=${email}`;
     console.log(modifyUser);
