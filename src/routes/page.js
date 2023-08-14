@@ -3,16 +3,10 @@ import sql from "mysql";
 import {getUserData,postUserJoin} from '../dao/user.js';
 const router = Router();
 import {getSelection, postInsert, postUpdate} from "../modules/maria.js";
-import {join} from "../controllers/auth.js";
+import {join,login} from "../controllers/auth.js";
 
-router.get("/userCheck/:id",async function (req, res) {
-    const email = req.query.email;
-    const query = getUserData(email);
-    const result = await getSelection(query);
-    console.log(result);
-    return result;
-    res.send("성공");
-});
+
+router.get("/login",login);
 
 router.post("/join",join);
 
