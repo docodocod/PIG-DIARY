@@ -1,4 +1,4 @@
-import {getUserLogin, postUserJoin} from "../dao/user.js";
+import {getUserLogin, postUserJoin,getUserProfile} from "../dao/user.js";
 import {getSelection, postInsert} from "../modules/maria.js";
 import bcrypt from "bcrypt";
 
@@ -27,4 +27,18 @@ export async function login(req,res,next) {
         console.error(error);
     }
 };
+
+export async function profile(req,res,next){
+    try{
+        const email=req.params.email;
+        console.log(email);
+        const query=getUserProfile(email);
+        const result=getSelection(query);
+        console.log(result);
+        return result;
+        res.send("profile 확인");
+    }catch(error){
+        console.error(error);
+    }
+}
 

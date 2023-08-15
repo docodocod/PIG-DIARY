@@ -3,12 +3,14 @@ import sql from "mysql";
 import {getUserData,postUserJoin} from '../dao/user.js';
 const router = Router();
 import {getSelection, postInsert, postUpdate} from "../modules/maria.js";
-import {join,login} from "../controllers/auth.js";
+import {join,login,profile} from "../controllers/auth.js";
 
 
 router.get("/login",login);
 
 router.post("/join",join);
+
+router.get("/profile",profile);
 
 router.post("/",function(res,req){
     const {email,nick,password}=req.body;
