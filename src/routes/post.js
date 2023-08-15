@@ -1,7 +1,7 @@
-const express=require('express');
-const multer=require('multer');
-const path=require('path');
-const fs=require('fs');
+import express from "express"
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 
 const {afterUploadImage, uploadPost}=require('../controllers/post');
 const {isLoggedIn}=require('../middlewares');
@@ -14,14 +14,15 @@ try{
     console.log('uploads 폴더가 없으므로 uploads 폴더를 생성합니다.');
     fs.mkdirSync('uploads');
 }
+
 const upload=multer({
     storage:multer.diskStorage({
-        destination(req,file,cb){
-            cb(null,'uploads/');
+        destination(req,file,done){
+            done(null,'uploads/');
         },
-        filename(req,file,cb){
+        filename(req,file,done){
             const ext=path.extname(file.originalname);
-            cb(null,path.basename(file.originalname,ext)+Date.now()+ext);
+            done(null,path.basename(file.originalname,ext)+Date.now()+ext);
         },
     }),
     limits:{fileSize: 5*1024*1024},
