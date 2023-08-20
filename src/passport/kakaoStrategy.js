@@ -1,11 +1,15 @@
-const passport=require('passport');
-const KakaoStrategy=require('passport-kakao').Strategy;
+import passport from "passport";
+import kakaoStrategy from "passport-kakao";
+const {Strategy} =kakaoStrategy;
+import dotenv from "dotenv";
+const Config = dotenv.config({ path: "./config/.env.app" }).parsed;
 
-
-module.exports=()=>{
-    passport.use(new KakaoStrategy({
-        clientId:process.env.KAKAO_ID,
+const setUpKakaoStrategy=()=>{
+    passport.use(new Strategy({
+        clientID:Config.KAKAO_ID,
         callbackURL: '/auth/kakao/callback',
     }));
 };
+
+export default setUpKakaoStrategy;
 

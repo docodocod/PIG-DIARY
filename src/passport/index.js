@@ -1,7 +1,7 @@
-const passport = require('passport');
-const local = require('./localStrategy');
-const kakao = require('./kakaoStrategy');
-const user=require('')
+import passport from "passport";
+import local from "./localStrategy.js";
+import setUpKakaoStrategy from "./kakaoStrategy.js";
+
 
 module.exports = () => {
     passport.serializeUser((user, done) => {
@@ -9,6 +9,7 @@ module.exports = () => {
     });
     passport.deserializeUser((id, done) => {
     });
+
     local();
-    kakao();
+    setUpKakaoStrategy();
 };
