@@ -2,18 +2,16 @@
 import mariadb from 'mariadb';
 import dotenv from 'dotenv';
 
-const Config = dotenv.config().parsed;
 
-console.log(Config);
+const Config = dotenv.config({ path: "./config/.env.app" }).parsed;
 
-// 포트 원래 없었나 만들어놨던거같은데 너가 다지워서 헷갈림
 const pool = mariadb.createPool({
     host: Config.DB_HOST,
-    port: 3306, // 포트 정보 추가
+    port: Config.DB_PORT, // 포트 정보 추가
     user: Config.DB_USER,
     password: Config.DB_PASSWORD,
     database: Config.DB_DATABASE,
-    connectionLimit: 5, // 연결 풀에 포함될 최대 연결 수
+    connectionLimit: 100, // 연결 풀에 포함될 최대 연결 수
 });
 
 async function getConnection() {
@@ -28,15 +26,12 @@ async function getConnection() {
 }
 
 
-export async function getSelection(select) {
+export async function Select(query) {
     const connection = await getConnection();
-    console.log(connection);
     try {
-        const results = await connection.query(select);
-        console.log('쿼리 결과: ', results);
+        const results = await connection.query(query);
         return results; // 결과 반환
     } catch (err) {
-        console.error('쿼리 오류: ', err);
         throw err;
     } finally {
         if (connection) {
@@ -44,13 +39,13 @@ export async function getSelection(select) {
             await connection.end();
         }
     }
-}
+};
 
-export async function postUpdate(update){
+export async function Update(query){
     const connection=await getConnection();
     console.log(connection);
     try {
-        const results = await connection.query(update);
+        const results = await connection.query(query);
         console.log("업데이트 성공 여부:", results);
         return results;
     }catch(err){
@@ -64,11 +59,11 @@ export async function postUpdate(update){
     }
 }
 
-export async function postInsert(insert){
+export async function Insert(query){
     const connection=await getConnection();
     console.log(connection);
     try {
-        const results = await connection.query(insert);
+        const results = await connection.query(query);
         console.log("삽입 성공:", results);
         return results;
     }catch(err){
@@ -81,4 +76,25 @@ export async function postInsert(insert){
             await connection.end();
         }
     }
-}
+};
+
+export async function Delete(query){
+    const connection = await getConnection();
+    console.log(connection);
+    try {
+        const results = await connection.query(query);
+        console.log("삭제 성공:", results);
+        return results;
+    } catch (error) {
+        console.error("삭제 실패:", error);
+        throw error;
+    } finally {
+        if (connection) {
+            await connection.release();
+            await connection.commit();
+            await connection.end();
+        }
+    }
+};
+
+
