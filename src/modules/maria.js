@@ -30,7 +30,7 @@ export async function Select(query) {
     const connection = await getConnection();
     try {
         const results = await connection.query(query);
-        return results; // 결과 반환
+        return results[0]; // 결과 반환
     } catch (err) {
         throw err;
     } finally {
@@ -57,7 +57,7 @@ export async function Update(query){
             await connection.end();
         }
     }
-}
+};
 
 export async function Insert(query){
     const connection=await getConnection();

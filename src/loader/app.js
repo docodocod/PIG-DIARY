@@ -2,18 +2,16 @@ import express from "express";
 import nunjucks from "nunjucks";
 import formData from "express-form-data";
 import dotenv from "dotenv";
-import path from "path";
-import session from "session";
+import session from "express-session";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-
 import passport from "passport";
+
 const Config = dotenv.config({ path: "./config/.env.app" }).parsed;
-import indexRouter from "./routes/index.js";
-import authRouter from "./routes/auth.js";
-import postRouter from "./routes/post.js";
-import userRouter from "./routes/user.js";
-import passportConfig from "./passport";
+import indexRouter from "../routes/index.js";
+import authRouter from "../routes/auth.js";
+import tokenRouter from "../routes/JWT.js";
+import {passportConfig} from "../passport/index.js";
 
 const app = express();
 passportConfig();
@@ -26,7 +24,6 @@ nunjucks.configure('views', { //nunjucks 설정방법
 
 app.use(morgan('dev'));
 app.use(express.json());
-app.use("/img",express.static(path.join(__dirname,'uploads')));
 app.use(formData.parse());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser(Config.COOKIE_SECRET));
@@ -44,9 +41,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/',indexRouter);
+app.use('/token',tokenRouter);
 app.use('/auth',authRouter);
-app.use('/post',postRouter);
-app.use('/user',userRouter);
 
 app.use((req, res, next) => {
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
