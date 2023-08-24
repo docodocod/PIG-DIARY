@@ -1,9 +1,8 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-const Config=dotenv.config({path:"./config/env.app"}).parsed;
+const Config=dotenv.config({path:"./config/.env.app"}).parsed;
 
 export function verifyToken (req,res,next){
-    // 인증 완료
     try {
         req.decoded = jwt.verify(req.headers.authorization, Config.JWT_SECRET);
         return next();
