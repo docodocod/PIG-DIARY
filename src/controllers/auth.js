@@ -2,6 +2,7 @@ import {postUserJoin, getUserData} from "../dao/auth.js";
 import crypto from "crypto";
 import dotenv from "dotenv";
 const Config = dotenv.config({ path: "./config/.env.app" }).parsed;
+import jwt from "jsonwebtoken";
 export async function join(req, res, next) {
     const {email,nick,password}=req.body;
     try{
@@ -39,7 +40,24 @@ export async function login(req, res, next) {
                 const hashedPw = derivedKey.toString('hex');
                 console.log('Hashed Password:', hashedPw);
                     if ( storedPW=== hashedPw) {
-                        res.status(200).send("로그인 성공");
+                        console.log("로그인 성공");
+                        try{
+                            const token=jwt.sign({email},Config.JWT_SECRET,{
+                                expiresIn:"60m",
+                                issuer:"dongja",
+                            })
+                        res.json({
+                            code:200,
+                            message:"토근이 발급되었습니다.",
+                            token,
+                        });
+                        }catch(error){
+                            console.log(error);
+                            res.json({
+                                code: 500,
+                                message: "서버 에러",
+                            });
+                        }
                     } else {
                         res.status(200).send("비밀번호가 틀렸습니다.");
                     }

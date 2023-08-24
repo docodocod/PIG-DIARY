@@ -10,7 +10,7 @@ import passport from "passport";
 const Config = dotenv.config({ path: "./config/.env.app" }).parsed;
 import indexRouter from "../routes/index.js";
 import authRouter from "../routes/auth.js";
-import tokenRouter from "../routes/JWT.js";
+import tokenTestRouter from "../modules/verifyToken.js";
 import {passportConfig} from "../passport/index.js";
 
 const app = express();
@@ -41,7 +41,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/',indexRouter);
-app.use('/token',tokenRouter);
+app.use('/token',tokenTestRouter);
 app.use('/auth',authRouter);
 
 app.use((req, res, next) => {

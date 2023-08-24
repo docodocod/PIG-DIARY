@@ -1,8 +1,11 @@
 import jwt from "jsonwebtoken";
+import express from "express";
+const router=express.Router();
 import dotenv from "dotenv";
 const Config=dotenv.config({path:"./config/.env.app"}).parsed;
 
-export function verifyToken (req,res,next){
+
+router.get('/test',(req,res,next)=>{
     try {
         req.decoded = jwt.verify(req.headers.authorization, Config.JWT_SECRET);
         return next();
@@ -18,4 +21,6 @@ export function verifyToken (req,res,next){
             message: '유효하지 않은 토큰입니다.'
         });
     }
-}
+});
+
+export default router;
