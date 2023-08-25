@@ -1,6 +1,8 @@
 import sql from "mysql";
+import {Select,Insert,Update,Delete} from "../modules/maria.js";
 
-export function createPost(title,content,writer,uploadFile){
-    let query=`insert into post (title,content,writer,uploadFile) values(${sql.escape(title)},${sql.escape(content)},${sql.escape(writer)},${sql.escape(uploadFile)})`;
-    return query;
+export async function createPost(content,img,UserId){
+    let query=`insert into post (content,img,UserId) values(${sql.escape(content)},${sql.escape(img)},${sql.escape(UserId)})`;
+    const result=await Select(query);
+    console.log(result);
 }

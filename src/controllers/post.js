@@ -1,14 +1,30 @@
 import {createPost} from "../dao/post.js";
-import {Insert} from "../modules/maria.js";
 
-export async function post(req,res,next){
+exports.afterUploadImage = (req, res) => {
+    console.log(req.file);
+    res.json({ url: `/img/${req.file.filename}` });
+};
+
+exports.uploadPost = async (req, res, next) => {
+    const content=req.body.content;
+    const image=req.body.img;
+    const UserId=req.user.id;
     try {
-        const {title, content, writer, uploadFile} = req.body;
-        const query = createPost(title, content, writer, uploadFile);
-        const result = Insert(query);
-        return result;
-        res.status(200).json(result);
-    }catch(error){
-        console.log(error);
+        const post = await createPost(content,image,UserId);
+        const hashtags = req.body.content.match(/#[^\s#]*/g);
+        if (hashtags) {
+            const result = await Promise.all(
+                hashtags.map(tag => {
+                    return Hashtag.findOrCreate({
+                        where: { title: tag.slice(1).toLowerCase() },
+                    })
+                }),
+            );
+            await post.addHashtags(result.map(r => r[0]));
+        }
+        res.redirect('/');
+    } catch (error) {
+        console.error(error);
+        next(error);
     }
-}
+};
