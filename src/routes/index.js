@@ -5,5 +5,5 @@ import {renderMain,renderJoin} from "../controllers/index.js";
 
 router.get('/join',isNotLoggedIn,renderJoin);
 router.get('/',renderMain);
-
+router.get("/room",isNotLoggedIn,renderRoom);
 export default router;
