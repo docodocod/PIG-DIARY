@@ -1,5 +1,5 @@
 import sql from "mysql";
-import {Insert,Select} from "../modules/maria.js";
+import {Insert,Select,Delete} from "../modules/maria.js";
 
 
 export async function createRoom(title,max,owner,password){
@@ -11,5 +11,17 @@ export async function createRoom(title,max,owner,password){
 export async function selectAllRoom(){
     const query="select title,max,owner from room";
     const result=Select(query);
+    return result;
+}
+
+export async function selectOneRoom(roomId){
+    const query=`select id from room where=${roomId}`;
+    const result=Select(query);
+    return result;
+}
+
+export async function deleteOneRoom(roomId){
+    const query=`delete from room where=${roomId}`;
+    const result=Delete(query);
     return result;
 }
