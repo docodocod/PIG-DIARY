@@ -19,6 +19,7 @@ export async function join(req, res, next) {
             const hashedPassword = derivedKey.toString('hex');
             console.log('Hashed Password:', hashedPassword);
             postUserJoin(email, nick, hashedPassword,salt);
+            return res.redirect('/');
         });
     }catch(error){
         console.error(error);
@@ -46,17 +47,13 @@ export async function login(req, res, next) {
                                 expiresIn:"60m",
                                 issuer:"dongja",
                             })
-                        res.json({
-                            code:200,
-                            message:"토근이 발급되었습니다.",
-                            token,
-                        });
+                            console.log("토큰이 발급 되었습니다.");
+                            console.log("token: "+token);
+                            req.session.user=exUser.nick;
+                            console.log(req.session.user);
+                            return res.redirect("/");
                         }catch(error){
                             console.log(error);
-                            res.json({
-                                code: 500,
-                                message: "서버 에러",
-                            });
                         }
                     } else {
                         res.status(200).send("비밀번호가 틀렸습니다.");

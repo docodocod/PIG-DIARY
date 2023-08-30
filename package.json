@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.0",
   "description": "개요",
-  "main": "src/loader/app.js",
+  "main": "app.js",
   "scripts": {
     "start": "nodemon app"
   },
@@ -32,6 +32,7 @@
     "passport": "^0.6.0",
     "passport-kakao": "^1.0.1",
     "passport-local": "^1.0.0",
+    "path": "^0.12.7",
     "pbkdf2": "^3.1.2",
     "sequelize": "^6.32.1",
     "sequelize-cli": "^6.6.1",
