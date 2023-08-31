@@ -1,10 +1,10 @@
-import Room from "../dao/room.js";
-import Chat from "../dao/chat.js";
+import {deleteOneRoom} from "../dao/room.js";
+import {deleteChat} from "../dao/chat.js";
 
-export async function removeRoom(roomId) {
+export async function removeRoomService(roomId) {
     try {
-        await Room.deleteOne({ _id: roomId });
-        await Chat.deleteMany({ room: roomId });
+        await deleteOneRoom(roomId);
+        await deleteChat(roomId);
     } catch (error) {
         throw error;
     }
