@@ -6,7 +6,7 @@ import session from "express-session";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import passport from "passport";
-
+import ColorHash from "color-hash";
 
 const Config = dotenv.config({ path: "./config/.env.app" }).parsed;
 import indexRouter from "./src/routes/index.js";
