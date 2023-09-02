@@ -47,11 +47,19 @@ app.use('/img', express.static(path.join("C:\\workspace\\node_twitter", 'uploads
 app.use('/',indexRouter);
 app.use('/token',tokenTestRouter);
 app.use('/auth',authRouter);
-app.use('/room',chatRouter);
 
 app.use((req, res, next) => {
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
     next(error);
+});
+
+app.use((req, res, next) => {
+    if (!req.session.color) {
+        const colorHash = new ColorHash();
+        req.session.color = colorHash.hex(req.sessionID);
+        console.log(req.session.color, req.sessionID);
+    }
+    next();
 });
 
 app.use((err, req, res, next) => {
