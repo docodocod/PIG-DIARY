@@ -6,3 +6,9 @@ export async function createPost(content,img,UserId){
     const result=await Select(query);
     console.log(result);
 }
+
+export async function deletePost(post_id){
+    let query= `delete from post where id=${sql.escape(post_id)}`;
+    const result=await Delete(query);
+    console.log(result);
+}
