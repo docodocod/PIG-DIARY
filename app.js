@@ -12,6 +12,7 @@ const Config = dotenv.config({ path: "./config/.env.app" }).parsed;
 import indexRouter from "./src/routes/index.js";
 import authRouter from "./src/routes/auth.js";
 import tokenTestRouter from "./src/modules/verifyToken.js";
+import roomRouter from "./src/routes/room.js";
 import {passportConfig} from "./src/passport/index.js";
 import path from "path";
 
@@ -47,6 +48,7 @@ app.use('/img', express.static(path.join("C:\\workspace\\node_twitter", 'uploads
 app.use('/',indexRouter);
 app.use('/token',tokenTestRouter);
 app.use('/auth',authRouter);
+app.use('/room',roomRouter);
 
 app.use((req, res, next) => {
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);

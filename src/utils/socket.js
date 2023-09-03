@@ -1,5 +1,6 @@
 import SocketIO from "socket.io"
 import { removeRoomService } from "../services/roomDelete.js";
+import cookieParser from "cookie-parser";
 
 export async function socket(server, app, sessionMiddleware) {
     const io = SocketIO(server, { path: '/socket.io' });
@@ -7,6 +8,9 @@ export async function socket(server, app, sessionMiddleware) {
     const room = io.of('/room');
     const chat = io.of('/chat');
 
+    io.use((socket,next)=>{
+        cookieParser()
+    }
     const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
     chat.use(wrap(sessionMiddleware));
 
@@ -19,7 +23,6 @@ export async function socket(server, app, sessionMiddleware) {
 
     chat.on('connection', (socket) => {
         console.log('chat 네임스페이스에 접속');
-
         socket.on('join', (data) => {
             socket.join(data);
             socket.to(data).emit('join', {

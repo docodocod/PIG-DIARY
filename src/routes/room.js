@@ -1,21 +1,10 @@
 import express from 'express';
-const path = require('path');
-const fs = require('fs');
-
-const {
-    renderMain, renderRoom, createRoom, enterRoom, removeRoom, sendChat, sendGif,
-} = require('../controllers');
-
 const router = express.Router();
+import {createRoom, renderMainRoom, renderRoom} from "../controllers/room.js";
 
-router.get('/', renderMain);
 
-router.get('/room', renderRoom);
+router.get('/', renderMainRoom);
+router.get('/create',renderRoom);
+router.post('/create',createRoom);
 
-router.post('/room', createRoom);
-
-router.get('/room/:id', enterRoom);
-
-router.delete('/room/:id', removeRoom);
-
-router.post('/room/:id/chat', sendChat);
+export default router;

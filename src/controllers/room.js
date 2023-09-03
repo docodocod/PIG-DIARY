@@ -1,11 +1,11 @@
-import {createRoom, selectAllRoom, selectOneRoom} from "../dao/room.js";
+import {createRoomService, selectAllRoom, selectOneRoom} from "../dao/room.js";
 import {removeRoomService} from "../service/roomDelete.js";
 
 
-export async function renderMain(req, res, next){
+export async function renderMainRoom(req, res, next){
     try {
         const rooms = await selectAllRoom();
-        res.render('main', { rooms, title: 'GIF 채팅방' });
+        res.render('roomMain', { rooms, title: 'GIF 채팅방' });
     } catch (error) {
         console.error(error);
         next(error);
@@ -22,11 +22,11 @@ export async function createRoom(req, res, next) {
         const max=req.body.max
         const owner=req.session.color
         const password=req.body.password
-        const newRoom = await createRoom(title,max,owner,password);
+        const newRoom = await createRoomService(title,max,owner,password);
         const io = req.app.get('io');
         io.of('/room').emit('newRoom', newRoom);
         if (req.body.password) { // 비밀번호가 있는 방이면
-            res.redirect(`/room/${newRoom._id}?password=${req.body.password}`);
+            res.redirect(`/room/${newRoom._id}?password=${password}`);
         } else {
             res.redirect(`/room/${newRoom._id}`);
         }

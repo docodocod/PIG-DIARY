@@ -2,7 +2,7 @@ import sql from "mysql";
 import {Insert,Select,Delete} from "../modules/maria.js";
 
 
-export async function createRoom(title,max,owner,password){
+export async function createRoomService(title,max,owner,password){
     const query=`insert into room (title,max,owner,password) values(${sql.escape(title)},${sql.escape(max)},
                  ${sql.escape(owner)},${sql.escape(password)})`;
     const result=Insert(query);
