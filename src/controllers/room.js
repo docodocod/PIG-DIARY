@@ -22,13 +22,13 @@ export async function createRoom(req, res, next) {
         const max=req.body.max
         const owner=req.session.color
         const password=req.body.password
-        const newRoom = await createRoomService(title,max,owner,password);
+        const newRoom = await createRoomService(id,title,max,owner,password);
         const io = req.app.get('io');
         io.of('/room').emit('newRoom', newRoom);
         if (req.body.password) { // 비밀번호가 있는 방이면
-            res.redirect(`/room/${newRoom._id}?password=${password}`);
+            res.redirect(`/room/${newRoom.id}?password=${password}`);
         } else {
-            res.redirect(`/room/${newRoom._id}`);
+            res.redirect(`/room/${newRoom.id}`);
         }
     } catch (error) {
         console.error(error);

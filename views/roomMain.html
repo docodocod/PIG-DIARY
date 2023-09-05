@@ -33,13 +33,15 @@
         </tbody>
     </table>
     <div class="error-message">{{error}}</div>
-    <a href="/room/create">채팅방 생성</a>
+    <a href="/room">채팅방 생성</a>
 </fieldset>
 <script src="/socket.io/socket.io.js"></script>
 <script>
     import io from "mysql/lib/Connection.js";
+
     const socket = io.connect('http://localhost:6969/room', { // 네임스페이스
         path: '/socket.io',
+        transports: ['websocket'],
     });
     socket.on('newRoom', function (data) { // 새 방 이벤트 시 새 방 생성
         const tr = document.createElement('tr');

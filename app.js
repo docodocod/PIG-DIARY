@@ -15,9 +15,11 @@ import tokenTestRouter from "./src/modules/verifyToken.js";
 import roomRouter from "./src/routes/room.js";
 import {passportConfig} from "./src/passport/index.js";
 import path from "path";
+import {webSocket} from "./src/utils/socket.js";
 
 const app = express();
 passportConfig();
+
 app.set('port', Config.SERVER_PORT || 8001); //Config.PORT를 앞에 붙여준 이유는 배포와 개발할때 서로 다른 포트를 사용할거라서
 app.set('view engine', 'html');
 nunjucks.configure('views', { //nunjucks 설정방법
@@ -76,3 +78,5 @@ app.use((err, req, res, next) => {
 const server=app.listen(Config.SERVER_PORT,()=>{
     console.log('Server Listening on 127.0.0.1:' + Config.SERVER_PORT);
 });
+
+webSocket(server,app);
