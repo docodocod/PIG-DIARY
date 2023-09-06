@@ -6,9 +6,14 @@ export async function deleteChat(roomId){
     return result;
 }
 
-export async function createChat(room,user,chat,gif,createAt){
-    const query=`insert into chatting (room,user,chat,igf,createAt) values(${sql.escape(room)},${sql.escape(user)}
-                ,${sql.escape(chat)},${sql.escape(gif)},${sql.escape(createAt)})`;
+export async function createChat(roomId,user,chat){
+    const query=`insert into chatting (roomId,user,chat) values(${sql.escape(roomId)},${sql.escape(user)},${sql.escape(chat)})`;
     const result=Insert(query);
     return result;
 };
+
+export async function findChat(roomId){
+    const query=`select roomId,user,chat,gif,createAt from chatting where roomId=${sql.escape(roomId)}`;
+    const result=Insert(query);
+    return result;
+}

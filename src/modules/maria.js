@@ -30,7 +30,8 @@ export async function Select(query) {
     const connection = await getConnection();
     try {
         const results = await connection.query(query);
-        return results[0]; // 결과 반환
+        console.log(results);
+        return results; // 결과 반환
     } catch (err) {
         throw err;
     } finally {

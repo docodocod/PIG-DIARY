@@ -1,6 +1,13 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/room.css">
+</head>
 <h1>{{title}}</h1>
 <a href="/" id="exit-btn">방 나가기</a>
 <fieldset>
@@ -33,7 +40,7 @@
         {% endfor %}
     </div>
 </fieldset>
-<form action="/chat" id="chat-form" method="post" enctype="multipart/form-data">
+<form action="/room/{{chat.roomId}}/chat" id="chat-form" method="post" enctype="multipart/form-data">
     <label for="gif">GIF 올리기</label>
     <input type="file" id="gif" name="gif" accept="image/gif">
     <input type="text" id="chat" name="chat">
@@ -43,6 +50,7 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
     import io from "mysql/lib/Connection.js";
+    import axios from "axios";
     const socket = io.connect('http://localhost:6969/chat', {
         path: '/socket.io',
     });
@@ -103,7 +111,7 @@
         console.log(e.target.files);
         const formData = new FormData();
         formData.append('gif', e.target.files[0]);
-        axios.post('/room/{{room._id}}/gif', formData)
+        axios.post('/room/{{room.id}}/gif', formData)
             .then(() => {
                 e.target.file = null;
             })

@@ -1,10 +1,11 @@
 import express from 'express';
 const router = express.Router();
-import {createRoom, renderMainRoom, renderRoom ,enterRoom} from "../controllers/room.js";
+import {createRoom, renderMainRoom, renderRoom ,enterRoom,sendChat} from "../controllers/room.js";
 
 
 router.get('/',renderRoom);
 router.post('/',createRoom);
-router.get('/room/:id', enterRoom);
+router.get('/:id', enterRoom);
+router.post('/:id/chat',sendChat);
 
 export default router;
