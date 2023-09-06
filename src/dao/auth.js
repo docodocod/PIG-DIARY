@@ -3,8 +3,8 @@ import {Select,Insert,Update,Delete} from "../modules/maria.js";
 export async function getUserData(email){
     let query = `select email,nick,password from user where email=${sql.escape(email)}`;
     const result=await Select(query);
-    console.log("result값:",result);
-    return result;
+    console.log("result값:",result[0]);
+    return result[0];
 };
 
 export async function getSnsData(profile_id,provider){

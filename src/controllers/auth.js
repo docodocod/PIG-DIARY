@@ -8,9 +8,9 @@ export async function join(req, res, next) {
     try{
         const exUser=await getUserData(email);
         console.log(exUser);
-        if(exUser) {
+/*        if(exUser) {
             return res.redirect('/join?error=exist');
-        }
+        }*/
         const salt = Config.SALT;
         const iterations = parseInt(Config.ITERATION);
         const keyLength = 64; // 출력 길이
@@ -40,7 +40,7 @@ export async function login(req, res, next) {
                 if (err) throw err;
                 const hashedPw = derivedKey.toString('hex');
                 console.log('Hashed Password:', hashedPw);
-                    if ( storedPW=== hashedPw) {
+                    if ( storedPW === hashedPw) {
                         console.log("로그인 성공");
                         try{
                             const token=jwt.sign({email},Config.JWT_SECRET,{
@@ -51,7 +51,7 @@ export async function login(req, res, next) {
                             console.log("token: "+token);
                             req.session.user=exUser.nick;
                             console.log(req.session.user);
-                            return res.redirect("/");
+                            res.render('layout',{user : exUser});
                         }catch(error){
                             console.log(error);
                         }
