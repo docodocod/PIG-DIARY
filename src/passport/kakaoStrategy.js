@@ -11,7 +11,7 @@ export function kakao(){
     passport.use(new kakaoStrategy({
         clientID:Config.KAKAO_ID,
         callbackURL: '/auth/kakao/callback',
-    },async (accessToken, refreshToken, profile, done) => {
+    },async(accessToken, refreshToken, profile, done) => {
         console.log('kakao profile', profile);
         const provider = "kakao";
         try {
@@ -19,7 +19,8 @@ export function kakao(){
             if (exUser) {
                 done(null, exUser);
             } else {
-                const newUser = await postSnsJoin(profile._json, profile.displayName, profile.id, provider);
+                const {email}=profile._json.kakao_account;
+                const newUser = await postSnsJoin(email, profile.displayName, profile.id, provider);
                 done(null, newUser);
             }
         } catch (error) {

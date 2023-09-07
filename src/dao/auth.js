@@ -11,7 +11,7 @@ export async function getSnsData(profile_id,provider){
     let query=`select snsId,provider from user where snsId=${sql.escape(profile_id)} and provider=${sql.escape(provider)}`;
     const result=await Select(query);
     console.log(result);
-    return result;
+    return result[0];
 }
 
 export async function postUserJoin(email,nick,password){
