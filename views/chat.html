@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'loginForm.html' %}
 
 {% block content %}
 <head>
@@ -40,7 +40,7 @@
         {% endfor %}
     </div>
 </fieldset>
-<form action="/room/{{chat.roomId}}/chat" id="chat-form" method="post" enctype="multipart/form-data">
+<form action="/chat" id="chat-form" method="post" enctype="multipart/form-data">
     <label for="gif">GIF 올리기</label>
     <input type="file" id="gif" name="gif" accept="image/gif">
     <input type="text" id="chat" name="chat">
@@ -96,10 +96,10 @@
     document.querySelector('#chat-form').addEventListener('submit', function (e) {
         e.preventDefault();
         if (e.target.chat.value) {
-            axios.post('/room/{{room._id}}/chat', {
+            axios.post('/room/{{room.id}}/chat', {
                 chat: this.chat.value,
             })
-                .then(() => {
+                .then(() => { 
                     e.target.chat.value = '';
                 })
                 .catch((err) => {

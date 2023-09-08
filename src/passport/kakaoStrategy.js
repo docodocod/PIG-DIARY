@@ -20,7 +20,8 @@ export function kakao(){
                 done(null, exUser);
             } else {
                 const {email}=profile._json.kakao_account;
-                const newUser = await postSnsJoin(email, profile.displayName, profile.id, provider);
+                await postSnsJoin(email, profile.displayName, profile.id, provider);
+                const newUser=await getSnsData(profile.id,provider);
                 done(null, newUser);
             }
         } catch (error) {
