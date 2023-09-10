@@ -41,9 +41,9 @@ app.use(session({
         secure:false,
     },
 }));
-
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use(express.static(path.join("C:\\workspace\\node_twitter", 'public')));
 app.use('/img', express.static(path.join("C:\\workspace\\node_twitter", 'uploads')));
 
@@ -80,3 +80,4 @@ const server=app.listen(Config.SERVER_PORT,()=>{
 });
 
 webSocket(server,app);
+
