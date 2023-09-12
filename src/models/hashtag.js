@@ -23,4 +23,4 @@ class Hashtag extends Sequelize.Model {
     }
 };
 
-module.exports = Hashtag;
+export default Hashtag;

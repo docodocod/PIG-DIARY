@@ -16,6 +16,7 @@ import roomRouter from "./src/routes/room.js";
 import {passportConfig} from "./src/passport/index.js";
 import path from "path";
 import {webSocket} from "./src/utils/socket.js";
+import {sequelize} from "./src/models";
 
 const app = express();
 passportConfig();
@@ -26,6 +27,13 @@ nunjucks.configure('views', { //nunjucks 설정방법
     express: app,
     watch: true,
 });
+sequelize.sync({ force: false })
+    .then(() => {
+        console.log('데이터베이스 연결 성공');
+    })
+    .catch((err) => {
+        console.error(err);
+    });
 
 app.use(morgan('dev'));
 app.use(express.json());
