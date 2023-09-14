@@ -1,6 +1,6 @@
-import {createRoomService, NewRoom, selectAllRoom, selectOneRoom} from "../dao/room.js";
+import {createRoomService, NewRoom, selectAllRoom, selectOneRoom} from "../schema/room.js";
 import {removeRoomService} from "../service/roomDelete.js";
-import {createChat, findChat} from "../dao/chat.js";
+import {createChat, findChat} from "../schema/chat.js";
 
 
 export async function renderMainRoom(req, res, next){

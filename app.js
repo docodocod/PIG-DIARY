@@ -16,24 +16,17 @@ import roomRouter from "./src/routes/room.js";
 import {passportConfig} from "./src/passport/index.js";
 import path from "path";
 import {webSocket} from "./src/utils/socket.js";
-import {sequelize} from "./src/models";
+import connect
 
 const app = express();
 passportConfig();
-
+db();
 app.set('port', Config.SERVER_PORT || 8001); //Config.PORT를 앞에 붙여준 이유는 배포와 개발할때 서로 다른 포트를 사용할거라서
 app.set('view engine', 'html');
 nunjucks.configure('views', { //nunjucks 설정방법
     express: app,
     watch: true,
 });
-sequelize.sync({ force: false })
-    .then(() => {
-        console.log('데이터베이스 연결 성공');
-    })
-    .catch((err) => {
-        console.error(err);
-    });
 
 app.use(morgan('dev'));
 app.use(express.json());
