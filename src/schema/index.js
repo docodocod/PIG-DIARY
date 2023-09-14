@@ -1,16 +1,25 @@
 import {Sequelize} from "sequelize";
 import fs from "fs";
 import path from "path";
-import dotenv from "dotenv";
 const env = process.env.NODE_ENV || 'development';
-const Config = dotenv.config({ path: "./config/.env.app" }).parsed;
+const config = require("../config/config.json")[env];
 
 const db = {};
 const sequelize = new Sequelize(
-    Config.DB_DATABASE, Config.DB_USER, Config.DB_PASSWORD, Config,
+    config.database,
+    config.username,
+    config.password,
+    config
 );
 
 db.sequelize = sequelize;
+sequelize.sync({ force: false })
+    .then(() => {
+        console.log('데이터베이스 연결 성공');
+    })
+    .catch((err) => {
+        console.error(err);
+    });
 
 const basename = path.basename(__filename);
 fs

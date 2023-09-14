@@ -1,4 +1,4 @@
-import {postUserJoin, getUserData} from "../dao/auth.js";
+import {postUserJoin, getUserData} from "../schema/user.js";
 import crypto from "crypto";
 import dotenv from "dotenv";
 const Config = dotenv.config({ path: "./config/.env.app" }).parsed;

@@ -1,5 +1,4 @@
 const Sequelize = require('sequelize');
-
 class Post extends Sequelize.Model {
     static initiate(sequelize) {
         Post.init({

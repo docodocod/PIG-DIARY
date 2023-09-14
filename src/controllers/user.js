@@ -1,4 +1,4 @@
-import {getUserData,postUserJoin} from "../dao/auth.js";
+import {getUserData,postUserJoin} from "../schema/user.js";
 
 
 exports.userJoin=(req,res,next)=>{

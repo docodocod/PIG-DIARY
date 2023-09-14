@@ -1,4 +1,4 @@
-import {createPost} from "../dao/post.js";
+import {createPost} from "../schema/post.js";
 
 exports.afterUploadImage = (req, res) => {
     console.log(req.file);
