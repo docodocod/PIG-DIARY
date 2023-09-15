@@ -2,7 +2,7 @@ import passport from "passport";
 import KakaoStrategy from "passport-kakao";
 const kakaoStrategy =KakaoStrategy.Strategy;
 import dotenv from "dotenv";
-import {getSnsData, getUserData, postSnsJoin} from "../dao/auth.js";
+import {getSnsData, getUserData, postSnsJoin} from "../schema/user.js";
 
 const Config = dotenv.config({ path: "./config/.env.app" }).parsed;
 
