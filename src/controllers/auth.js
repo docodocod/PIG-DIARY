@@ -1,4 +1,4 @@
-import {postUserJoin, getUserData} from "../schema/user.js";
+import User from "../models/user";
 import crypto from "crypto";
 import dotenv from "dotenv";
 const Config = dotenv.config({ path: "./config/.env.app" }).parsed;
@@ -6,11 +6,8 @@ import jwt from "jsonwebtoken";
 export async function join(req, res, next) {
     const {email,nick,password}=req.body;
     try{
-        const exUser=await getUserData(email);
+        const exUser=await User.findOne({where:{email}});
         console.log(exUser);
-/*        if(exUser) {
-            return res.redirect('/join?error=exist');
-        }*/
         const salt = Config.SALT;
         const iterations = parseInt(Config.ITERATION);
         const keyLength = 64; // 출력 길이
@@ -18,7 +15,12 @@ export async function join(req, res, next) {
             if (err) throw err;
             const hashedPassword = derivedKey.toString('hex');
             console.log('Hashed Password:', hashedPassword);
-            postUserJoin(email, nick, hashedPassword,salt);
+            User.create({
+                email,
+                nick,
+                password: hashedPassword,
+                salt
+            };
             return res.redirect('/');
         });
     }catch(error){
@@ -73,4 +75,51 @@ export async function logout(req,res){
     req.session.destroy;
     res.redirect('/');
 }
+const bcrypt = require('bcrypt');
+const passport = require('passport');
+const User = require('../models/user');
 
+export async function join(req, res, next){
+    const { email, nick, password } = req.body;
+    try {
+        const exUser = await User.findOne({ where: { email } });
+        if (exUser) {
+            return res.redirect('/join?error=exist');
+        }
+        const hash = await bcrypt.hash(password, 12);
+        await User.create({
+            email,
+            nick,
+            password: hash,
+        });
+        return res.redirect('/');
+    } catch (error) {
+        console.error(error);
+        return next(error);
+    }
+}
+
+exports.login = (req, res, next) => {
+    passport.authenticate('local', (authError, user, info) => {
+        if (authError) {
+            console.error(authError);
+            return next(authError);
+        }
+        if (!user) {
+            return res.redirect(`/?error=${info.message}`);
+        }
+        return req.login(user, (loginError) => {
+            if (loginError) {
+                console.error(loginError);
+                return next(loginError);
+            }
+            return res.redirect('/?머임');
+        });
+    })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
+};
+
+exports.logout = (req, res) => {
+    req.logout(() => {
+        res.redirect('/');
+    });
+};
