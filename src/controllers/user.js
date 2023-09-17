@@ -1,16 +1,16 @@
-import {getUserData,postUserJoin} from "../schema/user.js";
+import User from "../schema/user.js";
 
-
-exports.userJoin=(req,res,next)=>{
+export async function follow (req, res, next) {
     try {
-        const newUser = postUserJoin();
-        if (newUser) {
+        const user = await User.findOne({ where: { id: req.user.id } });
+        if (user) {
+            await user.addFollowing(parseInt(req.params.id, 10));
             res.send('success');
         } else {
-            res.status(404).send("fail");
+            res.status(404).send('no user');
         }
-    }catch(error){
-            console.error(error);
-            next(error);
-        }
-    };
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+};
