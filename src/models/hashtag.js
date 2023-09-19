@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize');
+import Sequelize from "sequelize";
 class Hashtag extends Sequelize.Model {
     static initiate(sequelize) {
         Hashtag.init({

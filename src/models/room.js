@@ -1,7 +1,7 @@
-const Sequelize = require('sequelize');
-class Chat extends Sequelize.Model {
+import Sequelize from "sequelize";
+class Room extends Sequelize.Model {
     static initiate(sequelize) {
-        Chat.init({
+        Room.init({
             title: {
                 type: String,
                 required: true,
@@ -22,18 +22,19 @@ class Chat extends Sequelize.Model {
                 default: Date.now,
             },
         }, {
-            sequelize,
-            timestamps: true,
-            underscored: false,
-            modelName: 'Room',
-            tableName: 'Rooms',
-            paranoid: true,
-            charset: 'utf8mb4',
-            collate: 'utf8mb4_general_ci',
-        });
+                sequelize,
+                timestamps: true,
+                underscored: false,
+                modelName: 'Room',
+                tableName: 'Rooms',
+                paranoid: true,
+                charset: 'utf8mb4',
+                collate: 'utf8mb4_general_ci',
+            });
     };
     static associate(db) {
-        db.Chat21
+        db.Room.hasMany(db.Chat,{fro});
+        db.Room.belongsToMany(db.Hashtag, {through: 'PostHashtag'});
     }
 };
-export default Chat;
+export default Room;

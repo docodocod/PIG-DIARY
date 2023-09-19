@@ -1,15 +1,23 @@
-import {Sequelize} from "sequelize";
+import Sequelize from "sequelize";
 import fs from "fs";
-import path from "path";
+import path, {join} from "path";
 const env = process.env.NODE_ENV || 'development';
-const config = require("../config/config.json")[env];
+import Config from '../../config/config.json' assert { type: "json" };
+const configValue = Config[env];
+
+import { fileURLToPath } from 'url'; //es모듈에서는 __filename을 사용할 수 없기에 url npm 사용
+import { dirname } from 'path';
+import express from "express";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 const db = {};
 const sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password,
-    config
+    configValue.database,
+    configValue.username,
+    configValue.password,
+    configValue
 );
 
 db.sequelize = sequelize;
@@ -27,8 +35,9 @@ fs
     .filter(file => { // 숨김 파일, index.js, js 확장자가 아닌 파일 필터링
         return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
     })
-    .forEach(file => { // 해당 파일의 모델 불러와서 init
-        const model = require(path.join(__dirname, file));
+    .forEach((file) => { // 해당 파일의 모델 불러와서 init
+        const modulePath = join(__dirname, file);
+        const model = import(modulePath);
         console.log(file, model.name);
         db[model.name] = model;
         model.initiate(sequelize);
