@@ -1,8 +1,7 @@
 import Room from "../schema/room.js";
 import Chat from "../schema/chat.js";
-import removeRoom from "../service/roomDelete.js";
 
-export async function renderRoomMain (req, res, next) {
+export async function renderMainRoom (req, res, next) { //채팅방 목록 불러오기
     try {
         const rooms = await Room.find({});
         res.render('main', { rooms, title: 'GIF 채팅방' });
@@ -12,11 +11,11 @@ export async function renderRoomMain (req, res, next) {
     }
 };
 
-export function renderRoom (req, res) {
-    res.render('room', { title: 'GIF 채팅방 생성' });
+export function renderRoom (req, res) { //채팅방 생성 페이지
+    res.render('room', { title: '채팅방 생성' });
 };
 
-export async function createRoom (req, res, next) {
+export async function createRoom (req, res, next) { //채팅방 생성
     try {
         const newRoom = await Room.create({
             title: req.body.title,
@@ -37,7 +36,7 @@ export async function createRoom (req, res, next) {
     }
 };
 
-export async function enterRoom (req, res, next) {
+export async function enterRoom (req, res, next) { //채팅방 입장
     try {
         const room = await Room.findOne({ _id: req.params.id });
         if (!room) {
@@ -64,8 +63,7 @@ export async function enterRoom (req, res, next) {
         return next(error);
     }
 };
-
-export async function removeRoom (req, res, next) {
+export async function removeRoom (req, res, next) { //채팅방 제거
     try {
         await removeRoom(req.params.id);
         res.send('ok');
@@ -75,7 +73,7 @@ export async function removeRoom (req, res, next) {
     }
 };
 
-export async function sendChat (req, res, next) {
+export async function sendChat (req, res, next) { //채팅 전송
     try {
         const chat = await Chat.create({
             room: req.params.id,
@@ -90,7 +88,7 @@ export async function sendChat (req, res, next) {
     }
 };
 
-export async function sendGif (req, res, next) {
+export async function sendGif (req, res, next) { //채팅방 사진 보내기
     try {
         const chat = await Chat.create({
             room: req.params.id,

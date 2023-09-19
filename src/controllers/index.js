@@ -2,13 +2,6 @@ import User from "../schema/user.js";
 import Post from "../schema/post.js";
 import Hashtag from "../schema/hashtag.js";
 
-export function renderProfile(req, res){
-    res.render('profile', { title: '내 정보 - NodeBird' });
-};
-export function renderJoin(req, res) {
-    res.render('join', { title: '회원가입 - NodeBird' });
-};
-
 export async function renderMain (req, res, next) {
     try {
         const posts = await Post.findAll({
