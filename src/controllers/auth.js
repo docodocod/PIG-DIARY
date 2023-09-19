@@ -1,8 +1,15 @@
-import User from "../models/user";
+import User from "../schema/user.js";
 import crypto from "crypto";
 import dotenv from "dotenv";
 const Config = dotenv.config({ path: "./config/.env.app" }).parsed;
 import jwt from "jsonwebtoken";
+
+export function renderProfile(req, res){
+    res.render('profile', { title: '내 정보 - NodeBird' });
+};
+export function renderJoin(req, res) {
+    res.render('join', { title: '회원가입 - NodeBird' });
+};
 export async function join(req, res, next) {
     const {email,nick,password}=req.body;
     try{
@@ -20,7 +27,7 @@ export async function join(req, res, next) {
                 nick,
                 password: hashedPassword,
                 salt
-            };
+            });
             return res.redirect('/');
         });
     }catch(error){
@@ -32,7 +39,7 @@ export async function join(req, res, next) {
 export async function login(req, res, next) {
     const {email, password} = req.body;
     try {
-        const exUser = await getUserData(email);
+        const exUser = await User.findOne({where:{email}});
         if (exUser) {
             const storedPW=exUser.password;
             const salt = Config.SALT;
