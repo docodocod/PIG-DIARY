@@ -7,8 +7,8 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 import ColorHash from "color-hash";
+dotenv.config();
 
-const Config = dotenv.config({ path: "./config/.env.app" }).parsed;
 import indexRouter from "./src/routes/index.js";
 import authRouter from "./src/routes/auth.js";
 import tokenTestRouter from "./src/modules/verifyToken.js";
@@ -16,12 +16,12 @@ import roomRouter from "./src/routes/room.js";
 import {passportConfig} from "./src/passport/index.js";
 import path from "path";
 import {webSocket} from "./src/utils/socket.js";
-import connect from "./src/schema/index.js";
+import connect from "./src/models/index.js";
 
 const app = express();
 passportConfig();
 connect();
-app.set('port', Config.SERVER_PORT || 8001); //Config.PORT를 앞에 붙여준 이유는 배포와 개발할때 서로 다른 포트를 사용할거라서
+app.set('port', process.env.SERVER_PORT || 8001); //Config.PORT를 앞에 붙여준 이유는 배포와 개발할때 서로 다른 포트를 사용할거라서
 app.set('view engine', 'html');
 nunjucks.configure('views', { //nunjucks 설정방법
     express: app,
@@ -32,11 +32,11 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(formData.parse());
 app.use(express.urlencoded({extended: true}));
-app.use(cookieParser(Config.COOKIE_SECRET));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
     resave:false,
     saveUninitialized:false,
-    secret:Config.COOKIE_SECRET,
+    secret:process.env.COOKIE_SECRET,
     cookie:{
         httponly:true,
         secure:false,
@@ -76,8 +76,8 @@ app.use((err, req, res, next) => {
     res.render('error');
 });
 
-const server=app.listen(Config.SERVER_PORT,()=>{
-    console.log('Server Listening on 127.0.0.1:' + Config.SERVER_PORT);
+const server=app.listen(process.env.SERVER_PORT,()=>{
+    console.log('Server Listening on 127.0.0.1:' + process.env.SERVER_PORT);
 });
 
 webSocket(server,app);

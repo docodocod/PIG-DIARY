@@ -1,5 +1,5 @@
-import Room from "../schema/room.js";
-import Chat from "../schema/chat.js";
+import Room from "../models/room.js";
+import Chat from "../models/chat.js";
 
 export async function removeRoom(roomId) {
     try {

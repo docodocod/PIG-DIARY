@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { removeRoomService } from "../service/roomDelete.js";
+import { removeRoom } from "../service/roomDelete.js";
 import cookieParser from "cookie-parser";
 
 export function webSocket(server, app/*, sessionMiddleware*/) {
@@ -39,7 +39,7 @@ export function webSocket(server, app/*, sessionMiddleware*/) {
             const currentRoom = chat.adapter.rooms.get(roomId);
             const userCount = currentRoom?.size || 0;
             if (userCount === 0) { // 유저가 0명이면 방 삭제
-                await removeRoomService(roomId); // 컨트롤러 대신 서비스를 사용
+                await removeRoom(roomId); // 컨트롤러 대신 서비스를 사용
                 room.emit('removeRoom', roomId);
                 console.log('방 제거 요청 성공');
             } else {

@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import express from "express";
 const router=express.Router();
 import dotenv from "dotenv";
-const Config=dotenv.config({path:"./config/.env.app"}).parsed;
+const Config=dotenv.config();
 
 
 router.get('/test',(req,res,next)=>{
