@@ -1,4 +1,4 @@
-import User from "../schema/user.js";
+import User from "../models/user.js";
 
 export async function follow (req, res, next) {
     try {

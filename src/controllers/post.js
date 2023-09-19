@@ -1,5 +1,5 @@
-import Post from "../schema/post.js";
-import Hashtag from "../schema/hashtag.js";
+import Post from "../models/post.js";
+import Hashtag from "../models/hashtag.js";
 
 
 export function afterUploadImage (req, res) {

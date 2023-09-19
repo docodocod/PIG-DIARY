@@ -1,5 +1,5 @@
-import Room from "../schema/room.js";
-import Chat from "../schema/chat.js";
+import Room from "../models/room.js";
+import Chat from "../models/chat.js";
 
 export async function renderMainRoom (req, res, next) { //채팅방 목록 불러오기
     try {

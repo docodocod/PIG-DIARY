@@ -1,6 +1,6 @@
-import User from "../schema/user.js";
-import Post from "../schema/post.js";
-import Hashtag from "../schema/hashtag.js";
+import User from "../models/user.js";
+import Post from "../models/post.js";
+import Hashtag from "../models/hashtag.js";
 
 export async function renderMain (req, res, next) {
     try {

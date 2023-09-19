@@ -1,7 +1,7 @@
-import User from "../schema/user.js";
+import User from "../models/user.js";
 import crypto from "crypto";
 import dotenv from "dotenv";
-const Config = dotenv.config({ path: "./config/.env.app" }).parsed;
+const Config = dotenv.config();
 import jwt from "jsonwebtoken";
 
 export function renderProfile(req, res){
