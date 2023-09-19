@@ -36,4 +36,4 @@ class Chat extends Sequelize.Model {
         db.Chat21
     }
 };
-export default Room;
+export default Chat;
