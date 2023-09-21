@@ -2,6 +2,10 @@ import Sequelize from "sequelize";
 class Room extends Sequelize.Model {
     static initiate(sequelize) {
         Room.init({
+            id: {
+                type: Number,
+                allowNull:false,
+            },
             title: {
                 type: String,
                 required: true,
@@ -33,8 +37,7 @@ class Room extends Sequelize.Model {
             });
     };
     static associate(db) {
-        db.Room.hasMany(db.Chat,{fro});
-        db.Room.belongsToMany(db.Hashtag, {through: 'PostHashtag'});
+        db.Room.hasMany(db.Chat);
     }
 };
 export default Room;

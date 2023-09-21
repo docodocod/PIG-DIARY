@@ -2,21 +2,16 @@ import Sequelize from "sequelize";
 class Chat extends Sequelize.Model {
     static initiate(sequelize) {
         Chat.init({
-            title: {
+            room: {
                 type: String,
                 required: true,
             },
-            max: {
+            user: {
                 type: Number,
                 required: true,
-                default: 10,
-                min: 2,
             },
-            owner: {
-                type: String,
-                required: true,
-            },
-            password: String,
+            chat: String,
+            gif: String,
             createdAt: {
                 type: Date,
                 default: Date.now,
@@ -32,8 +27,5 @@ class Chat extends Sequelize.Model {
             collate: 'utf8mb4_general_ci',
         });
     };
-    static associate(db) {
-        db.Chat21
-    }
 };
 export default Chat;
