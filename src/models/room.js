@@ -3,27 +3,25 @@ class Room extends Sequelize.Model {
     static initiate(sequelize) {
         Room.init({
             id: {
-                type: Number,
+                type: Sequelize.INTEGER(200),
                 allowNull:false,
             },
             title: {
-                type: String,
-                required: true,
+                type: Sequelize.STRING(200),
+                allowNull:false,
             },
             max: {
-                type: Number,
-                required: true,
+                type: Sequelize.INTEGER(10),
+                allowNull:false,
                 default: 10,
                 min: 2,
             },
             owner: {
-                type: String,
-                required: true,
+                type: Sequelize.STRING(50),
+                allowNull:false,
             },
-            password: String,
-            createdAt: {
-                type: Date,
-                default: Date.now,
+            password: {
+                type: Sequelize.STRING(100)
             },
         }, {
                 sequelize,

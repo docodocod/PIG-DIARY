@@ -3,18 +3,18 @@ class Chat extends Sequelize.Model {
     static initiate(sequelize) {
         Chat.init({
             room: {
-                type: String,
-                required: true,
+                type: Sequelize.INTEGER(200),
+                allowNull:false,
             },
             user: {
-                type: Number,
-                required: true,
+                type: Sequelize.STRING(200),
+                allowNull:false,
             },
-            chat: String,
-            gif: String,
-            createdAt: {
-                type: Date,
-                default: Date.now,
+            chat: {
+                type:Sequelize.STRING(200)
+            },
+            gif: {
+                type: Sequelize.STRING(200)
             },
         }, {
             sequelize,

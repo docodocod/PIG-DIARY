@@ -18,6 +18,7 @@ export function renderRoom (req, res) { //채팅방 생성 페이지
 export async function createRoom (req, res, next) { //채팅방 생성
     try {
         const newRoom = await Room.create({
+            id:req.body.id,
             title: req.body.title,
             max: req.body.max,
             owner: req.session.color,
@@ -26,9 +27,9 @@ export async function createRoom (req, res, next) { //채팅방 생성
         const io = req.app.get('io');
         io.of('/room').emit('newRoom', newRoom);
         if (req.body.password) { // 비밀번호가 있는 방이면
-            res.redirect(`/room/${newRoom._id}?password=${req.body.password}`);
+            res.redirect(`/room/${newRoom.id}?password=${req.body.password}`);
         } else {
-            res.redirect(`/room/${newRoom._id}`);
+            res.redirect(`/room/${newRoom.id}`);
         }
     } catch (error) {
         console.error(error);
@@ -38,7 +39,7 @@ export async function createRoom (req, res, next) { //채팅방 생성
 
 export async function enterRoom (req, res, next) { //채팅방 입장
     try {
-        const room = await Room.findOne({ _id: req.params.id });
+        const room = await Room.findOne({ id: req.params.id });
         if (!room) {
             return res.redirect('/?error=존재하지 않는 방입니다.');
         }
@@ -51,7 +52,7 @@ export async function enterRoom (req, res, next) { //채팅방 입장
         if (room.max <= rooms.get(req.params.id)?.size) {
             return res.redirect('/?error=허용 인원이 초과하였습니다.');
         }
-        const chats = await Chat.find({ room: room._id }).sort('createdAt');
+        const chats = await Chat.find({ room: room.id }).sort('createdAt');
         return res.render('chat', {
             room,
             title: room.title,
