@@ -16,8 +16,14 @@ router.get('/logout',isLoggedIn,logout); //로그아웃
 router.get("/kakao",passport.authenticate("kakao")); //카카오 로그인
 router.get("/kakao/callback",passport.authenticate("kakao",{
     failureRedirect:"/?error='카카오 로그인 실패",
-}),(req,res)=>{
-    res.redirect('/');
+}),(req,res,next)=>{
+    return req.login(user,(loginError)=>{
+        if(loginError){
+            console.log(loginError);
+            return next(loginError);
+        }
+        return res.redirect('/');
+    })
 });
 
 export default router;
