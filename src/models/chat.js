@@ -1,7 +1,7 @@
 import Sequelize from "sequelize";
 class Chat extends Sequelize.Model {
-    static initiate(sequelize) {
-        Chat.init({
+    static init(sequelize) {
+        return super.init({
             room: {
                 type: Sequelize.INTEGER(200),
                 allowNull:false,
@@ -20,8 +20,8 @@ class Chat extends Sequelize.Model {
             sequelize,
             timestamps: true,
             underscored: false,
-            modelName: 'Room',
-            tableName: 'Rooms',
+            modelName: 'Chat',
+            tableName: 'Chats',
             paranoid: true,
             charset: 'utf8mb4',
             collate: 'utf8mb4_general_ci',

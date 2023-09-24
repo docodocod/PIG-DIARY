@@ -5,6 +5,8 @@ const configValue=config[env];
 import User from "./user.js";
 import Post from "./post.js";
 import Hashtag from "./hashtag.js";
+import Room from "./room.js";
+import Chat from "./chat.js";
 
 const db={};
 export const sequelize=new Sequelize(
@@ -18,10 +20,14 @@ db.sequelize=sequelize;
 db.User=User;
 db.Post=Post;
 db.Hashtag=Hashtag;
+db.Room=Room;
+db.Chat=Chat;
 
 User.init(sequelize);
 Post.init(sequelize);
 Hashtag.init(sequelize);
+Room.init(sequelize);
+Chat.init(sequelize);
 
 User.associate(db);
 Post.associate(db);

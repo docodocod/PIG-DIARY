@@ -1,7 +1,7 @@
 import Sequelize from "sequelize";
 class Hashtag extends Sequelize.Model {
-    static initiate(sequelize) {
-        Hashtag.init({
+    static init(sequelize) {
+        return super.init({
             title: {
                 type: Sequelize.STRING(15),
                 allowNull: false,

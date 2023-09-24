@@ -1,7 +1,7 @@
 import Sequelize from "sequelize";
 class Post extends Sequelize.Model {
-    static initiate(sequelize) {
-        Post.init({
+    static init(sequelize) {
+        return super.init({
             content: {
                 type: Sequelize.STRING(140),
                 allowNull: false,

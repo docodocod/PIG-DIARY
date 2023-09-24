@@ -1,7 +1,7 @@
 import Sequelize from "sequelize";
 class User extends Sequelize.Model {
-    static initiate(sequelize) {
-        User.init({
+    static init(sequelize){
+        return super.init({
             email: {
                 type: Sequelize.STRING(40),
                 allowNull: true,
@@ -12,7 +12,7 @@ class User extends Sequelize.Model {
                 allowNull: false,
             },
             password: {
-                type: Sequelize.STRING(100),
+                type: Sequelize.STRING(500),
                 allowNull: true,
             },
             provider: {
@@ -34,7 +34,7 @@ class User extends Sequelize.Model {
             charset: 'utf8',
             collate: 'utf8_general_ci',
         });
-    }
+    };
     static associate(db) {
         db.User.hasMany(db.Post);
         db.User.belongsToMany(db.User, {

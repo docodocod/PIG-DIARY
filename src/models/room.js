@@ -1,10 +1,11 @@
 import Sequelize from "sequelize";
 class Room extends Sequelize.Model {
-    static initiate(sequelize) {
-        Room.init({
+    static init(sequelize) {
+        return super.init({
             id: {
                 type: Sequelize.INTEGER(200),
                 allowNull:false,
+                primaryKey:true,
             },
             title: {
                 type: Sequelize.STRING(200),
