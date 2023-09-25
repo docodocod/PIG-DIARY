@@ -27,7 +27,7 @@ nunjucks.configure('views', { //nunjucks 설정방법
     watch: true,
 });
 
-sequelize.sync({ force: false })
+sequelize.sync({ force: false }) //true로 하면 강제적으로 데이터베이스를 초기화하고 다시만든다.
     .then(() => {
         console.log('데이터베이스 연결 성공');
     })
@@ -50,7 +50,7 @@ app.use(session({
     },
 }));
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session()); //passport->index.js로 넘어가서 deserialize로 넘어간다.
 
 app.use(express.static(path.join("C:\\workspace\\node_twitter", 'public')));
 app.use('/img', express.static(path.join("C:\\workspace\\node_twitter", 'uploads')));

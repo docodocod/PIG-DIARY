@@ -1,8 +1,8 @@
 import User from "../models/user.js";
 import crypto from "crypto";
 import dotenv from "dotenv";
-const Config = dotenv.config();
 import jwt from "jsonwebtoken";
+dotenv.config();
 
 export function renderProfile(req, res){
     res.render('profile', { title: '내 정보 - NodeBird' });
@@ -14,10 +14,14 @@ export async function join(req, res, next) {
     const {email,nick,password}=req.body;
     try{
         const exUser=await User.findOne({where:{email}});
-        console.log(exUser);
-        const salt = Config.SALT;
-        const iterations = parseInt(Config.ITERATION);
+        if(exUser){
+            return res.redirect("/join?error=아이디가 존재 합니다"); //아이디가 존재할 시 return
+        }
+        const salt = process.env.SALT;
+        const iterations = parseInt(process.env.ITERATION);
         const keyLength = 64; // 출력 길이
+        
+        //비밀번호 암호화
         crypto.pbkdf2(password, salt, iterations, keyLength, 'sha512', (err, derivedKey) => {
             if (err) throw err;
             const hashedPassword = derivedKey.toString('hex');
@@ -42,9 +46,11 @@ export async function login(req, res, next) {
         const exUser = await User.findOne({where:{email}});
         if (exUser) {
             const storedPW=exUser.password;
-            const salt = Config.SALT;
-            const iterations = parseInt(Config.ITERATION);
+            const salt = process.env.SALT;
+            const iterations = parseInt(process.env.ITERATION);
             const keyLength = 64; // 출력 길이
+            
+            //암호화된 비밀번호 비교하기
             crypto.pbkdf2(password, salt, iterations, keyLength, 'sha512', (err, derivedKey) => {
                 if (err) throw err;
                 const hashedPw = derivedKey.toString('hex');
@@ -52,7 +58,7 @@ export async function login(req, res, next) {
                     if ( storedPW === hashedPw) {
                         console.log("로그인 성공");
                         try{
-                            const token=jwt.sign({email},Config.JWT_SECRET,{
+                            const token=jwt.sign({email},process.env.JWT_SECRET,{
                                 expiresIn:"60m",
                                 issuer:"dongja",
                             })
@@ -60,7 +66,7 @@ export async function login(req, res, next) {
                             console.log("token: "+token);
                             req.session.user=exUser.nick;
                             console.log(req.session.user);
-                            res.render('layout',{user : exUser});
+                            res.render('loginForm',{user : exUser});
                         }catch(error){
                             console.log(error);
                         }
@@ -81,4 +87,5 @@ export async function logout(req,res){
     req.logout();
     req.session.destroy;
     res.redirect('/');
+
 }
