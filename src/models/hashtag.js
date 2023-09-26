@@ -2,7 +2,7 @@ import Sequelize from "sequelize";
 class Hashtag extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
-            title: {
+            title: { //해시태그 글
                 type: Sequelize.STRING(15),
                 allowNull: false,
                 unique: true,

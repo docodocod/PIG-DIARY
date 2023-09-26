@@ -2,18 +2,18 @@ import Sequelize from "sequelize";
 class Chat extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
-            room: {
+            room: { //room 아이디
                 type: Sequelize.INTEGER(200),
                 allowNull:false,
             },
-            user: {
+            user: { //생성자
                 type: Sequelize.STRING(200),
                 allowNull:false,
             },
-            chat: {
+            chat: {//채팅 내용
                 type:Sequelize.STRING(200)
             },
-            gif: {
+            gif: {//사진
                 type: Sequelize.STRING(200)
             },
         }, {
