@@ -67,7 +67,7 @@ export async function enterRoom (req, res, next) { //채팅방 입장
 export async function removeRoom (req, res, next) { //채팅방 제거
     try {
         await removeRoom(req.params.id);
-        res.send('ok');
+        res.send('채팅방을 나갔습니다.');
     } catch (error) {
         console.error(error);
         next(error);
@@ -82,7 +82,7 @@ export async function sendChat (req, res, next) { //채팅 전송
             chat: req.body.chat,
         });
         req.app.get('io').of('/chat').to(req.params.id).emit('chat', chat);
-        res.send('ok');
+        res.send('채팅을 정상적으로 전송');
     } catch (error) {
         console.error(error);
         next(error);

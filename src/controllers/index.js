@@ -7,7 +7,7 @@ export async function renderMain (req, res, next) {
         const posts = await Post.findAll({
             include: {
                 model: User,
-                attributes: ['id', 'nick'],
+                attributes: ['email', 'nick'],
             },
             order: [['createdAt', 'DESC']],
         });
@@ -30,7 +30,7 @@ export async function renderHashtag (req, res, next) {
         const hashtag = await Hashtag.findOne({ where: { title: query } });
         let posts = [];
         if (hashtag) {
-            posts = await hashtag.getPosts({ include: [{ model: User }] });
+            posts = await hashtag.getPost({ include: [{ model: User }] });
         }
         return res.render('main', {
             title: `${query} | NodeBird`,

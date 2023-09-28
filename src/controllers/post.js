@@ -23,7 +23,7 @@ export async function uploadPost (req, res, next){
                     })
                 }),
             );
-            await post.addHashtags(result.map(r => r[0]));
+            await post.add(result.map(r => r[0]));
         }
         res.redirect('/');
     } catch (error) {
