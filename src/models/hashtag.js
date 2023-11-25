@@ -1,4 +1,4 @@
-import Sequelize from "sequelize";
+const Sequelize=require("sequelize");
 class Hashtag extends Sequelize.Model {
     static init(sequelize) {
         return super.init({

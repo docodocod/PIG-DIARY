@@ -1,4 +1,4 @@
-import Sequelize from "sequelize";
+const Sequelize=require("sequelize");
 class Chat extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
@@ -28,4 +28,4 @@ class Chat extends Sequelize.Model {
         });
     };
 };
-export default Chat;
+module.exports=Chat;

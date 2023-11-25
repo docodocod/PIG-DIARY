@@ -1,15 +1,15 @@
-import Sequelize from "sequelize";
+const Sequelize=require("sequelize");
 const env=process.env.NODE_ENV || "development";
-import config from "../../config/config.json" assert { type: "json" };
+const config=require("../../config/config.json");
 const configValue=config[env];
-import User from "./user.js";
-import Post from "./post.js";
-import Hashtag from "./hashtag.js";
-import Room from "./room.js";
-import Chat from "./chat.js";
+const User=require("./user.js");
+const Post=require("./post.js");
+const Hashtag=require("./hashtag.js");
+const Room=require("./room.js");
+const Chat=require("./chat.js");
 
 const db={};
-export const sequelize=new Sequelize(
+const sequelize=new Sequelize(
         configValue.database,
         configValue.username,
         configValue.password,
@@ -33,4 +33,4 @@ User.associate(db);
 Post.associate(db);
 Hashtag.associate(db);
 
-export default db;
+module.exports=db;

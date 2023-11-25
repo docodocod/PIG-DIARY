@@ -1,4 +1,4 @@
-import Sequelize from "sequelize";
+const Sequelize=require("sequelize");
 class User extends Sequelize.Model {
     static init(sequelize){
         return super.init({
