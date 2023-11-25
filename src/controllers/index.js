@@ -2,7 +2,7 @@ import User from "../models/user.js";
 import Post from "../models/post.js";
 import Hashtag from "../models/hashtag.js";
 
-export async function renderMain (req, res, next) {
+exports.renderMain=async(req, res, next)=>{
     try {
         const posts = await Post.findAll({
             include: {
@@ -21,7 +21,7 @@ export async function renderMain (req, res, next) {
     }
 }
 
-export async function renderHashtag (req, res, next) {
+exports.renderHashtag=async(req, res, next)=>{
     const query = req.query.hashtag;
     if (!query) {
         return res.redirect('/');

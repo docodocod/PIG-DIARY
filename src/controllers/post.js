@@ -1,13 +1,12 @@
-import Post from "../models/post.js";
-import Hashtag from "../models/hashtag.js";
+const Post=require("../models/post.js");
+const Hashtag =require("../models/hashtag.js");
 
-
-export function afterUploadImage (req, res) {
+exports.afterUploadImage=(req, res)=>{
     console.log(req.file);
     res.json({ url: `/img/${req.file.filename}` });
 };
 
-export async function uploadPost (req, res, next){
+exports.uploadPost=async(req, res, next)=>{
     try {
         const post = await Post.create({
             content: req.body.content,
