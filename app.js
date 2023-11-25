@@ -1,22 +1,22 @@
-import express from "express";
-import nunjucks from "nunjucks";
-import formData from "express-form-data";
-import dotenv from "dotenv";
-import session from "express-session";
-import morgan from "morgan";
-import cookieParser from "cookie-parser";
-import passport from "passport";
-import ColorHash from "color-hash";
+const express=require("express");
+const nunjucks=require("nunjucks");
+const formDat=require("express-form-data");
+const dotenv=require("dotenv");
+const session=require("express-session");
+const morgan=require("morgan");
+const cookieParser=require("cookie-parser");
+const passport=require("passport");
+const ColorHash=require("color-hash");
 dotenv.config();
 
-import indexRouter from "./src/routes/index.js";
-import authRouter from "./src/routes/auth.js";
-import tokenTestRouter from "./src/modules/verifyToken.js";
-import roomRouter from "./src/routes/room.js";
-import {passportConfig} from "./src/passport/index.js";
-import path from "path";
-import {webSocket} from "./src/utils/socket.js";
-import {sequelize} from "./src/models/index.js";
+const indexRouter=require("./src/routes/index.js");
+const authRouter=require("./src/routes/auth.js");
+const tokenTestRouter=require("./src/modules/verifyToken.js");
+const roomRouter=require("./src/routes/room.js");
+const {passportConfig}=require("./src/passport/index.js");
+const path=require("path");
+const {webSocket}=require("./src/utils/socket.js");
+const {sequelize}=require("./src/models/index.js");
 
 const app = express();
 passportConfig();
@@ -37,7 +37,6 @@ sequelize.sync({ force: false }) //true로 하면 강제적으로 데이터베�
 
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(formData.parse());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
