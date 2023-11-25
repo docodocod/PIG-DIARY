@@ -1,13 +1,12 @@
-import jwt from "jsonwebtoken";
-import express from "express";
+const jwt=require("jsonwebtoken");
+const express=require("express");
 const router=express.Router();
-import dotenv from "dotenv";
-const Config=dotenv.config();
-
+const dotenv=require("dotenv");
+dotenv.config()
 
 router.get('/test',(req,res,next)=>{
     try {
-        req.decoded = jwt.verify(req.headers.authorization, Config.JWT_SECRET);
+        req.decoded = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
         return next();
     } catch(error) {
         if (error.name === 'TokenExpireError') {
@@ -23,4 +22,4 @@ router.get('/test',(req,res,next)=>{
     }
 });
 
-export default router;
+module.exports=router;
