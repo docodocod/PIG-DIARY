@@ -1,8 +1,8 @@
-import { Server } from 'socket.io';
-import { removeRoom } from "../service/roomDelete.js";
-import cookieParser from "cookie-parser";
+const { Server }=require('socket.io');
+const { removeRoom }=require("../service/roomDelete.js");
+const cookieParser=require("cookie-parser");
 
-export function webSocket(server, app/*, sessionMiddleware*/) {
+exports.webSocket=(server, app/*, sessionMiddleware*/)=>{
     const io =new Server(server, { path: '/socket.io' });
     app.set('io', io); //라우터와 웹소켓을 연결해주기 위하여 app.js에서 app을 넘겨줌
     const room = io.of('/room'); //네임스페이스 사용을 위해 io.of를 사용했다.
