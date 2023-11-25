@@ -1,9 +1,9 @@
-import express from "express"
-import multer from "multer";
-import path from "path";
-import fs from "fs";
-import { afterUploadImage, uploadPost } from '../controllers/post';
-import {isLoggedIn} from "../middlewares/index.js";
+const express=require("express");
+const multer=require("multer");
+const path=require("path");
+const fs=require("fs");
+const { afterUploadImage, uploadPost }=require('../controllers/post');
+const {isLoggedIn}=require("../middlewares/index.js");
 
 const router = express.Router();
 
@@ -34,4 +34,4 @@ router.post('/img', isLoggedIn, upload.single('img'), afterUploadImage);
 const upload2 = multer();
 router.post('/', isLoggedIn, upload2.none(), uploadPost);
 
-export default router;
+module.exports=router;

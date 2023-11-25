@@ -1,8 +1,9 @@
-import express from "express";
-import passport from "passport";
-import {isLoggedIn,isNotLoggedIn} from "../middlewares/index.js";
-import {join,login,logout} from "../controllers/auth.js";
-import {renderJoin} from "../controllers/auth.js";
+const express=require("express");
+const passport=require("passport");
+const {isLoggedIn,isNotLoggedIn}=require("../middlewares/index.js");
+const {join,login,logout}=require("../controllers/auth.js");
+const {renderJoin}=require("../controllers/auth.js");
+const user = require("../models/user.js");
 const router=express.Router();
 
 router.get('/join',isNotLoggedIn,renderJoin); //회원가입 페이지 이동
@@ -26,4 +27,4 @@ router.get("/kakao/callback",passport.authenticate("kakao",{
     })
 });
 
-export default router;
+module.epxorts=router;

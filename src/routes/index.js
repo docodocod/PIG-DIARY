@@ -1,8 +1,8 @@
-import express from "express";
+const express=require("express");
 const router=express.Router();
-import {renderMain} from "../controllers/index.js";
+const {renderMain}=require("../controllers/index.js");
 
 router.get('/',renderMain); //메인 페이지 이동
 
 
-export default router;
+module.exports=router;

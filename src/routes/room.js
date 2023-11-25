@@ -1,11 +1,16 @@
-import express from "express";
-import multer from "multer";
-import path from "path";
-import fs from "fs";
-import {removeRoom} from "../service/roomDelete.js";
-import {
-    renderRoom, renderMainRoom, createRoom, enterRoom, sendChat, sendGif
-} from "../controllers/room.js";
+const express=require('express');
+const multer=require('multer');
+const path=require('path');
+const fs=require('fs');
+const {removeRoom}=require("../service/roomDelete.js");
+const {
+    renderRoom,
+    renderMainRoom,
+    createRoom,
+    enterRoom,
+    sendChat,
+    sendGif
+}=require("../controllers/room.js");
 
 const router = express.Router();
 
@@ -41,4 +46,4 @@ const upload = multer({
 });
 router.post('/room/:id/gif', upload.single('gif'), sendGif);
 
-export default router;
+module.exports=router;
