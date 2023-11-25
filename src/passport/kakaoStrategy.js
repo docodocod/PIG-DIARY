@@ -1,11 +1,10 @@
-import passport from "passport";
-import KakaoStrategy from "passport-kakao";
-const kakaoStrategy =KakaoStrategy.Strategy;
-import dotenv from "dotenv";
-import User from "../models/user.js";
+const passport=require( "passport");
+const KakaoStrategy=require("passport-kakao");
+const dotenv=require('dotenv');
+const User=require("../models/user.js");
 
 
-export function kakao(){
+exports.kakao=()=>{
     passport.use(new kakaoStrategy({
         clientID:process.env.KAKAO_ID,
         callbackURL: '/auth/kakao/callback',
