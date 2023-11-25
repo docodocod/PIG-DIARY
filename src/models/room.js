@@ -39,4 +39,4 @@ class Room extends Sequelize.Model {
         db.Room.hasMany(db.Chat);
     }
 };
-export default Room;
+module.exports=Room;

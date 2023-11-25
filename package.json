@@ -1,6 +1,5 @@
 {
   "name": "nodetwitter",
-  "type": "module",
   "version": "1.0.0",
   "description": "개요",
   "main": "app.js",

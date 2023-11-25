@@ -28,4 +28,4 @@ class Post extends Sequelize.Model {
     }
 }
 
-export default Post;
+module.exports=Post;

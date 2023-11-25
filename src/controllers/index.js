@@ -1,6 +1,14 @@
-import User from "../models/user.js";
-import Post from "../models/post.js";
-import Hashtag from "../models/hashtag.js";
+const User=require("../models/user.js");
+const Post=require("../models/post.js");
+const Hashtag=require("../models/hashtag.js");
+
+exports.renderProfile = (req, res) => {
+    res.render('profile', { title: '내 정보 - NodeBird' });
+};
+
+exports.renderJoin = (req, res) => {
+    res.render('join', { title: '회원가입 - NodeBird' });
+};
 
 exports.renderMain=async(req, res, next)=>{
     try {

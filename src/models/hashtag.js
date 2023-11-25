@@ -17,10 +17,10 @@ class Hashtag extends Sequelize.Model {
             charset: 'utf8mb4',
             collate: 'utf8mb4_general_ci',
         });
-    }
+    };
     static associate(db) {
         db.Hashtag.belongsToMany(db.Post, { through: 'PostHashtag' });
-    }
+    };
 };
 
-export default Hashtag;
+module.exports=Hashtag;

@@ -6,8 +6,6 @@ const {renderJoin}=require("../controllers/auth.js");
 const user = require("../models/user.js");
 const router=express.Router();
 
-router.get('/join',isNotLoggedIn,renderJoin); //회원가입 페이지 이동
-
 router.post('/join',isNotLoggedIn,join); //회원가입
 
 router.post("/login",isNotLoggedIn,login); //로그인
@@ -27,4 +25,4 @@ router.get("/kakao/callback",passport.authenticate("kakao",{
     })
 });
 
-module.epxorts=router;
+module.exports=router;
