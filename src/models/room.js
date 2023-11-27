@@ -2,10 +2,11 @@ const Sequelize=require("sequelize");
 class Room extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
-            id: {
-                type: Sequelize.INTEGER(200),
+            id:{
+                type:Sequelize.INTEGER(200),
                 allowNull:false,
                 primaryKey:true,
+                autoIncrement:true,
             },
             title: {
                 type: Sequelize.STRING(200),
@@ -27,7 +28,6 @@ class Room extends Sequelize.Model {
         }, {
                 sequelize,
                 timestamps: true,
-                underscored: false,
                 modelName: 'Room',
                 tableName: 'Rooms',
                 paranoid: true,
