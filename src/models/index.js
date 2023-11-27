@@ -1,7 +1,6 @@
 const Sequelize=require("sequelize");
 const env=process.env.NODE_ENV || "development";
-const config=require("../../config/config.json");
-const configValue=config[env];
+const config=require("../../config/config.json")[env];
 const User=require("./user.js");
 const Post=require("./post.js");
 const Hashtag=require("./hashtag.js");
@@ -10,10 +9,10 @@ const Chat=require("./chat.js");
 
 const db={};
 const sequelize=new Sequelize(
-        configValue.database,
-        configValue.username,
-        configValue.password,
-        configValue
+        config.database,
+        config.username,
+        config.password,
+        config
 );
 
 db.sequelize=sequelize;

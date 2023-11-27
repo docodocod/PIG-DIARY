@@ -2,7 +2,7 @@ const passport=require("passport");
 const kakao=require("./kakaoStrategy.js");
 const User =require("../models/user.js");
 
-exports.passportConfig=()=>{
+module.exports=()=>{
     passport.serializeUser((user, done)=>{
         console.log('passport session save: ', user.id);
         done(null, user.id);
