@@ -1,5 +1,5 @@
 const { Server }=require('socket.io');
-const { removeRoom }=require("../service/roomDelete.js");
+const removeRoom=require("../service/roomDelete.js");
 const cookieParser=require("cookie-parser");
 
 exports.webSocket=(server, app/*, sessionMiddleware*/)=>{
