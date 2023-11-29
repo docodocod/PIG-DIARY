@@ -23,7 +23,7 @@ exports.webSocket=(server, app, sessionMiddleware)=>{
             socket.join(data);
             socket.to(data).emit('join', {
                 user: 'system',
-                chat: `${req.session.user}님이 입장하셨습니다.`,
+                chat: `${req.session}님이 입장하셨습니다.`,
             });
         });
 
