@@ -1,19 +1,14 @@
-const { Server }=require('socket.io');
-const removeRoom=require("../service/roomDelete.js");
-const cookieParser=require("cookie-parser");
+const SocketIO=require('socket.io');
+const {removeRoom}=require("../service/roomDelete.js");
 
-exports.webSocket=(server, app/*, sessionMiddleware*/)=>{
-    const io =new Server(server, { path: '/socket.io' });
+exports.webSocket=(server, app, sessionMiddleware)=>{
+    const io =SocketIO(server, { path: '/socket.io' });
     app.set('io', io); //라우터와 웹소켓을 연결해주기 위하여 app.js에서 app을 넘겨줌
     const room = io.of('/room'); //네임스페이스 사용을 위해 io.of를 사용했다.
     const chat = io.of('/chat');
 
-    io.use((socket,next)=>{
-        cookieParser()
-        next();
-    });
-  /*  const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
-    chat.use(wrap(sessionMiddleware));*/
+    const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
+    chat.use(wrap(sessionMiddleware));
 
     room.on('connection', (socket) => {
         console.log('room 네임스페이스에 접속');
@@ -22,17 +17,17 @@ exports.webSocket=(server, app/*, sessionMiddleware*/)=>{
         });
     });
 
-    chat.on('connection', (socket) => {
+    chat.on('connection', (socket,req,res) => {
         console.log('chat 네임스페이스에 접속');
         socket.on('join', (data) => {
             socket.join(data);
             socket.to(data).emit('join', {
                 user: 'system',
-                chat: `${socket.request.session.color}님이 입장하셨습니다.`,
+                chat: `${req.session.user}님이 입장하셨습니다.`,
             });
         });
 
-        socket.on('disconnect', async () => {
+        socket.on('disconnect', async (req,res,next) => {
             console.log('chat 네임스페이스 접속 해제');
             const { referer } = socket.request.headers; // 브라우저 주소가 들어있음
             const roomId = new URL(referer).pathname.split('/').at(-1);
@@ -45,7 +40,7 @@ exports.webSocket=(server, app/*, sessionMiddleware*/)=>{
             } else {
                 socket.to(roomId).emit('exit', {
                     user: 'system',
-                    chat: `${socket.request.session.color}님이 퇴장하셨습니다.`,
+                    chat: `${req.session.user}님이 퇴장하셨습니다.`,
                 });
             }
         });
