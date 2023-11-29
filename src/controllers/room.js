@@ -2,6 +2,7 @@ const Room=require("../models/room.js");
 const Chat=require("../models/chat.js");
 const {removeRoom} = require("../service/roomDelete");
 
+
 exports.renderMainRoom=async(req, res, next)=>{ //채팅방 목록 불러오기
     try {
         const rooms = await Room.findAll({}); //현재 생성되어 있는 모든 방 찾아서 담기
@@ -21,7 +22,7 @@ exports.createRoom=async(req, res, next)=>{ //채팅방 생성
         const newRoom=await Room.create({ //새로운 방 만들기
             title: req.body.title,
             max: req.body.max,
-            owner: req.session.color,
+            owner: req.session.user,
             password: req.body.password,
         });
         console.log(newRoom.id);
@@ -53,12 +54,14 @@ exports.enterRoom=async(req, res, next)=>{ //채팅방 입장
         if (room.max <= rooms.get(req.params.id)?.size) {
             return res.redirect('/?error=허용 인원이 초과하였습니다.');
         }
-        const chats = await Chat.findOne({ room: room.id });
+        const chats = await Chat.findAll(
+            { room: room.id },
+                    {order: "createdAt"});
         return res.render('chat', { //채팅 창에 데이터 뿌려주기
             room,
             title: room.title,
             chats,
-            user: req.session.color,
+            user: req.session.user,
         });
     } catch (error) {
         console.error(error);
@@ -79,7 +82,7 @@ exports.sendChat=async(req, res, next)=>{ //채팅 전송
     try {
         const chat = await Chat.create({
             room: req.params.id,
-            user: req.session.color,
+            user: req.session.user,
             chat: req.body.chat,
         });
         req.app.get('io').of('/chat').to(req.params.id).emit('chat', chat);
@@ -94,7 +97,7 @@ exports.sendGif=async(req, res, next)=>{ //채팅방 사진 보내기
     try {
         const chat = await Chat.create({
             room: req.params.id,
-            user: req.session.color,
+            user: req.session.user,
             gif: req.file.filename,
         });
         req.app.get('io').of('/chat').to(req.params.id).emit('chat', chat);

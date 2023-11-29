@@ -60,7 +60,9 @@ exports.login=async(req, res, next)=>{
                             console.log("token: "+token);
                             req.session.user=exUser.nick;
                             console.log(req.session.user);
-                            res.render('loginForm',{user : exUser});
+                            req.session.save(()=>{
+                                res.render('loginForm',{user : exUser});
+                            });
                         }catch(error){
                             console.log(error);
                         }
