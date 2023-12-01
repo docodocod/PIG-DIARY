@@ -24,6 +24,7 @@
             <input id="my-id" type="hidden" value="{{user.id}}">
             <a id="my-profile" href="/auth/profile" class="btn">내 프로필</a>
             <a id="logout" href="/auth/logout" class="btn">로그아웃</a>
+            <a id="logout" href="/room" class="btn">채팅방 들어가기</a>
             {% else %}
             <form id="login-form" action="/auth/login" method="post">
                 <div class="input-group">

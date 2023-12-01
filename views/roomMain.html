@@ -1,5 +1,3 @@
-{% extends 'loginForm.html' %}
-
 {% block content %}
 <h1>GIF 채팅방</h1>
 <fieldset>
@@ -33,11 +31,11 @@
         </tbody>
     </table>
     <div class="error-message">{{error}}</div>
-    <a href="/room">채팅방 생성</a>
+    <a href="/room/addRoom">채팅방 생성</a>
 </fieldset>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-    const socket = io.connect('http://localhost:6969/room', { // 네임스페이스
+    const socket = io.connect('http://localhost:4161/room', { // 네임스페이스
         path: '/socket.io',
         transports: ['websocket'],
     });
