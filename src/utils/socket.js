@@ -23,7 +23,7 @@ exports.webSocket=(server, app, sessionMiddleware)=>{
             socket.join(data);
             socket.to(data).emit('join', {
                 user: 'system',
-                chat: `${req.session}님이 입장하셨습니다.`,
+                chat: `${sessionMiddleware.user}님이 입장하셨습니다.`,
             });
         });
 
@@ -40,7 +40,7 @@ exports.webSocket=(server, app, sessionMiddleware)=>{
             } else {
                 socket.to(roomId).emit('exit', {
                     user: 'system',
-                    chat: `${req.session.user}님이 퇴장하셨습니다.`,
+                    chat: `${sessionMiddleware.user}님이 퇴장하셨습니다.`,
                 });
             }
         });
