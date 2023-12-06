@@ -9,13 +9,13 @@ module.exports=()=>{
         callbackURL: '/auth/kakao/callback',
     },async(accessToken, refreshToken, profile, done) => {
         console.log('kakao profile', profile);
-        const provider = "kakao";
         try {
             const exUser = await User.findOne( {where: {
                     snsId: profile.id,
                     provider: 'kakao'
-            }});
+            },});
             if (exUser) {
+                console.log("아이디 존재");
                 done(null, exUser);
             } else {
                 const newUser=await User.create({
