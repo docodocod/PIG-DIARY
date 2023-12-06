@@ -35,11 +35,11 @@ exports.join=async(req,res,next)=>{
 };
 
 exports.login=async(req, res, next)=>{
-    const {email, password} = req.body;
+    const {email, password} = req.body; //페이지에서 로그인 데이터 받아오기
     try {
-        const exUser = await User.findOne({where:{email}});
-        if (exUser) {
-            const storedPW=exUser.password;
+        const exUser = await User.findOne({where:{email}}); // 회원 조회
+        if (exUser) { //만약 있다면?
+            const storedPW=exUser.password; // 입력한 비밀번호
             const salt = process.env.SALT;
             const iterations = parseInt(process.env.ITERATION);
             const keyLength = 64; // 출력 길이
