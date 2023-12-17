@@ -1,19 +1,29 @@
-const passport=require("passport");
-const kakao=require("./kakaoStrategy.js");
-const User =require("../models/user.js");
+const passport = require('passport');
+const kakao = require('./kakaoStrategy');
+const local=require('./localStrategy');
+const User = require('../models/user');
 
-module.exports=()=>{
-    passport.serializeUser((user, done)=>{
-        console.log('passport session save: ', user.id);
+module.exports = () => {
+    passport.serializeUser((user, done) => {
         done(null, user.id);
-        //{ id:3, connect.sid: s%2343432324324}
     });
 
-    passport.deserializeUser((id, done)=>{
-        console.log('passport session get id: ', id);
-        User.findOne({where:{id}})
-            .then(user=>done(null,user))
-            .catch(err=>done(err));
+    passport.deserializeUser((id, done) => {
+        User.findOne({
+            where: { id },
+            include: [{
+                model: User,
+                attributes: ['id', 'nick'],
+                as: 'Followers',
+            }, {
+                model: User,
+                attributes: ['id', 'nick'],
+                as: 'Followings',
+            }],
+        })
+            .then(user => done(null, user))
+            .catch(err => done(err));
     });
+    local();
     kakao();
 };

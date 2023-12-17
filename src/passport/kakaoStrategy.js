@@ -13,6 +13,7 @@ module.exports = () => {
             // accessToken, refreshToken : 로그인 성공 후 카카오가 보내준 토큰
             // profile: 카카오가 보내준 유저 정보. profile의 정보를 바탕으로 회원가입
             async (accessToken, refreshToken, profile, done) => {
+                console.log(profile);
                 try {
                     const exUser = await User.findOne({
                         // 카카오 플랫폼에서 로그인 했고 & snsId필드에 카카오 아이디가 일치할경우
@@ -25,7 +26,7 @@ module.exports = () => {
                         // 가입되지 않는 유저면 회원가입 시키고 로그인을 시킨다
                         const newUser = await User.create({
                             email: profile._json && profile._json.kakao_account_email,
-                            nickname: profile.displayName,
+                            nick: profile.displayName,
                             snsId: profile.id,
                             provider: 'kakao',
                         });
@@ -35,7 +36,5 @@ module.exports = () => {
                     console.error(error);
                     done(error);
                 }
-            },
-        ),
-    );
+            }));
 };
