@@ -15,12 +15,12 @@ exports.renderMain=async(req, res, next)=>{ //메인 페이지에서 정보 불�
         const posts = await Post.findAll({ //해당 유저가 가지고 있는 게시글들을 담아줍니다.
             include: {
                 model: User,
-                attributes: ['email', 'nick'],
+                attributes: ['id','email', 'nick'],
             },
             order: [['createdAt', 'DESC']],
         });
         res.render('main', { //메인페이지가 로딩 될때 데이터를 뿌려줍니다.
-            title: 'NodeBird',
+            title: 'Nodetwitter',
             twits: posts,
         });
     } catch (err) {
@@ -38,7 +38,7 @@ exports.renderHashtag=async(req, res, next)=>{//
         const hashtag = await Hashtag.findOne({ where: { title: query } });
         let posts = [];
         if (hashtag) {
-            posts = await hashtag.getPost({ include: [{ model: User }] });
+            posts = await hashtag.getPosts({ include: [{ model: User }] });
         }
         return res.render('main', {
             title: `${query} | NodeBird`,

@@ -1,6 +1,7 @@
 const User=require("../models/user.js");
 const crypto=require('crypto');
 const dotenv=require('dotenv');
+const passport=require('passport');
 const jwt=require("jsonwebtoken");
 dotenv.config();
 
@@ -34,53 +35,27 @@ exports.join=async(req,res,next)=>{
     }
 };
 
-exports.login=async(req, res, next)=>{
-    const {email, password} = req.body; //페이지에서 로그인 데이터 받아오기
-    try {
-        const exUser = await User.findOne({where:{email}}); // 회원 조회
-        if (exUser) { //만약 있다면?
-            const storedPW=exUser.password; // 입력한 비밀번호
-            const salt = process.env.SALT;
-            const iterations = parseInt(process.env.ITERATION);
-            const keyLength = 64; // 출력 길이
-            
-            //암호화된 비밀번호 비교하기
-            crypto.pbkdf2(password, salt, iterations, keyLength, 'sha512', (err, derivedKey) => {
-                if (err) throw err;
-                const hashedPw = derivedKey.toString('hex');
-                console.log('Hashed Password:', hashedPw);
-                    if ( storedPW === hashedPw) {
-                        console.log("로그인 성공");
-                        try{
-                            const token=jwt.sign({email},process.env.JWT_SECRET,{
-                                expiresIn:"60m",
-                                issuer:"dongja",
-                            })
-                            console.log("토큰이 발급 되었습니다.");
-                            console.log("token: "+token);
-                            req.session.user=exUser.nick;
-                            console.log(req.session.user);
-                            req.session.save(()=>{
-                                res.render('loginForm',{user : exUser});
-                            });
-                        }catch(error){
-                            console.log(error);
-                        }
-                    } else {
-                        res.status(200).send("비밀번호가 틀렸습니다.");
-                    }
-            });
-        }else{
-            res.status(200).send("아이디가 존재하지 않습니다.");
+exports.login = (req, res, next) => {
+    passport.authenticate('local', (authError, user, info) => {
+        if (authError) {
+            console.error(authError);
+            return next(authError);
         }
-    } catch (error) {
-        console.error(error);
-        return next(error);
-    }
+        if (!user) {
+            return res.redirect(`/?error=${info.message}`);
+        }
+        return req.login(user, (loginError) => {
+            if (loginError) {
+                console.error(loginError);
+                return next(loginError);
+            }
+            return res.redirect('/');
+        });
+    })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙인다.
 };
 
-exports.logout=(req,res)=>{
-    req.logout();
-    req.session.destroy;
-    res.redirect('/');
-}
+exports.logout = (req, res) => {
+    req.logout(() => {
+        res.redirect('/');
+    });
+};

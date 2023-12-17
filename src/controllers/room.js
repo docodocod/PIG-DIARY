@@ -56,7 +56,7 @@ exports.enterRoom=async(req, res, next)=>{ //채팅방 입장
         }
         const chats = await Chat.findAll(
             { room: room.id },
-                    {order: "createdAt"});
+            {order: "createdAt"});
         return res.render('chat', { //채팅 창에 데이터 뿌려주기
             room,
             title: room.title,
