@@ -1,9 +1,9 @@
-const express=require("express");
-const multer=require("multer");
-const path=require("path");
-const fs=require("fs");
-const { afterUploadImage, uploadPost }=require('../controllers/post');
-const {isLoggedIn}=require("../middlewares/index.js");
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const { afterUploadImage, uploadPost } = require('../controllers/post');
+const { isLoggedIn } = require('../middlewares');
 
 const router = express.Router();
 
@@ -34,4 +34,4 @@ router.post('/img', isLoggedIn, upload.single('img'), afterUploadImage);
 const upload2 = multer();
 router.post('/', isLoggedIn, upload2.none(), uploadPost);
 
-module.exports=router;
+module.exports = router;

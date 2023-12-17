@@ -1,9 +1,25 @@
-const express=require("express");
-const router=express.Router();
-const {renderMain}=require("../controllers/index.js");
-const {renderJoin} = require("../controllers");
+const express = require('express');
+const { isLoggedIn, isNotLoggedIn } = require('../middlewares');
+const {
+    renderProfile, renderJoin, renderMain, renderHashtag,
+} = require('../controllers/index.js');
 
-router.get('/',renderMain); //메인 페이지 이동
-router.get('/join',renderJoin) //회원가입창 이동
+const router = express.Router();
 
-module.exports=router;
+router.use((req, res, next) => {
+    res.locals.user = req.user;
+    res.locals.followerCount = req.user?.Followers?.length || 0;
+    res.locals.followingCount = req.user?.Followings?.length || 0;
+    res.locals.followingIdList = req.user?.Followings?.map(f => f.id) || [];
+    next();
+});
+
+router.get('/profile', isLoggedIn, renderProfile);
+
+router.get('/join', isNotLoggedIn, renderJoin);
+
+router.get('/', renderMain);
+
+router.get('/hashtag', renderHashtag);
+
+module.exports = router;
