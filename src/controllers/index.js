@@ -9,6 +9,9 @@ exports.renderProfile = (req, res) => {
 exports.renderJoin = (req, res) => {
     res.render('join', { title: '회원가입 - NodeBird' });
 };
+exports.renderChat=(req,res)=>{
+    res.render('chat',{title:"chat"});
+}
 
 exports.renderMain=async(req, res, next)=>{ //메인 페이지에서 정보 불러올 메서드
     try {
@@ -41,7 +44,7 @@ exports.renderHashtag=async(req, res, next)=>{//
             posts = await hashtag.getPosts({ include: [{ model: User }] });
         }
         return res.render('main', {
-            title: `${query} | NodeBird`,
+            title: `${query} | NodeTwitter`,
             twits: posts,
         });
     } catch (error) {

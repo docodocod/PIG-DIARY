@@ -3,6 +3,7 @@ const { isLoggedIn, isNotLoggedIn } = require('../middlewares');
 const {
     renderProfile, renderJoin, renderMain, renderHashtag,
 } = require('../controllers/index.js');
+const {renderChat} = require("../controllers");
 
 const router = express.Router();
 
@@ -19,6 +20,8 @@ router.get('/profile', isLoggedIn, renderProfile);
 router.get('/join', isNotLoggedIn, renderJoin);
 
 router.get('/', renderMain);
+
+router.get('/chat',renderChat);
 
 router.get('/hashtag', renderHashtag);
 
