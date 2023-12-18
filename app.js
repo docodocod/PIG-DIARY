@@ -1,21 +1,22 @@
 const express = require('express');
-const nunjucks=require("nunjucks");
-const dotenv=require("dotenv");
-const session=require("express-session");
-const morgan=require("morgan");
-const cookieParser=require("cookie-parser");
-const passport=require("passport");
-const ColorHash=require("color-hash").default;
+const nunjucks = require("nunjucks");
+const dotenv = require("dotenv");
+const session = require("express-session");
+const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
+const passport = require("passport");
 dotenv.config();
 
-const indexRouter=require("./src/routes/index.js");
-const authRouter=require("./src/routes/auth.js");
-const roomRouter=require("./src/routes/room.js");
-const {webSocket}=require("./src/utils/socket.js");
-const {sequelize}=require("./src/models/index.js");
-const passportConfig=require("./src/passport/index.js");
-const path=require("path");
-const tokenTestRouter=require("./src/modules/verifyToken.js");
+const indexRouter = require("./src/routes/index.js");
+const authRouter = require("./src/routes/auth.js");
+const postRouter=require('./src/routes/post.js');
+const userRouter=require('./src/routes/user.js');
+
+
+const {sequelize} = require("./src/models/index.js");
+const passportConfig = require("./src/passport/index.js");
+const path = require("path");
+const tokenTestRouter = require("./src/modules/verifyToken_test.js");
 
 const app = express();
 passportConfig();
@@ -27,7 +28,7 @@ nunjucks.configure('views', { //nunjucks 설정방법
     watch: true,
 });
 
-sequelize.sync({ force: false }) //true로 하면 강제적으로 데이터베이스를 초기화하고 다시만든다.
+sequelize.sync({force: false}) //true로 하면 강제적으로 데이터베이스를 초기화하고 다시만든다.
     .then(() => { //sequelize를 실행 시켜 mySQL과 연결해준다.
         console.log('데이터베이스 연결 성공');
     })
@@ -44,6 +45,7 @@ const sessionMiddleware = session({
         secure: false,
     },
 });
+
 app.use(morgan('dev')); // 데이터의 흐름을 자세히 보여줌
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -52,28 +54,18 @@ app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session()); //passport->index.js로 넘어가서 deserialize로 넘어간다.
 
-app.use(express.static(path.join("C:\\workspace\\node_twitter", 'public')));
-app.use('/img', express.static(path.join("C:\\workspace\\node_twitter", 'uploads')));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/img', express.static(path.join(__dirname, 'uploads')));
 
-app.use('/',indexRouter);
-app.use('/token',tokenTestRouter);
+app.use('/', indexRouter);
+app.use('/token', tokenTestRouter);
 app.use('/auth',authRouter);
-app.use('/room',roomRouter);
-
-app.use((req, res, next) => {// 에러처리
-    if (!req.session.color) {
-        const colorHash = new ColorHash();
-        req.session.color = colorHash.hex(req.sessionID);
-        console.log(req.session.color, req.sessionID);
-    }
-    next();
-});
+app.use('/post',postRouter);
+app.use('/user',userRouter);
 app.use((req, res, next) => { //404 에러
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
     next(error);
 });
-
-
 
 app.use((err, req, res, next) => {
     // set locals, only providing error in development
@@ -84,9 +76,8 @@ app.use((err, req, res, next) => {
     res.render('error');
 });
 
-const server=app.listen(process.env.SERVER_PORT,()=>{ //웹서버 연결 확인
+const server = app.listen(process.env.SERVER_PORT, () => { //웹서버 연결 확인
     console.log('Server Listening on 127.0.0.1:' + process.env.SERVER_PORT);
 });
 
-webSocket(server,app,sessionMiddleware);
 
