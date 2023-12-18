@@ -1,6 +1,15 @@
 const Post=require("../models/post.js");
 const Hashtag =require("../models/hashtag.js");
 
+exports.postDelete=async(req,res)=>{
+    const postId=req.params.id;
+    await Post.destroy({
+        where:{
+            id:postId
+        }
+    })
+}
+
 exports.afterUploadImage=(req, res)=>{
     console.log(req.file);
     res.json({ url: `/img/${req.file.filename}` });
