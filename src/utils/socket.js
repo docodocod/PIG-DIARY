@@ -1,14 +1,11 @@
 const SocketIO=require('socket.io');
-const {removeRoom}=require("../service/roomDelete.js");
+const {removeRoom}=require("../services/roomDelete.js");
 
-exports.webSocket=(server, app, sessionMiddleware)=>{
+exports.webSocket=(server, app)=>{
     const io =SocketIO(server, { path: '/socket.io' });
     app.set('io', io); //라우터와 웹소켓을 연결해주기 위하여 app.js에서 app을 넘겨줌
     const room = io.of('/room'); //네임스페이스 사용을 위해 io.of를 사용했다.
     const chat = io.of('/chat');
-
-    const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
-    chat.use(wrap(sessionMiddleware));
 
     room.on('connection', (socket) => {
         console.log('room 네임스페이스에 접속');
@@ -22,8 +19,8 @@ exports.webSocket=(server, app, sessionMiddleware)=>{
         socket.on('join', (data) => {
             socket.join(data);
             socket.to(data).emit('join', {
-                user: 'system',
-                chat: `${sessionMiddleware.user}님이 입장하셨습니다.`,
+                user: req.session.user,
+                chat: `${req.session.user}님이 입장하셨습니다.`,
             });
         });
 
@@ -39,8 +36,8 @@ exports.webSocket=(server, app, sessionMiddleware)=>{
                 console.log('방 제거 요청 성공');
             } else {
                 socket.to(roomId).emit('exit', {
-                    user: 'system',
-                    chat: `${sessionMiddleware.user}님이 퇴장하셨습니다.`,
+                    user: req.session.user,
+                    chat: `${req.session.user}님이 퇴장하셨습니다.`,
                 });
             }
         });
