@@ -11,12 +11,14 @@ const indexRouter = require("./src/routes/index.js");
 const authRouter = require("./src/routes/auth.js");
 const postRouter=require('./src/routes/post.js');
 const userRouter=require('./src/routes/user.js');
+const roomRouter=require('./src/routes/room.js');
 
 
 const {sequelize} = require("./src/models/index.js");
 const passportConfig = require("./src/passport/index.js");
 const path = require("path");
 const tokenTestRouter = require("./src/modules/verifyToken_test.js");
+const {webSocket} = require("./src/utils/socket");
 
 const app = express();
 passportConfig();
@@ -50,7 +52,6 @@ app.use(morgan('dev')); // 데이터의 흐름을 자세히 보여줌
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session()); //passport->index.js로 넘어가서 deserialize로 넘어간다.
 
@@ -62,6 +63,7 @@ app.use('/token', tokenTestRouter);
 app.use('/auth',authRouter);
 app.use('/post',postRouter);
 app.use('/user',userRouter);
+app.use('/room',roomRouter);
 app.use((req, res, next) => { //404 에러
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
     next(error);
@@ -77,7 +79,9 @@ app.use((err, req, res, next) => {
 });
 
 const server = app.listen(process.env.SERVER_PORT, () => { //웹서버 연결 확인
-    console.log('Server Listening on 127.0.0.1:' + process.env.SERVER_PORT);
+    console.log('Server Listening on 127.0.0.1:' + process.env.SERVER_PORT+"에서 대기중입니다.");
 });
+
+webSocket(server,app);
 
 
