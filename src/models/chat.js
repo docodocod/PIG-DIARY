@@ -27,5 +27,8 @@ class Chat extends Sequelize.Model {
             collate: 'utf8mb4_general_ci',
         });
     };
+    static associate(db){
+        db.Chat.belongsTo(db.Room);
+    }
 };
 module.exports=Chat;

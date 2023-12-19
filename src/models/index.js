@@ -1,9 +1,8 @@
 const Sequelize=require("sequelize");
 const env=process.env.NODE_ENV || "development";
 const config=require("../config/config.json")[env];
-const User=require("./user.js");
-const Post=require("./post.js");
-const Hashtag=require("./hashtag.js");
+const {User,Post,Hashtag,Room,Chat}=require('./');
+
 
 const db={};
 const sequelize=new Sequelize(
@@ -17,13 +16,19 @@ db.sequelize=sequelize;
 db.User=User;
 db.Post=Post;
 db.Hashtag=Hashtag;
+db.Room=Room;
+db.Chat=Chat;
 
 User.init(sequelize);
 Post.init(sequelize);
 Hashtag.init(sequelize);
+Room.init(sequelize);
+Chat.init(sequelize);
 
 User.associate(db);
 Post.associate(db);
 Hashtag.associate(db);
+Room.associate(db);
+Chat.associate(db);
 
 module.exports=db;
