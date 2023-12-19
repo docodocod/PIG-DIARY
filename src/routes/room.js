@@ -1,30 +1,23 @@
-const express=require('express');
-const multer=require('multer');
-const path=require('path');
-const fs=require('fs');
-const {removeRoom}=require("../service/roomDelete.js");
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
 const {
-    renderRoom,
-    renderMainRoom,
-    createRoom,
-    enterRoom,
-    sendChat,
-    sendGif
-}=require("../controllers/room.js");
+    renderMain, renderRoom, createRoom, enterRoom, removeRoom, sendChat, sendGif,
+} = require('../controllers/room.js');
 
 const router = express.Router();
 
-router.get('/', renderMainRoom); //채팅방 목록
+router.get('/', renderRoom); // 채팅방 리스트 호출
 
-router.get('/addRoom', renderRoom); //채팅방 생성창
+router.post('/', createRoom); // 채팅방 생성
 
-router.post('/addRoom', createRoom); //채팅방 생성
+router.get('/room/:id', enterRoom);
 
-router.get('/:id', enterRoom); //채팅방 입장
+router.delete('/room/:id', removeRoom);
 
-router.delete('/:id', removeRoom); //채팅방 제거
-
-router.post('/:id/chat', sendChat); //채팅 전송
+router.post('/room/:id/chat', sendChat);
 
 try {
     fs.readdirSync('uploads');
@@ -44,6 +37,6 @@ const upload = multer({
     }),
     limits: { fileSize: 5 * 1024 * 1024 },
 });
-router.post('/:id/gif', upload.single('gif'), sendGif);
+router.post('/room/:id/gif', upload.single('gif'), sendGif);
 
-module.exports=router;
+module.exports = router;
