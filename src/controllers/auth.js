@@ -15,7 +15,8 @@ exports.join=async(req,res,next)=>{
         const salt = process.env.SALT;
         const iterations = parseInt(process.env.ITERATION);
         const keyLength = 64; // 출력 길이
-        
+
+
         //비밀번호 암호화
         crypto.pbkdf2(password, salt, iterations, keyLength, 'sha512', (err, derivedKey) => {
             if (err) throw err;
