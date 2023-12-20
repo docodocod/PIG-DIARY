@@ -3,18 +3,14 @@ const Chat=require("../models/chat.js");
 const {removeRoom} = require("../services/roomDelete");
 
 
-exports.renderAllRoom=async(req, res, next)=>{ //채팅방 목록 불러오기
+exports.renderRoom=async(req, res, next)=>{ //채팅방 목록 불러오기 기능
     try {
         const rooms = await Room.findAll({}); //현재 생성되어 있는 모든 방 찾아서 담기
-        res.render('chattingRoom', { rooms, title: 'GIF 채팅방' }); //데이터 담아서 채팅방 목록 페이지에 뿌려주기
+        res.render('roomList', { rooms, title: '채팅방' }); //데이터 담아서 채팅방 목록 페이지에 뿌려주기
     } catch (error) {
         console.error(error);
         next(error);
     }
-};
-
-exports.renderRoom=(req, res)=>{ //채팅방 목록페이지
-    res.render('roomList', { title: '채팅방 생성' });
 };
 
 exports.createRoom=async(req, res, next)=>{ //채팅방 생성

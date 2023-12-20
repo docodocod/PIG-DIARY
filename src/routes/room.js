@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get('/', renderRoom); // 채팅방 리스트 호출
 
-router.post('/', createRoom); // 채팅방 생성
+router.post('/create', createRoom); // 채팅방 생성
 
 router.get('/room/:id', enterRoom);
 
