@@ -13,11 +13,11 @@ router.get('/', renderRoom); // 채팅방 리스트 호출
 
 router.post('/create', createRoom); // 채팅방 생성
 
-router.get('/room/:id', enterRoom);
+router.get('/room/:id', enterRoom); //방 입장
 
-router.delete('/room/:id', removeRoom);
+router.delete('/room/:id', removeRoom); //방 퇴장
 
-router.post('/room/:id/chat', sendChat);
+router.post('/room/:id/chat', sendChat); //채팅 보내기
 
 try {
     fs.readdirSync('uploads');
@@ -25,7 +25,8 @@ try {
     console.error('uploads 폴더가 없어 uploads 폴더를 생성합니다.');
     fs.mkdirSync('uploads');
 }
-const upload = multer({
+
+const upload = multer({ // 업로드 메서드
     storage: multer.diskStorage({
         destination(req, file, done) {
             done(null, 'uploads/');
@@ -37,6 +38,7 @@ const upload = multer({
     }),
     limits: { fileSize: 5 * 1024 * 1024 },
 });
+
 router.post('/room/:id/gif', upload.single('gif'), sendGif);
 
 module.exports = router;

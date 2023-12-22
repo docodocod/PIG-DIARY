@@ -50,6 +50,7 @@ exports.enterRoom=async(req, res, next)=>{ //채팅방 입장
         return next(error);
     }
 };
+
 exports.removeRoom=async(req, res, next)=>{ //채팅방 제거
     try {
         await removeRoom(req.params.id);
