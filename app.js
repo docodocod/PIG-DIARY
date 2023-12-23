@@ -17,7 +17,6 @@ const roomRouter=require('./src/routes/room.js');
 const {sequelize} = require("./src/models/index.js");
 const passportConfig = require("./src/passport/index.js");
 const path = require("path");
-const tokenTestRouter = require("./src/modules/verifyToken_test.js");
 const {webSocket} = require("./src/utils/socket");
 
 const app = express();
@@ -38,7 +37,7 @@ sequelize.sync({force: false}) //true로 하면 강제적으로 데이터베이�
         console.error(err);
     });
 
-const sessionMiddleware = session({
+app.use(session({
     resave: false,
     saveUninitialized: false,
     secret: process.env.COOKIE_SECRET,
@@ -46,7 +45,7 @@ const sessionMiddleware = session({
         httpOnly: true,
         secure: false,
     },
-});
+}));
 
 app.use(morgan('dev')); // 데이터의 흐름을 자세히 보여줌
 app.use(express.json());
@@ -59,7 +58,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/img', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/', indexRouter);
-app.use('/token', tokenTestRouter);
 app.use('/auth',authRouter);
 app.use('/post',postRouter);
 app.use('/user',userRouter);
@@ -82,6 +80,5 @@ const server = app.listen(process.env.SERVER_PORT, () => { //웹서버 연결 �
     console.log('Server Listening on 127.0.0.1:' + process.env.SERVER_PORT+"에서 대기중입니다.");
 });
 
-webSocket(server,app);
 
 
