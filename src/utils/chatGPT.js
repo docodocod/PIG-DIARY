@@ -10,7 +10,7 @@ async function callChatGPT(prompt) {
     const chatCompletion = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [{role: "user", content: prompt}],
-        max_tokens:100
+        max_tokens:500,
     });
     return chatCompletion.choices[0].message.content;
 };
