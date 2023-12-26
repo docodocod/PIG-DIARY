@@ -33,6 +33,9 @@
             {% if not followingIdList.includes(twit.User.id) and twit.User.id !== user.id %}
             <button class="twit-follow">팔로우하기</button>
             {% endif %}
+            {% if followingIdList.includes(twit.User.id) and twit.User.id !== user.id %}
+            <button class="twit-unfollow">팔로우 끊기</button>
+            {% endif %}
             {% if twit.User.id==user.id %}
             <button id="twit-delete">삭제하기</button>
             {% endif %}
@@ -86,19 +89,40 @@
             }
         });
     });
+
+    //팔로우 끊기 기능 script
+    document.querySelectorAll('.twit-unfollow').forEach(function(tag) {
+        tag.addEventListener('click', function() {
+            const myId = document.querySelector('#my-id');
+            if (myId) {
+                const userId = tag.parentNode.querySelector('.twit-user-id').value;
+                if (userId !== myId.value) {
+                    if (confirm('팔로우를 끊으시겠습니까?')) {
+                        axios.delete(`/user/${userId}/unfollow`)
+                            .then(() => {
+                                location.reload();
+                            })
+                            .catch((err) => {
+                                console.error(err);
+                            });
+                    }
+                }
+            }
+        });
+    });
     //게시글 삭제 script
     document.querySelectorAll('#twit-delete').forEach(function(tag) {
         tag.addEventListener('click', function () {
             const postId = tag.parentNode.querySelector('.twit-id').value;
             if (confirm("게시글을 삭제하시겠습니까?")) {
-                axios.post(`/post/${postId}/delete`)
+                axios.delete(`/post/${postId}/delete`)
                     .then(()=> {
                         console.log("게시글 삭제 성공");
                         location.reload();
                     })
                     .catch((err)=>{
                         console.log(err);
-                    })
+                    });
             }
         });
     });
