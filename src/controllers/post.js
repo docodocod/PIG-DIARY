@@ -1,7 +1,39 @@
 const Post=require("../models/post.js");
 const Hashtag =require("../models/hashtag.js");
+const User = require("../models/user");
 
-exports.postDelete=async(req,res)=>{
+
+exports.like=async(req,res,next)=>{ //좋아요 기능
+    try {
+        const post = await Post.findOne({ where: { id: req.params.id } });
+        if (post) {
+            await post.addLiker(parseInt(req.user.id, 10));
+            res.send('success');
+        } else {
+            res.status(404).send('no user');
+        }
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+}
+
+exports.unlike=async(req,res,next)=>{ //좋아요 해제 기능
+    try{
+        const post=await Post.findOne({where:{id:req.params.id}});
+        if (post){
+            await post.removeLiker(parseInt(req.user.id, 10));
+            res.send("success");
+        }else{
+            res.status(404).send("delete fail");
+        }
+    }catch(err){
+        console.error(err);
+        next(err);
+    }
+}
+
+exports.postDelete=async(req,res,next)=>{ //게시글 삭제
     const postId=req.params.id;
     await Post.destroy({
         where:{
@@ -10,12 +42,12 @@ exports.postDelete=async(req,res)=>{
     })
 }
 
-exports.afterUploadImage=(req, res)=>{
+exports.afterUploadImage=(req, res)=>{ //이미지 업로드
     console.log(req.file);
     res.json({ url: `/img/${req.file.filename}` });
 };
 
-exports.uploadPost=async(req, res, next)=>{
+exports.uploadPost=async(req, res, next)=>{ //게시글 업로드
     try {
         const post = await Post.create({
             content: req.body.content,
