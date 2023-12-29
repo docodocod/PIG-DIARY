@@ -12,6 +12,7 @@ const authRouter = require("./src/routes/auth.js");
 const postRouter=require('./src/routes/post.js');
 const userRouter=require('./src/routes/user.js');
 const roomRouter=require('./src/routes/room.js');
+const chatBotRouter=require('./src/routes/chatBot.js');
 
 
 const {sequelize} = require("./src/models/index.js");
@@ -62,6 +63,7 @@ app.use('/auth',authRouter);
 app.use('/post',postRouter);
 app.use('/user',userRouter);
 app.use('/room',roomRouter);
+app.use('/chatBot',chatBotRouter);
 app.use((req, res, next) => { //404 에러
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
     next(error);

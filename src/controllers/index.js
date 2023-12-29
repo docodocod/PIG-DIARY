@@ -16,10 +16,14 @@ exports.renderChat=(req,res)=>{
 exports.renderMain=async(req, res, next)=>{ //메인 페이지에서 정보 불러올 메서드
     try {
         const posts = await Post.findAll({ //해당 유저가 가지고 있는 게시글들을 담아줍니다.
-            include: {
+            include: [{
                 model: User,
-                attributes: ['id','email', 'nick'],
-            },
+                attributes: ['id', 'nick'],
+            },{
+                model:User,
+                attributes:['id','nick'],
+                as:"Liker",
+        }],
             order: [['createdAt', 'DESC']],
         });
         res.render('main', { //메인페이지가 로딩 될때 데이터를 뿌려줍니다.
