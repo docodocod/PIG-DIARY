@@ -40,11 +40,56 @@
     <button type="submit">전송</button>
 </form>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script>
+    //헷갈려서 이해하기 위해 주석 설명 처리
+
+    const socket = io.connect('http://localhost:8005/chat', {
+        path: '/socket.io',
+    });
+    socket.emit('join', new URL(location).pathname.split('/').at(-1)); // 서버에 'join' 이벤트명으로 현재 주소에 있는 id 값을 보낸다.
+    socket.on('join', function (data) { //서버에서 'join' 이벤트명으로 데이터 보낸걸 받는다.
+        const div = document.createElement('div');
+        div.classList.add('system');
+        const chat = document.createElement('div');
+        chat.textContent = data.chat;
+        div.appendChild(chat);
+        document.querySelector('#chat-list').appendChild(div);
+    });
+    socket.on('exit', function (data) { //서버에서 'exit' 이벤트명으로 데이터 보낸걸 받는다.
+        const div = document.createElement('div');
+        div.classList.add('system');
+        const chat = document.createElement('div');
+        chat.textContent = data.chat;
+        div.appendChild(chat);
+        document.querySelector('#chat-list').appendChild(div);
+    });
+    socket.on('chat', function (data) { //서버에서 'chat' 이벤트명으로 데이터 보낸걸 받는다.
+        const div = document.createElement('div');
+        if (data.user === '{{user}}') {
+            div.classList.add('mine');
+        } else {
+            div.classList.add('other');
+        }
+        const name = document.createElement('div');
+        name.textContent = data.user;
+        div.appendChild(name);
+        if (data.chat) {
+            const chat = document.createElement('div');
+            chat.textContent = data.chat;
+            div.appendChild(chat);
+        } else {
+            const gif = document.createElement('img');
+            gif.src = '/gif/' + data.gif;
+            div.appendChild(gif);
+        }
+        div.style.color = data.user;
+        document.querySelector('#chat-list').appendChild(div);
+    });
     document.querySelector('#chat-form').addEventListener('submit', function (e) {
         e.preventDefault();
         if (e.target.chat.value) {
-            axios.post('/room/chat', {
+            axios.post('/room/{{room._id}}/chat', { //axios 비동기로 서버에 post 요청을 해서 chat data를 보낸다.
                 chat: this.chat.value,
             })
                 .then(() => {

@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 const {
-    renderMain, renderRoom, createRoom, enterRoom, removeRoom, sendChat, sendGif,
+    renderMain, renderRoom, createRoom, enterRoom, removeRoom,renderChat,sendChat, sendGif,
 } = require('../controllers/room.js');
 
 const router = express.Router();
@@ -17,7 +17,9 @@ router.get('/room/:id', enterRoom); //방 입장
 
 router.delete('/room/:id', removeRoom); //방 퇴장
 
-router.post('/room/:id/chat', sendChat); //채팅 보내기
+// router.post('/room/:id/chat', sendChat); //채팅 보내기
+
+router.post('/chat',sendChat);
 
 try {
     fs.readdirSync('uploads');

@@ -6,7 +6,7 @@ const {removeRoom} = require("../services/roomDelete");
 exports.renderRoom=async(req, res, next)=>{ //채팅방 목록 불러오기 기능
     try {
         const rooms = await Room.findAll({}); //현재 생성되어 있는 모든 방 찾아서 담기
-        res.render('roomList', { rooms, title: '채팅방' }); //데이터 담아서 채팅방 목록 페이지에 뿌려주기
+        res.render('chat', { rooms, title: '채팅방' }); //데이터 담아서 채팅방 목록 페이지에 뿌려주기
     } catch (error) {
         console.error(error);
         next(error);

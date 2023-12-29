@@ -16,7 +16,7 @@ exports.webSocket=(server, app)=>{
 
     chat.on('connection', (socket,req,res) => {
         console.log('chat 네임스페이스에 접속');
-        socket.on('join', (data) => {
+        socket.on('join', (data) => { //chat.html 에서 'join' 이벤트명으로 보낸 data를 받는다.
             socket.join(data);
             socket.to(data).emit('join', {
                 user: req.session.user,
