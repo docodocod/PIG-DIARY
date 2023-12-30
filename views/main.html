@@ -26,6 +26,7 @@
             <button class="btn">검색</button>
         </form>
         {% for twit in twits %}
+        {% set Likers = [] %}
         <div class="twit">
             <input type="hidden" value="{{twit.User.id}}" class="twit-user-id">
             <input type="hidden" value="{{twit.id}}" class="twit-id">
@@ -35,9 +36,25 @@
             {% endif %}
             {% if followingIdList.includes(twit.User.id) and twit.User.id !== user.id %}
             <button class="twit-unfollow">팔로우 끊기</button>
+            <button class="twit-chat">대화하기</button>
             {% endif %}
             {% if twit.User.id==user.id %}
-            <button id="twit-delete">삭제하기</button>
+            <button class="twit-delete">삭제</button>
+            {% endif %}
+            {% for item in twit.Liker %}
+                {% set Likers=(Likers.push(item.id),Likers) %}
+            {% endfor %}
+            {% if not Likers.includes(user.id) and twit.User.id !== user.id and user %}
+            <div class="twit-like">
+            <label for="checkbox">
+                <input type="checkbox" id="checkbox" hidden>
+                <svg t="1689815540548" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2271"><path d="M742.4 101.12A249.6 249.6 0 0 0 512 256a249.6 249.6 0 0 0-230.72-154.88C143.68 101.12 32 238.4 32 376.32c0 301.44 416 546.56 480 546.56s480-245.12 480-546.56c0-137.92-111.68-275.2-249.6-275.2z" fill="#231F20" p-id="2272" id="heart"></path></svg>
+                <span></span>
+            </label>
+            </div>
+            {% endif %}
+            {% if Likers.includes(user.id) and twit.User.id !== user.id and user %}
+            <button class="twit-unlike">좋아요 취소</button>
             {% endif %}
             <div class="twit-content">{{twit.content}}</div>
             {% if twit.img %}
@@ -48,7 +65,6 @@
     </div>
 </div>
 {% endblock %}
-
 
 {% block script %}
 <script>
@@ -111,7 +127,7 @@
         });
     });
     //게시글 삭제 script
-    document.querySelectorAll('#twit-delete').forEach(function(tag) {
+    document.querySelectorAll('.twit-delete').forEach(function(tag) {
         tag.addEventListener('click', function () {
             const postId = tag.parentNode.querySelector('.twit-id').value;
             if (confirm("게시글을 삭제하시겠습니까?")) {
@@ -125,6 +141,51 @@
                     });
             }
         });
+    });
+
+    document.querySelectorAll('.twit-like').forEach(function(tag) {
+        tag.addEventListener('click', function() {
+            const myId = document.querySelector('#my-id');
+            if (myId) {
+                const postId = tag.parentNode.querySelector('.twit-id').value;
+                console.log("postID"+postId);
+                    axios.post(`/post/${postId}/like`)
+                        .then(() => {
+                            location.reload();
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                        });
+                }
+            });
+    });
+
+    document.querySelectorAll('.twit-unlike').forEach(function(tag) {
+        tag.addEventListener('click', function() {
+            const myId = document.querySelector('#my-id');
+            if (myId) {
+                const postId = tag.parentNode.querySelector('.twit-id').value;
+                console.log(postId);
+                    axios.delete(`/post/${postId}/unlike`)
+                        .then(() => {
+                            location.reload();
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                        });
+                }
+            });
+    });
+
+    document.querySelectorAll('.twit-chat').forEach(function(tag){
+        tag.addEventListener("click",()=>{
+            const myId=document.querySelector('#my-id');
+            if (myId){
+                const opponentId=tag.parentNode.querySelector('.twit-user-id').value;
+                console.log(opponentId);
+                    axios.post('/room/create',{opponentId:opponentId})
+            }
+        })
     });
 </script>
 {% endblock %}

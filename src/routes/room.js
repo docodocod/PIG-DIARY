@@ -13,13 +13,11 @@ router.get('/', renderRoom); // 채팅방 리스트 호출
 
 router.post('/create', createRoom); // 채팅방 생성
 
-router.get('/room/:id', enterRoom); //방 입장
+router.get('/:id', enterRoom); //방 입장
 
-router.delete('/room/:id', removeRoom); //방 퇴장
+router.delete('/:id', removeRoom); //방 퇴장
 
-// router.post('/room/:id/chat', sendChat); //채팅 보내기
-
-router.post('/chat',sendChat);
+router.post('/room/:id/chat',sendChat);
 
 try {
     fs.readdirSync('uploads');

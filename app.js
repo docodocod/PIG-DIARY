@@ -82,5 +82,5 @@ const server = app.listen(process.env.SERVER_PORT, () => { //웹서버 연결 �
     console.log('Server Listening on 127.0.0.1:' + process.env.SERVER_PORT+"에서 대기중입니다.");
 });
 
-
+webSocket(server,app);
 

@@ -5,8 +5,8 @@ const {removeRoom} = require("../services/roomDelete");
 
 exports.renderRoom=async(req, res, next)=>{ //채팅방 목록 불러오기 기능
     try {
-        const rooms = await Room.findAll({}); //현재 생성되어 있는 모든 방 찾아서 담기
-        res.render('chat', { rooms, title: '채팅방' }); //데이터 담아서 채팅방 목록 페이지에 뿌려주기
+        //const rooms = await Room.findAll({}); //현재 생성되어 있는 모든 방 찾아서 담기
+        res.render('roomList', { title: '채팅방 목록' }); //데이터 담아서 채팅방 목록 페이지에 뿌려주기
     } catch (error) {
         console.error(error);
         next(error);
@@ -16,8 +16,8 @@ exports.renderRoom=async(req, res, next)=>{ //채팅방 목록 불러오기 기�
 exports.createRoom=async(req, res, next)=>{ //채팅방 생성
     try {
         const newRoom=await Room.create({ //새로운 방 만들기
-            opponent: req.body.title,
-            owner: req.session.user,
+            opponent: req.body.opponentId,
+            owner: req.user.id,
         });
         console.log(newRoom.id);
         const io = req.app.get('io'); //채팅방 기능을 위해 socket.io에서 받아온거 담기
@@ -39,11 +39,11 @@ exports.enterRoom=async(req, res, next)=>{ //채팅방 입장
         const chats = await Chat.findAll(
             { room: room.id },
             {order: "createdAt"});
-        return res.render('chattingRoom', { //채팅 창에 데이터 뿌려주기
+        res.render('chat', { //채팅 창에 데이터 뿌려주기
             room,
             opponent: room.opponent,
             chats,
-            user: req.session.user,
+            user: req.user.id,
         });
     } catch (error) {
         console.error(error);
