@@ -19,8 +19,8 @@ exports.webSocket=(server, app)=>{
         socket.on('join', (data) => { //chat.html 에서 'join' 이벤트명으로 보낸 data를 받는다.
             socket.join(data);
             socket.to(data).emit('join', {
-                user:  req.session.user,
-                chat: `${req.session.user}님이 입장하셨습니다.`,
+                user: "system",
+                chat: "입장하셨습니다."
             });
         });
 
@@ -36,8 +36,8 @@ exports.webSocket=(server, app)=>{
                 console.log('방 제거 요청 성공');
             } else {
                 socket.to(roomId).emit('exit', {
-                    user: req.session.user,
-                    chat: `${req.session.user}님이 퇴장하셨습니다.`,
+                    user: req.user.id,
+                    chat: `${req.user.nick}님이 퇴장하셨습니다.`,
                 });
             }
         });

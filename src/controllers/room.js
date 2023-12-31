@@ -5,8 +5,8 @@ const {removeRoom} = require("../services/roomDelete");
 
 exports.renderRoom=async(req, res, next)=>{ //채팅방 목록 불러오기 기능
     try {
-        //const rooms = await Room.findAll({}); //현재 생성되어 있는 모든 방 찾아서 담기
-        res.render('roomList', { title: '채팅방 목록' }); //데이터 담아서 채팅방 목록 페이지에 뿌려주기
+        const rooms = await Room.findAll({where:{owner:req.user.id}}); //현재 생성되어 있는 모든 방 찾아서 담기
+        res.render('roomList', { rooms, title: '채팅방 목록' }); //데이터 담아서 채팅방 목록 페이지에 뿌려주기
     } catch (error) {
         console.error(error);
         next(error);
@@ -32,14 +32,15 @@ exports.createRoom=async(req, res, next)=>{ //채팅방 생성
 exports.enterRoom=async(req, res, next)=>{ //채팅방 입장
     try {
         const room = await Room.findOne({where:{ id: req.params.id }}); //해당 아이디 채팅방 찾기
+        console.log("room: "+room);
         if (!room) { //room data 없으면
             return res.redirect('/?error=존재하지 않는 방입니다.');
         }
-        const io = req.app.get('io'); //socket.io 사용하기
+        const io = req.app.get('io'); //socket.io
         const chats = await Chat.findAll(
             { room: room.id },
             {order: "createdAt"});
-        res.render('chat', { //채팅 창에 데이터 뿌려주기
+        return res.render('chat', { //채팅 창에 데이터 뿌려주기
             room,
             opponent: room.opponent,
             chats,
@@ -65,7 +66,7 @@ exports.sendChat=async(req, res, next)=>{ //채팅 전송
     try {
         const chat = await Chat.create({
             room: req.params.id,
-            user: req.session.user,
+            user: req.user.id,
             chat: req.body.chat,
         });
         req.app.get('io').of('/chat').to(req.params.id).emit('chat', chat);
@@ -80,7 +81,7 @@ exports.sendGif=async(req, res, next)=>{ //채팅방 사진 보내기
     try {
         const chat = await Chat.create({
             room: req.params.id,
-            user: req.session.user,
+            user: req.user.id,
             gif: req.file.filename,
         });
         req.app.get('io').of('/chat').to(req.params.id).emit('chat', chat);

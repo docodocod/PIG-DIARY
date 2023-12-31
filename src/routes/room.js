@@ -2,22 +2,23 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const {isLoggedIn,isNotLoggedIn}=require("../middlewares");
 
 const {
-    renderMain, renderRoom, createRoom, enterRoom, removeRoom,renderChat,sendChat, sendGif,
+    renderMain, renderRoom, createRoom, enterRoom, removeRoom,sendChat, sendGif,
 } = require('../controllers/room.js');
 
 const router = express.Router();
 
-router.get('/', renderRoom); // 채팅방 리스트 호출
+router.get('/',renderRoom); // 채팅방 리스트 호출
 
-router.post('/create', createRoom); // 채팅방 생성
+router.post('/create',createRoom); // 채팅방 생성
 
 router.get('/:id', enterRoom); //방 입장
 
 router.delete('/:id', removeRoom); //방 퇴장
 
-router.post('/room/:id/chat',sendChat);
+router.post('/:id/chat',sendChat); //채팅 전송
 
 try {
     fs.readdirSync('uploads');
