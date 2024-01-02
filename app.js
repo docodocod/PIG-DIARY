@@ -47,7 +47,7 @@ app.use(session({
         secure: false,
     },
 }));
-
+//테스트
 app.use(morgan('dev')); // 데이터의 흐름을 자세히 보여줌
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
