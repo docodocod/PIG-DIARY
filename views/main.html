@@ -1,5 +1,9 @@
 {% extends 'layout.html' %}
-
+<head>
+    <title>main</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/main.css">
+</head>
 {% block content %}
 <div class="timeline">
     {% if user %}
@@ -65,7 +69,6 @@
     </div>
 </div>
 {% endblock %}
-
 {% block script %}
 <script>
     //이미지 첨부 기능 script
@@ -187,5 +190,16 @@
             }
         })
     });
+
+    function success(pos) { // 위치 정보를 가져오는데 성공했을 때 호출되는 콜백 함수 (pos : 위치 정보 객체)
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        console.log(`현위치 : ${lat}, ${lng}`);
+    }
+
+    function fail(err) { // 위치 정보를 가져오는데 실패했을 때 호출되는 콜백 함수
+        alert('현위치를 찾을 수 없습니다.');
+    }
+    navigator.geolocation.getCurrentPosition(success, fail);
 </script>
 {% endblock %}

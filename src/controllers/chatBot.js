@@ -2,7 +2,7 @@ const {callChatGPT} = require("../utils/chatGPT");
 
 
 exports.renderChatBot=(req,res)=>{
-    res.render("chatBot.html",{title:"AI 챗봇"});
+    res.render('chat-bot',{title:"AI 챗봇"});
 }
 
 exports.sendChatBot=async (req,res,next)=>{

@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="kr">
 <head>
     <meta charset="UTF-8">
     <title>{{title}}</title>
@@ -43,10 +43,7 @@
     </div>
     {% block content %}
     {% endblock %}
-    <!-- 푸터 내용 -->
-    {% include 'footer.html' %}
 </div>
-
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     window.onload = () => {
@@ -55,7 +52,5 @@
         }
     };
 </script>
-{% block script %}
-{% endblock %}
 </body>
 </html>

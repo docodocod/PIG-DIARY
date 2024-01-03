@@ -25,7 +25,7 @@ passportConfig();
 
 app.set('port', process.env.SERVER_PORT || 8001); //Config.PORT를 앞에 붙여준 이유는 배포와 개발할때 서로 다른 포트를 사용할거라서
 app.set('view engine', 'html');
-nunjucks.configure('views', { //nunjucks 설정방법
+nunjucks.configure('views', {
     express: app,
     watch: true,
 });
@@ -63,7 +63,7 @@ app.use('/auth',authRouter);
 app.use('/post',postRouter);
 app.use('/user',userRouter);
 app.use('/room',roomRouter);
-app.use('/chatBot',chatBotRouter);
+app.use('/chat-bot',chatBotRouter);
 app.use((req, res, next) => { //404 에러
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
     next(error);

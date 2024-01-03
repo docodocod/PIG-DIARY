@@ -1,6 +1,6 @@
 const express=require('express');
 const {renderChatBot, sendChatBot} = require("../controllers/chatBot");
-const router=express();
+const router=express.Router();
 
 router.get('/chat',renderChatBot);
 

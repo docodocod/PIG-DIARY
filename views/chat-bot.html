@@ -1,21 +1,21 @@
 {% extends 'layout.html' %}
 
-{% block content %}
 <head>
+    <title>없음</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenAI를 이용한 챗봇</title>
     <link rel="stylesheet" type="text/css" href="/chatbot.css">
 </head>
+{% block content %}
 <div id="chat-container">
     <div id="chat-messages"></div>
     <div id="user-input">
-        <input type="text" placeholder="메시지를 입력하세요..." />
+        <input type="text" placeholder="메시지를 입력하세요..."/>
         <button>전송</button>
     </div>
 </div>
 {% endblock %}
 
+{% block script %}
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     // 채팅 메시지를 표시할 DOM
@@ -61,5 +61,4 @@
         }
     });
 </script>
-</body>
-</html>
+{% endblock %}
