@@ -40,6 +40,7 @@ exports.postDelete=async(req,res,next)=>{ //게시글 삭제
             id:postId
         }
     })
+    res.send("success");
 }
 
 exports.afterUploadImage=(req, res)=>{ //이미지 업로드

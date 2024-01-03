@@ -1,6 +1,10 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/room.css">
+</head>
 <h1>{{title}}</h1>
 <a href="/" id="exit-btn">방 나가기</a>
 <fieldset>
@@ -44,7 +48,7 @@
 <script>
     //헷갈려서 이해하기 위해 주석 설명 처리
 
-    const socket = io.connect('http://localhost:8005/chat', {
+    const socket = io.connect('http://localhost:4161/chat', {
         path: '/socket.io',
     });
     socket.emit('join', new URL(location).pathname.split('/').at(-1)); // 서버에 'join' 이벤트명으로 현재 주소에 있는 id 값을 보낸다.
