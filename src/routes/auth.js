@@ -1,10 +1,12 @@
 const express=require("express");
 const passport=require("passport");
 const {isLoggedIn,isNotLoggedIn}=require("../middlewares/index.js");
-const {join,login,logout}=require("../controllers/auth.js");
+const {join,login,logout,loginTest}=require("../controllers/auth.js");
 const router=express.Router();
 
 router.post('/join',isNotLoggedIn,join); //회원가입
+
+router.get("/loginTest",loginTest);
 
 router.post("/login",isNotLoggedIn,login); //로그인
 

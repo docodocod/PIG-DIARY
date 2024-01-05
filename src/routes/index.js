@@ -25,4 +25,8 @@ router.get('/chat',renderChat);
 
 router.get('/hashtag', renderHashtag);
 
+router.get("/kakaoMap",function(req,res){
+    res.render("kakaoMap",{title:"kakaoMap"});
+})
+
 module.exports = router;

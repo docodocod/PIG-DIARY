@@ -5,6 +5,10 @@ const passport=require('passport');
 const jwt=require("jsonwebtoken");
 dotenv.config();
 
+exports.loginTest=async(req,res,next)=>{
+    res.render("login",{title:"loginTest"});
+}
+
 exports.join=async(req,res,next)=>{
     const {email,nick,password}=req.body;
     try{
