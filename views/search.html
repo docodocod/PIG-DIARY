@@ -1,0 +1,88 @@
+{% block content %}
+<head>
+    <title>search</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/search.css">
+    <link href='//maxcdn.bootstrap.com/font-awesome/4.3.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<form id="search" action="/search" method="get">
+<div class='container'>
+    <h1>Go on, click me!</h1>
+    <div class='search-box-container'>
+        <button class='submit'>
+            <i class='fa fa-search'></i>
+        </button>
+        <input class='search-box' name="content" placeholder="검색어를 입력해주세요.">
+    </div>
+    <h3 class='response'></h3>
+</div>
+</form>
+<script>
+    $.fn.toggleState = function (b) {
+        $(this)
+            .stop()
+            .animate(
+                {
+                    width: b ? "300px" : "50px"
+                },
+                600,
+                "easeOutElastic"
+            );
+    };
+
+    $(document).ready(function () {
+        const container = $(".container");
+        const boxContainer = $(".search-box-container");
+        const submit = $(".submit");
+        const searchBox = $(".search-box");
+        const response = $(".response");
+        let isOpen = false;
+        submit.on("mousedown", function (e) {
+            e.preventDefault();
+            boxContainer.toggleState(!isOpen);
+            isOpen = !isOpen;
+            if (!isOpen) {
+                handleRequest();
+            } else {
+                searchBox.focus();
+            }
+        });
+        searchBox.keypress(function (e) {
+            if (e.which === 13) {
+                boxContainer.toggleState(false);
+                isOpen = false;
+                handleRequest();
+            }
+        });
+        searchBox.blur(function () {
+            boxContainer.toggleState(false);
+            isOpen = false;
+        });
+        function handleRequest() {
+            // You could do an ajax request here...
+            const value = searchBox.val();
+            searchBox.val("");
+            if (value.length > 0) {
+                response.text('Searching for "' + value + '" . . .');
+                response
+                    .animate(
+                        {
+                            opacity: 1
+                        },
+                        300
+                    )
+                    .delay(2000)
+                    .animate(
+                        {
+                            opacity: 0
+                        },
+                        300
+                    );
+            }
+        }
+    });
+</script>
+{% endblock %}
+

@@ -1,7 +1,7 @@
 const express = require('express');
 const { isLoggedIn, isNotLoggedIn } = require('../middlewares');
 const {
-    renderProfile, renderJoin, renderMain, renderHashtag,
+    renderProfile, renderJoin, renderMain, renderHashtag,renderLogin,renderSearch,getSearchContent
 } = require('../controllers/index.js');
 const {renderChat} = require("../controllers");
 
@@ -19,7 +19,13 @@ router.get('/profile', isLoggedIn, renderProfile);
 
 router.get('/join', isNotLoggedIn, renderJoin);
 
-router.get('/', renderMain);
+router.get('/main', renderMain);
+
+router.get('/',renderLogin);
+
+router.get('/search',renderSearch);
+
+router.get("/search_content",getSearchContent);
 
 router.get('/chat',renderChat);
 

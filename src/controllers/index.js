@@ -13,6 +13,14 @@ exports.renderChat=(req,res)=>{
     res.render('chat',{title:"chat"});
 }
 
+exports.renderLogin=(req,res)=>{
+    res.render("login",{title:"login"});
+}
+
+exports.renderSearch=(req,res)=>{
+    res.render("search",{title:"search"});
+}
+
 exports.renderMain=async(req, res, next)=>{ //메인 페이지에서 정보 불러올 메서드
     try {
         const posts = await Post.findAll({ //해당 유저가 가지고 있는 게시글들을 담아줍니다.
@@ -56,3 +64,6 @@ exports.renderHashtag=async(req, res, next)=>{//
         return next(error);
     }
 };
+exports.getSearchContent=(req,res,next)=>{
+
+}
