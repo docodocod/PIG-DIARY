@@ -32,7 +32,7 @@ exports.join=async(req,res,next)=>{
                 password: hashedPassword,
                 salt
             });
-            return res.redirect('/');
+            return res.redirect('/main');
         });
     }catch(error){
         console.error(error);
@@ -58,6 +58,11 @@ exports.login = (req, res, next) => {
         });
     })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙인다.
 };
+
+exports.unregister=async (req,res,next)=>{
+    await User.destroy({where:{id:req.user.id}});
+    res.redirect('/');
+}
 
 exports.logout = (req, res) => {
     req.logout(() => {
