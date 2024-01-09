@@ -5,6 +5,7 @@ const session = require("express-session");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
+const morganMiddelware=require("./src/middlewares/morganMiddleware");
 dotenv.config();
 
 const indexRouter = require("./src/routes/index.js");
@@ -19,6 +20,7 @@ const {sequelize} = require("./src/models/index.js");
 const passportConfig = require("./src/passport/index.js");
 const path = require("path");
 const {webSocket} = require("./src/utils/socket");
+const {morganMiddleware} = require("./src/middlewares/morganMiddleware");
 
 const app = express();
 passportConfig();
@@ -50,6 +52,7 @@ app.use(session({
 //테스트
 app.use(morgan('dev')); // 데이터의 흐름을 자세히 보여줌
 app.use(express.json());
+app.use(morganMiddleware);
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(passport.initialize());

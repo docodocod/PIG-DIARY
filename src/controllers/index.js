@@ -17,8 +17,17 @@ exports.renderLogin=(req,res)=>{
     res.render("login",{title:"login"});
 }
 
+exports.renderSearchPage=(req,res)=>{
+    const searchWord=req.body.searchWord;
+    console.log("searchWord:"+searchWord);
+    res.render("kakaoMap",{
+        title: "지도",
+        searchWord: searchWord,
+    });
+}
+
 exports.renderSearch=(req,res)=>{
-    res.render("search",{title:"search"});
+    res.render("search");
 }
 
 exports.renderMain=async(req, res, next)=>{ //메인 페이지에서 정보 불러올 메서드
