@@ -13,7 +13,7 @@
 <fieldset class="field-container">
     <form id="search" action="/searchPage" method="post">
         <input type="text" name="searchWord" placeholder="Search..." class="field" />
-        <input type="submit"></input>
+        <input type="submit" />
     </form>
     <div class="icons-container">
         <div class="icon-search"></div>
@@ -22,7 +22,13 @@
             <div class="x-down"></div>
         </div>
     </div>
+    <form id="myPosition" action="/searchPage" method="post">
+        <input type="hidden" id="position" name="searchWord" value="" />
+        <input type="submit" id="myPosition" />
+    </form>
 </fieldset>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=22382396d3cba032b99b1fcc9ec5b4f1&libraries=services"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     const field=$('.field');
     $(document).on("ready", function () {
@@ -41,6 +47,33 @@
             }
         });
     });
+
+    document.getElementById("myPosition").addEventListener("click",(e)=>{
+        e.preventDefault();
+        function success(pos) { // 위치 정보를 가져오는데 성공했을 때 호출되는 콜백 함수 (pos : 위치 정보 객체)
+            getMyPosition(pos.coords.latitude,pos.coords.longitude);
+        }
+        function fail(err) { // 위치 정보를 가져오는데 실패했을 때 호출되는 콜백 함수
+            alert('현위치를 찾을 수 없습니다.');
+        }
+        navigator.geolocation.getCurrentPosition(success,fail);
+        function getMyPosition(lat, lng){
+            console.log(lat,lng);
+            var geocoder = new kakao.maps.services.Geocoder();
+
+            var coord = new kakao.maps.LatLng(lat, lng);
+            var callback = function(result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    const position=document.getElementById("position");
+                    const name=result[0].address.address_name+" 맛집";
+                    position.value=name;
+                    const myPosition = document.getElementById('myPosition');
+                    myPosition.submit();
+                }
+            };
+            geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+        }
+    })
 </script>
 {% endblock %}
 
