@@ -19,10 +19,12 @@ exports.renderLogin=(req,res)=>{
 
 exports.renderSearchPage=(req,res)=>{
     const searchWord=req.body.searchWord;
+    const userId=req.user.id;
     console.log("searchWord:"+searchWord);
     res.render("kakaoMap",{
         title: "지도",
         searchWord: searchWord,
+        userId:userId
     });
 }
 
@@ -73,6 +75,3 @@ exports.renderHashtag=async(req, res, next)=>{//
         return next(error);
     }
 };
-exports.getSearchContent=(req,res,next)=>{
-
-}

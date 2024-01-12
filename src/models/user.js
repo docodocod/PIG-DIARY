@@ -37,6 +37,7 @@ class User extends Sequelize.Model {
     };
     static associate(db) {
         db.User.hasMany(db.Post);
+        db.User.hasMany(db.Favorite);
         db.User.belongsToMany(db.User, {
             foreignKey: 'followingId',
             as: 'Followers',
@@ -48,6 +49,7 @@ class User extends Sequelize.Model {
             through: 'Follow',
         });
         db.User.belongsToMany(db.Post,{through: "like"});
+
     };
 };
 

@@ -27,8 +27,6 @@ router.get("/search",renderSearch)
 
 router.post('/searchPage',renderSearchPage);
 
-router.get("/search_content",getSearchContent);
-
 router.get('/chat',renderChat);
 
 router.get('/hashtag', renderHashtag);

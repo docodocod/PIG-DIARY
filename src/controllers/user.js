@@ -1,4 +1,5 @@
 const User=require("../models/user.js");
+const Favorite=require("../models/favorite.js");
 
 exports.follow=async(req, res, next)=>{
     try {
@@ -29,3 +30,15 @@ exports.unfollow=async(req, res, next)=>{
         next(error);
     }
 };
+
+exports.favorite=async(req,res,next)=>{
+    try{
+        await Favorite.create({
+            placeName:req.body.placeName,
+            userId:req.body.userId,
+        });
+    }catch(err){
+        console.error(err);
+        next(err);
+    }
+}
