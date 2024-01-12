@@ -6,6 +6,11 @@
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <!--    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
 </head>
+<!--<div class="bg">
+    <video class="video" muted autoplay loop>
+        <source src="/video/coffee.mp4" type="video/mp4">
+    </video>
+</div>-->
 <div class="title-container">
     <h1 class="title">검색해주세요.</h1>
     <h1 class="title-down">찾아볼까요?</h1>
@@ -13,7 +18,7 @@
 <fieldset class="field-container">
     <form id="search" action="/searchPage" method="post">
         <input type="text" name="searchWord" placeholder="Search..." class="field" />
-        <input type="submit" />
+        <input type="submit" value="맛집 검색"/>
     </form>
     <div class="icons-container">
         <div class="icon-search"></div>
@@ -24,9 +29,11 @@
     </div>
     <form id="myPosition" action="/searchPage" method="post">
         <input type="hidden" id="position" name="searchWord" value="" />
-        <input type="submit" id="myPosition" />
+        <input type="submit" id="myPosition" value="내 주변 맛집 검색"/>
     </form>
 </fieldset>
+{% endblock %}
+{% include "footer.html" %}
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=22382396d3cba032b99b1fcc9ec5b4f1&libraries=services"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
@@ -75,5 +82,5 @@
         }
     })
 </script>
-{% endblock %}
+
 
