@@ -32,13 +32,13 @@ exports.unfollow=async(req, res, next)=>{
 };
 
 exports.favorite=async(req,res,next)=>{
-    try{
-        await Favorite.create({
-            placeName:req.body.placeName,
-            userId:req.body.userId,
-        });
-    }catch(err){
-        console.error(err);
-        next(err);
-    }
+    const {placeName,roadAddressName,addressName,userId,phone}=req.body;
+    await Favorite.create({
+        placeName,
+        roadAddressName,
+        addressName,
+        phone,
+        UserId:userId,
+    });
+    res.send("success");
 }

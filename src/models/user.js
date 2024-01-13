@@ -51,6 +51,6 @@ class User extends Sequelize.Model {
         db.User.belongsToMany(db.Post,{through: "like"});
 
     };
-};
+}
 
 module.exports=User;
