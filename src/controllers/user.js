@@ -31,14 +31,32 @@ exports.unfollow=async(req, res, next)=>{
     }
 };
 
+//맛집 저장하기
 exports.favorite=async(req,res,next)=>{
-    const {placeName,roadAddressName,addressName,userId,phone}=req.body;
+    const {placeName,roadAddressName,addressName,userId,phone,lng,lat}=req.body;
     await Favorite.create({
         placeName,
         roadAddressName,
         addressName,
         phone,
+        lng,
+        lat,
         UserId:userId,
     });
     res.send("success");
 }
+
+//맛집 저장한거 불러오기
+exports.favoriteList=async(req,res,next)=>{
+    const myFavoriteList=await Favorite.findAll({where:{UserId:req.user.id}});
+    console.log(myFavoriteList);
+    res.send(myFavoriteList);
+}
+
+exports.aroundMyList=async(req,res,next)=>{
+    const Lists=await Favorite.findAll({where:{UserId:req.user.id}});
+    console.log("myFavoriteList:"+JSON.stringify(myFavoriteMap));
+    res.render("test",{
+        Lists,
+    });
+};
