@@ -15,11 +15,29 @@ router.get('/logout',isLoggedIn,logout); //로그아웃
 router.get("/unregister",isLoggedIn,unregister); //회원탈퇴
 
 router.get("/kakao",passport.authenticate("kakao")); //카카오 로그인
-// GET /auth/kakao/callback
+
 router.get('/kakao/callback', passport.authenticate('kakao', {
     failureRedirect: '/?error=카카오로그인 실패',
 }), (req, res) => {
-    res.redirect('/'); // 성공 시에는 /로 이동
+    res.redirect('/main'); // 성공 시에는 /로 이동
 });
+
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] })); //구글 로그인
+router.get(
+    '/google/callback', passport.authenticate('google', { failureRedirect: '/?error=구글 로그인 실패' }),
+    (req, res) => {
+        res.redirect('/');
+    },
+);
+
+//* 네이버로 로그인하기 라우터 ***********************
+router.get('/naver', passport.authenticate('naver', { authType: 'reprompt' })); //네이버 로그인
+
+router.get(
+    '/naver/callback', passport.authenticate('naver', { failureRedirect: '/?error=네이버 로그인 실패' }),
+    (req, res) => {
+        res.redirect('/');
+    },
+);
 
 module.exports=router;
