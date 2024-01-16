@@ -4,7 +4,7 @@ exports.sendEmail=(to, newPassword)=> {
         service: 'naver',
         auth: {
             user: 'binarycodebook@naver.com',
-            pass: 'answlrl@1'
+            pass: ''
         }
     });
 
