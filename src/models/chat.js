@@ -30,5 +30,5 @@ class Chat extends Sequelize.Model {
     static associate(db){
         db.Chat.belongsTo(db.Room);
     }
-};
+}
 module.exports=Chat;
