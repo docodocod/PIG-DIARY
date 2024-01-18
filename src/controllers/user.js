@@ -33,12 +33,13 @@ exports.unfollow=async(req, res, next)=>{
 
 //맛집 저장하기
 exports.favorite=async(req,res,next)=>{
-    const {placeName,roadAddressName,addressName,userId,phone,lng,lat}=req.body;
+    const {placeName,roadAddressName,addressName,placeUrl,userId,phone,lng,lat}=req.body;
     await Favorite.create({
         placeName,
         roadAddressName,
         addressName,
         phone,
+        placeUrl,
         lng,
         lat,
         UserId:userId,
@@ -54,9 +55,13 @@ exports.favoriteList=async(req,res,next)=>{
 }
 
 exports.aroundMyList=async(req,res,next)=>{
-    const Lists=await Favorite.findAll({where:{UserId:req.user.id}});
-    console.log("myFavoriteList:"+JSON.stringify(myFavoriteMap));
-    res.render("test",{
-        Lists,
-    });
-};
+    const data=await Favorite.findAll({where:{UserId:req.user.id}});
+    const lat=req.body.lat;
+    const lng=req.body.lng;
+    const parsingData=JSON.stringify(data);
+    res.render("myFavoriteListMap",{
+        Lists:parsingData,
+        myPosition_lat:lat,
+        myPosition_lng:lng
+    })
+}

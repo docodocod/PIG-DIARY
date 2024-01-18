@@ -29,7 +29,9 @@ exports.renderSearchPage=(req,res)=>{
 }
 
 exports.renderSearch=(req,res)=>{
-    res.render("search");
+    res.render("search",{
+        userId:req.user.id
+    });
 }
 
 exports.renderMain=async(req, res, next)=>{ //메인 페이지에서 정보 불러올 메서드
