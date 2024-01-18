@@ -52,7 +52,7 @@ exports.favoriteList=async(req,res,next)=>{
     const myFavoriteList=await Favorite.findAll({where:{UserId:req.user.id}});
     console.log(myFavoriteList);
     res.send(myFavoriteList);
-}
+};
 
 exports.aroundMyList=async(req,res,next)=>{
     const data=await Favorite.findAll({where:{UserId:req.user.id}});
@@ -62,6 +62,6 @@ exports.aroundMyList=async(req,res,next)=>{
     res.render("myFavoriteListMap",{
         Lists:parsingData,
         myPosition_lat:lat,
-        myPosition_lng:lng
-    })
-}
+        myPosition_lng:lng,
+    });
+};

@@ -1,5 +1,4 @@
 require('dotenv').config();
-const OpenAI=require('openai');
 
 async function callChatGPT(prompt) {
     const OpenAI = require("openai");
@@ -13,5 +12,5 @@ async function callChatGPT(prompt) {
         max_tokens:500,
     });
     return chatCompletion.choices[0].message.content;
-};
+}
 module.exports = { callChatGPT };
