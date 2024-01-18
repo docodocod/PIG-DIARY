@@ -15,6 +15,6 @@ router.post('/:id/favorite',isLoggedIn,favorite);
 
 router.get("/:id/favoriteList",isLoggedIn,favoriteList);
 
-router.get("/:id/aroundMyList",isLoggedIn,aroundMyList);
+router.post("/:id/aroundMyList",isLoggedIn,aroundMyList);
 
 module.exports = router;

@@ -16,8 +16,20 @@ class Favorite extends Sequelize.Model {
                 allowNull: true,
             },
             phone: {
-                type:Sequelize.STRING(50),
+                type: Sequelize.STRING(50),
+                allowNull: true,
+            },
+            placeUrl:{
+                type:Sequelize.STRING(200),
                 allowNull:true,
+            },
+            lat:{
+                type:Sequelize.FLOAT(40),
+                allowNull:false,
+            },
+            lng:{
+                type:Sequelize.FLOAT(40),
+                allowNull:false,
             },
         }, {
             sequelize,
