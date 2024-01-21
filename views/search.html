@@ -31,6 +31,11 @@
         <input type="hidden" id="position" name="searchWord" value="" />
         <input type="submit" id="myPosition" value="내 주변 맛집 검색"/>
     </form>
+    <form id="curruntPosition" action="/user/{{userId}}/aroundMyList" method="post">
+        <input type="hidden" id="lat" name="lat" value=""/>
+        <input type="hidden" id="lng" name="lng" value=""/>
+        <input type="submit" id="myAround" value="내 주변 맛집 리스트"/>
+    </form>
 </fieldset>
 {% endblock %}
 {% include "footer.html" %}
@@ -55,32 +60,59 @@
         });
     });
 
-    document.getElementById("myPosition").addEventListener("click",(e)=>{
+    document.getElementById("myPosition").addEventListener("click",(e)=> {
         e.preventDefault();
+
         function success(pos) { // 위치 정보를 가져오는데 성공했을 때 호출되는 콜백 함수 (pos : 위치 정보 객체)
-            getMyPosition(pos.coords.latitude,pos.coords.longitude);
+            getMyPosition(pos.coords.latitude, pos.coords.longitude);
         }
+
         function fail(err) { // 위치 정보를 가져오는데 실패했을 때 호출되는 콜백 함수
             alert('현위치를 찾을 수 없습니다.');
         }
-        navigator.geolocation.getCurrentPosition(success,fail);
-        function getMyPosition(lat, lng){
-            console.log(lat,lng);
+
+        navigator.geolocation.getCurrentPosition(success, fail);
+
+        function getMyPosition(lat, lng) {
+            console.log(lat, lng);
             var geocoder = new kakao.maps.services.Geocoder();
 
             var coord = new kakao.maps.LatLng(lat, lng);
-            var callback = function(result, status) {
+            var callback = function (result, status) {
                 if (status === kakao.maps.services.Status.OK) {
-                    const position=document.getElementById("position");
-                    const name=result[0].address.address_name+" 맛집";
-                    position.value=name;
+                    const position = document.getElementById("position");
+                    const name = result[0].address.address_name + " 맛집";
+                    position.value = name;
                     const myPosition = document.getElementById('myPosition');
                     myPosition.submit();
                 }
             };
             geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
         }
-    })
+    });
+
+        document.getElementById("myAround").addEventListener("click", (e) => {
+            e.preventDefault();
+
+            function success(pos) { // 위치 정보를 가져오는데 성공했을 때 호출되는 콜백 함수 (pos : 위치 정보 객체)
+                getMyPosition(pos.coords.latitude, pos.coords.longitude);
+            }
+
+            function fail(err) { // 위치 정보를 가져오는데 실패했을 때 호출되는 콜백 함수
+                alert('현위치를 찾을 수 없습니다.');
+            }
+
+            navigator.geolocation.getCurrentPosition(success, fail);
+
+            function getMyPosition(lat, lng){
+                const my_lat = $('[name=lat]').val();
+                const my_lng = $('[name=lng]').val();
+                my_lat.value=lat;
+                my_lng.value=lng;
+                const myAround=document.getElementById('curruntPosition');
+                myAround.submit();
+            }
+        });
 </script>
 
 

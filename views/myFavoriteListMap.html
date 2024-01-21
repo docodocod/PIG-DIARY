@@ -6,7 +6,6 @@
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 </head>
 <input type="hidden" value="{{userId}}" id="user-id">
-<a href="https://www.youtube.com/results?search_query='{{searchWord}}'" target="_blank">youtube로 찾아보기</a>
 <div class="map_wrap">
     <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
     <div id="menu_wrap" class="bg_white">
@@ -24,16 +23,22 @@
     </div>
 </div>
 {% endblock %}
+<footer>
 {% include "footer.html" %}
+</footer>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=22382396d3cba032b99b1fcc9ec5b4f1&libraries=services"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+    var myLists = {{Lists|safe}};
+    var currunt_lat={{myPosition_lat}};
+    var currunt_lng={{myPosition_lng}};
+
     // 마커를 담을 배열입니다
     var markers = [];
 
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div
         mapOption = {
-            center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+            center: new kakao.maps.LatLng(currunt_lat, currunt_lng), // 지도의 중심좌표
             level: 3 // 지도의 확대 레벨
         };
 
@@ -51,16 +56,8 @@
 
     // 키워드 검색을 요청하는 함수입니다
     function searchPlaces() {
-
-        const keyword=document.getElementById("keyword").value
-
-        if (!keyword.replace(/^\s+|\s+$/g, '')) {
-            alert('키워드를 입력해주세요!');
-            return false;
-        }
-
         // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
-        ps.keywordSearch( keyword, placesSearchCB);
+        ps.keywordSearch( myLists, placesSearchCB);
     }
 
     // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
@@ -86,7 +83,7 @@
 
         }
     }
-    function displayInfowindow(marker, title,places) {
+    function displayInfowindow(marker,title,places) {
         const content = '<div class="wrap">' +
             '    <div class="info">' +
             '        <div class="title">' +
@@ -98,8 +95,8 @@
             '                <img src="" width="73" height="70">' +
             '           </div>' +
             '            <div class="desc">' +
-            '                <div class="ellipsis">'+ places.road_address_name + '</div>' +
-            '                <div class="jibun ellipsis">'+places.address_name+ '</div>' +
+            '                <div class="ellipsis">'+ places.roadAddressName + '</div>' +
+            '                <div class="jibun ellipsis">'+places.addressName+ '</div>' +
             '                <div><span class="tel">'+places.phone+'</span></div>' +
             '            </div>' +
             '        </div>' +
@@ -133,7 +130,7 @@
         for ( var i=0; i<places.length; i++ ) {
 
             // 마커를 생성하고 지도에 표시합니다
-            var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
+            var placePosition = new kakao.maps.LatLng(places[i].lat, places[i].lng),
                 marker = addMarker(placePosition, i),
                 itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
 
@@ -184,14 +181,7 @@
         var el = document.createElement('li'),
             itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
                 '<div class="info">' +
-                '   <a href="'+places.place_url+'" target="_blank" ><h5>' + places.place_name + '</h5></a>'+
-                '<input type="hidden" value="'+places.place_name+'" name="place_name_'+index+'">'+
-                '<input type="hidden" value="'+places.road_address_name+'" name="road_address_name_'+index+'">'+
-                '<input type="hidden" value="'+places.address_name+'" name="address_name_'+index+'">'+
-                '<input type="hidden" value="'+places.phone+'" name="phone_'+index+'">'+
-                '<input type="hidden" value="'+places.y+'" name="lat_'+index+'">'+
-                '<input type="hidden" value="'+places.x+'" name="lng_'+index+'">'+
-                '<input type="hidden" value="'+places.place_url+'" name="place_url_'+index+'">'
+                '   <a href="'+places.place_url+'" target="_blank" ><h5>' + places.place_name + '</h5></a>';
         if (places.road_address_name) {
             itemStr += '    <span>' + places.road_address_name + '</span>' +
                 '   <span class="jibun gray">' +  places.address_name  + '</span>';
@@ -199,7 +189,6 @@
             itemStr += '    <span>' +  places.address_name  + '</span>';
         }
         itemStr += '  <span class="tel">' + places.phone  + '</span>' +
-            '<input type="button" id="submit" value="리스트 추가하기" onclick="onsubmitFavorite('+index+')">'+
             '</div>';
 
         el.innerHTML = itemStr;
@@ -277,32 +266,5 @@
         while (el.hasChildNodes()) {
             el.removeChild (el.lastChild);
         }
-    }
-
-    function onsubmitFavorite(idx){
-        var userId=document.getElementById("user-id").value;
-        var placeName = $('[name=place_name_'+idx+']').val();
-        var roadAddressName= $('[name=road_address_name_'+idx+']').val();
-        var addressName = $('[name=address_name_'+idx+']').val();
-        var phone= $('[name=phone_'+idx+']').val();
-        var lat= $('[name=lat_'+idx+']').val();
-        var lng= $('[name=lng_'+idx+']').val();
-        var placeUrl = $('[name=place_url_'+idx+']').val();
-        axios.post(`/user/${userId}/favorite`,{
-            placeName:placeName,
-            roadAddressName:roadAddressName,
-            addressName:addressName,
-            phone:phone,
-            lat:lat,
-            lng:lng,
-            placeUrl:placeUrl,
-            userId:userId,
-        })
-            .then(()=>{
-                console.log("save complete");
-            })
-            .catch((err)=>{
-                console.error(err);
-            });
     }
 </script>
