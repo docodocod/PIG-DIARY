@@ -29,7 +29,7 @@
     </div>
     <form id="myPosition" action="/searchPage" method="post">
         <input type="hidden" id="position" name="searchWord" value="" />
-        <input type="submit" id="myPosition" value="내 주변 맛집 검색"/>
+        <input type="submit" id="myPosition_submit" value="내 주변 맛집 검색"/>
     </form>
     <form id="curruntPosition" action="/user/{{userId}}/aroundMyList" method="post">
         <input type="hidden" id="lat" name="lat" value=""/>
@@ -91,7 +91,7 @@
         }
     });
 
-        document.getElementById("myAround").addEventListener("click", (e) => {
+        document.getElementById("curruntPosition").addEventListener("click", (e) => {
             e.preventDefault();
 
             function success(pos) { // 위치 정보를 가져오는데 성공했을 때 호출되는 콜백 함수 (pos : 위치 정보 객체)
@@ -105,10 +105,8 @@
             navigator.geolocation.getCurrentPosition(success, fail);
 
             function getMyPosition(lat, lng){
-                const my_lat = $('[name=lat]').val();
-                const my_lng = $('[name=lng]').val();
-                my_lat.value=lat;
-                my_lng.value=lng;
+                $('input[name=lat]').attr('value',lat);
+                $('input[name=lng]').attr('value',lng);
                 const myAround=document.getElementById('curruntPosition');
                 myAround.submit();
             }
