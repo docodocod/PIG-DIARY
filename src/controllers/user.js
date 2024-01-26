@@ -57,7 +57,9 @@ exports.favoriteList=async(req,res,next)=>{
 exports.aroundMyList=async(req,res,next)=>{
     const data=await Favorite.findAll({where:{UserId:req.user.id}});
     const lat=req.body.lat;
+    console.log("server_lat:"+lat);
     const lng=req.body.lng;
+    console.log("server_lng:"+lng);
     const parsingData=JSON.stringify(data);
     res.render("myFavoriteListMap",{
         Lists:parsingData,
