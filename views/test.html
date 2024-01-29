@@ -1,0 +1,20 @@
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<script>
+    // Accessing the 'Lists' array in JavaScript
+    const myLists = {{Lists|safe}};
+
+    console.log("myLists:"+myLists);
+
+    // You can iterate through the array and perform other JavaScript operations
+    for (var i = 0; i < myLists.length; i++) {
+        console.log(myLists[i].lat);
+    }
+</script>
+{% endblock %}
