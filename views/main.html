@@ -1,10 +1,12 @@
-{% extends 'layout.html' %}
 <head>
     <title>main</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/main.css">
 </head>
 {% block content %}
+<header>
+    {% include 'header.html' %}
+</header>
 <div class="timeline">
     {% if user %}
     <div>

@@ -36,21 +36,27 @@
     const lng={{myPosition_lng}};
     console.log(lng);
     // 마커를 담을 배열입니다
+
     var markers = [];
 
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div
         mapOption = {
             center: new kakao.maps.LatLng(lat,lng), // 지도의 중심좌표
-            level: 2 // 지도의 확대 레벨
+            level: 3 // 지도의 확대 레벨
         };
 
-    // 지도를 생성합니다
+        // 지도를 생성합니다
     var map = new kakao.maps.Map(mapContainer, mapOption);
 
     // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
     var infowindow = new kakao.maps.InfoWindow({zIndex:1});
+    let data=[];
 
-    displayPlaces(myLists);
+    for ( var i=0; i<myLists.length; i++ ){
+        if(calculateDistance(lat,lng,myLists[i].lat,myLists[i].lng)==true){
+        data+=result;
+    }
+    displayPlaces(data);
 
     function displayInfowindow(marker,title,places) {
         const content = '<div class="wrap">' +
@@ -79,6 +85,19 @@
     function closeOverlay() {
         infowindow.close();
     }
+    function calculateDistance(lat1, lng1, lat2, lng2) {
+        const R = 6371; // 지구의 반지름 (단위: km)
+        const dLat = (lat2 - lat1) * (Math.PI / 180);
+        const dLng = (lng2 - lng1) * (Math.PI / 180);
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+            Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = R * c; // 거리 계산 결과 (단위: km)
+
+        return distance;
+    }
 
 
     // 검색 결과 목록과 마커를 표출하는 함수입니다
@@ -99,43 +118,47 @@
         // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
 
         for ( var i=0; i<places.length; i++ ) {
-            // 마커를 생성하고 지도에 표시합니다
-            var placePosition = new kakao.maps.LatLng(places[i].lat, places[i].lng),
-                marker = addMarker(placePosition, i),
-                itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
+            let myDistance=calculateDistance(lat,lng,places[i].lat,places[i].lng);
+            console.log(myDistance);
+            if(myDistance<=2) {
+                // 마커를 생성하고 지도에 표시합니다
+                var placePosition = new kakao.maps.LatLng(places[i].lat, places[i].lng),
+                    marker = addMarker(placePosition, i),
+                    itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
 
 
-            // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-            // LatLngBounds 객체에 좌표를 추가합니다
-            bounds.extend(placePosition);
+                // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+                // LatLngBounds 객체에 좌표를 추가합니다
+                bounds.extend(placePosition);
 
-            // 마커와 검색결과 항목에 mouseover 했을때
-            // 해당 장소에 인포윈도우에 장소명을 표시합니다
-            // mouseout 했을 때는 인포윈도우를 닫습니다
-            (function(marker, title, place) {
-                kakao.maps.event.addListener(marker, 'mouseover', function() {
-                    displayInfowindow(marker, title, place);
-                });
+                // 마커와 검색결과 항목에 mouseover 했을때
+                // 해당 장소에 인포윈도우에 장소명을 표시합니다
+                // mouseout 했을 때는 인포윈도우를 닫습니다
+                (function (marker, title, place) {
+                    kakao.maps.event.addListener(marker, 'mouseover', function () {
+                        displayInfowindow(marker, title, place);
+                    });
 
-                kakao.maps.event.addListener(marker, 'mouseout', function() {
-                    infowindow.close();
-                });
+                    kakao.maps.event.addListener(marker, 'mouseout', function () {
+                        infowindow.close();
+                    });
 
-                kakao.maps.event.addListener(marker, 'click', function() {
-                    displayInfowindow(marker, title, place);
-                });
+                    kakao.maps.event.addListener(marker, 'click', function () {
+                        displayInfowindow(marker, title, place);
+                    });
 
-                itemEl.onmouseover =  function () {
-                    displayInfowindow(marker, title, place);
-                };
+                    itemEl.onmouseover = function () {
+                        displayInfowindow(marker, title, place);
+                    };
 
-                itemEl.onmouseout =  function () {
-                    infowindow.close();
-                };
+                    itemEl.onmouseout = function () {
+                        infowindow.close();
+                    };
 
-            })(marker, places[i].placeName, places[i]);
+                })(marker, places[i].placeName, places[i]);
 
-            fragment.appendChild(itemEl);
+                fragment.appendChild(itemEl);
+            }
         }
 
         // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
@@ -198,7 +221,7 @@
     }
 
     // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
-    function displayPagination(pagination) {
+    /*function displayPagination(pagination) {
         var paginationEl = document.getElementById('pagination'),
             fragment = document.createDocumentFragment(),
             i;
@@ -226,7 +249,7 @@
             fragment.appendChild(el);
         }
         paginationEl.appendChild(fragment);
-    }
+    }*/
 
     // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
     // 인포윈도우에 장소명을 표시합니다
