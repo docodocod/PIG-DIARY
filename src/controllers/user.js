@@ -1,6 +1,19 @@
 const User=require("../models/user.js");
 const Favorite=require("../models/favorite.js");
 
+exports.myProfileImg=(req, res)=>{ //이미지 업로드
+    console.log(req.file);
+    res.json({ myImg: `/img/${req.file.filename}` });
+};
+
+exports.myProfileImgEdit=async(req,res)=>{
+    const editMyImg=req.body.myImg;
+    console.log(req.file);
+    await User.update({myImg:editMyImg},{where:{id:req.user.id}});
+    console.log("프로필 이미지 수정 완료");
+    res.direct("/");
+}
+
 exports.follow=async(req, res, next)=>{
     try {
         const user = await User.findOne({ where: { id: req.user.id } });
