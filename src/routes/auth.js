@@ -1,7 +1,9 @@
 const express=require("express");
 const passport=require("passport");
 const {isLoggedIn,isNotLoggedIn}=require("../middlewares/index.js");
-const {join,login,logout,loginTest,unregister,passwordFind,passwordInit}=require("../controllers/auth.js");
+const {
+    join,login,logout,loginTest,unregister,passwordFind,passwordInit,passwordEdit
+}=require("../controllers/auth.js");
 const router=express.Router();
 
 
@@ -37,6 +39,8 @@ router.post("/findPassword",passwordFind);
 //비밀번호 재설정
 router.post("/passwordInit",passwordInit);
 
+//비밀번호 수정
+router.post("/passwordEdit",isLoggedIn,passwordEdit);
 
 router.get('/kakao/callback', passport.authenticate('kakao', {
     failureRedirect: '/?error=카카오로그인 실패',

@@ -8,26 +8,6 @@ const {sendEmail}=require('../utils/emailSender');
 const {pbkdf2}=require("../utils/encrypt");
 dotenv.config();
 
-//회원가입
-exports.join=async(req,res,next)=>{
-    const {email,nick,password}=req.body;
-    try {
-        const exUser = await User.findOne({where: {email}});
-        if (exUser) {
-            return res.redirect("/join?error=아이디가 존재 합니다");
-        }
-        const hashedPassword = pbkdf2(password);
-        await User.create({
-            email,
-            nick,
-            password: hashedPassword,
-        });
-        res.redirect("/");
-    }catch(error){
-        console.error(error);
-        return next(error);
-    }
-};
 
 //로그인
 exports.login = (req, res, next) => {
@@ -49,11 +29,26 @@ exports.login = (req, res, next) => {
     })(req, res, next);
 };
 
-//회원탈퇴
-exports.unregister=async (req,res,next)=>{
-    await User.destroy({where:{id:req.user.id}});
-    res.redirect('/');
-}
+//회원가입
+exports.join=async(req,res,next)=>{
+    const {email,nick,password}=req.body;
+    try {
+        const exUser = await User.findOne({where: {email}});
+        if (exUser) {
+            return res.redirect("/join?error=아이디가 존재 합니다");
+        }
+        const hashedPassword = pbkdf2(password);
+        await User.create({
+            email,
+            nick,
+            password: hashedPassword,
+        });
+        res.redirect("/");
+    }catch(error){
+        console.error(error);
+        return next(error);
+    }
+};
 
 //비밀번호 찾기
 exports.passwordFind=async(req,res)=> {
@@ -93,3 +88,34 @@ exports.logout = (req, res) => {
         res.redirect('/');
     });
 };
+
+//닉네임 수정
+exports.nickEdit=async(req,res)=>{
+    const userId=req.user.id;
+    const newNick=req.body.nick;
+    await User.update({nick:newNick},{where:{id:userId}});
+    console.log("닉네임 수정완료");
+    res.redirect("/");
+}
+
+//비밀번호 수정
+exports.passwordEdit=async(req,res)=>{
+    const userId=req.user.id;
+    const newPassword=req.body.password;
+    const hashedPassword=pbkdf2(newPassword);
+    await User.update({password:hashedPassword},{where:{id:userId}});
+    console.log("비밀번호 수정 성공");
+    res.redirect("/");
+}
+
+//회원탈퇴
+exports.unregister=async (req,res,next)=>{
+    await User.destroy({where:{id:req.user.id}});
+    res.redirect('/');
+}
+
+
+
+
+
+
