@@ -2,6 +2,10 @@ const Sequelize=require("sequelize");
 class Post extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
+            title:{
+                type:Sequelize.STRING(140),
+                allowNull:false,
+            },
             content: {
                 type: Sequelize.STRING(140),
                 allowNull: false,
@@ -21,12 +25,11 @@ class Post extends Sequelize.Model {
             collate: 'utf8mb4_general_ci',
         });
     }
-
     static associate(db) {
+        db.Post.hasMany(db.Comment);
         db.Post.belongsTo(db.User);
         db.Post.belongsToMany(db.Hashtag, {through: 'PostHashtag'});
         db.Post.belongsToMany(db.User,{through: "Like", as: "Liker"});
     }
 }
-
 module.exports=Post;

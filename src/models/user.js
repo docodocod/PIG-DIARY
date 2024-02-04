@@ -16,12 +16,12 @@ class User extends Sequelize.Model {
                 allowNull: true,
             },
             provider: {
-                type: Sequelize.ENUM('local', 'kakao'),
+                type: Sequelize.STRING(30),
                 allowNull: false,
                 defaultValue: 'local',
             },
             snsId: {
-                type: Sequelize.STRING(30),
+                type: Sequelize.STRING(100),
                 allowNull: true,
             },
         }, {
