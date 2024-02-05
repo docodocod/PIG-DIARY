@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { afterUploadImage, uploadPost,postDelete,like,unlike } = require('../controllers/post');
+const { afterUploadImage, uploadPost,postDelete,like,unlike,postReply} = require('../controllers/post');
 const { isLoggedIn } = require('../middlewares');
 
 const router = express.Router();
@@ -39,5 +39,7 @@ router.post('/:id/like',isLoggedIn,like);
 router.delete('/:id/unlike',isLoggedIn,unlike);
 
 router.delete('/:id/delete',isLoggedIn,postDelete);
+
+router.post('/:id/reply',isLoggedIn,postReply);
 
 module.exports = router;

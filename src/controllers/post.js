@@ -1,6 +1,7 @@
 const Post=require("../models/post.js");
 const Hashtag =require("../models/hashtag.js");
 const User = require("../models/user");
+const Comment=require('../models/comment');
 
 
 //게시글 업로드
@@ -54,6 +55,19 @@ exports.postDelete=async(req,res,next)=>{ //게시글 삭제
     res.send("success");
 }
 
+//댓글 달기
+exports.postReply=async(req,res,next)=>{
+    const postId=req.params.id;
+    const userId=req.user.id;
+    const comment=req.body.comment;
+    await Comment.create({
+        postId:postId,
+        writer:userId,
+        comment:comment,
+    })
+    res.redirect('/');
+}
+
 //게시글 좋아요
 exports.like=async(req,res,next)=>{ //좋아요 기능
     try {
@@ -68,7 +82,7 @@ exports.like=async(req,res,next)=>{ //좋아요 기능
         console.error(error);
         next(error);
     }
-}
+};
 
 //게시글 좋아요 취소
 exports.unlike=async(req,res,next)=>{ //좋아요 해제 기능

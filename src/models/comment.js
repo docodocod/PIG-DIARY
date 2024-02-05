@@ -2,6 +2,10 @@ const Sequelize=require("sequelize");
 class Comment extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
+            writer:{
+                type:Sequelize.STRING(50),
+                allowNull:false,
+            },
             comment: {
                 type: Sequelize.STRING(140),
                 allowNull: false,
