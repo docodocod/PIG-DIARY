@@ -7,7 +7,7 @@
 <header>
     {% include 'header.html' %}
 </header>
-<div class="timeline">
+<!--<div class="timeline">
     {% if user %}
     <div>
         <form id="twit-form" action="/post" method="post" enctype="multipart/form-data">
@@ -34,8 +34,6 @@
         {% for twit in twits %}
         {% set Likers = [] %}
         <div class="twit">
-            <input type="hidden" value="{{twit.User.id}}" class="twit-user-id">
-            <input type="hidden" value="{{twit.id}}" class="twit-id">
             <div class="twit-author">{{twit.User.nick}}</div>
             {% if not followingIdList.includes(twit.User.id) and twit.User.id !== user.id %}
             <button class="twit-follow">팔로우하기</button>
@@ -63,13 +61,82 @@
         </div>
         {% endfor %}
     </div>
+</div>-->
+{% for twit in twits %}
+<input type="hidden" value="{{twit.User.id}}" class="twit-user-id">
+<input type="hidden" value="{{twit.id}}" class="twit-id">
+<div class="feed">
+    <div class="main-image">
+        <img src="{{twit.img}}"
+             alt="" class="mainPic">
+    </div>
+    <div class="icons-react">
+        <div class="icons-left">
+            <button class="like_button" onclick="saveLike('${feed_idx}')">
+                <img class="icon-react" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png"
+                     alt="좋아요">
+            </button>
+            <img class="icon-react"
+                 src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/comment.png" alt="말풍선">
+            <!--                        <img class="icon-react" src="../static/img/dm.png" alt="DM">-->
+        </div>
+        <img class="icon-react"
+             src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/bookmark.png" alt="북마크">
+    </div>
+    <!-- article text data -->
+    <div class="reaction">
+        <div class="liked-people">
+            <p><span class="like_size">좋아요</span> <span class="point-span">${like_count}개</span></p>
+        </div>
+        <div class="description">
+            <div><span class="point-span userID">{{twit.userid}</span><span class="mycontent${i}">${content}</span></div>
+        </div>
+        <div class="comment-section">
+            <div class="comments" id="commentappend${i}">
+
+            </div>
+            <div class="time-log">
+                <span>${timeForToday(created_at)}</span>
+            </div>
+        </div>
+    </div>
+    <div class="hl"></div>
+    <div class="comment">
+        <input id="input-comment${i}" class="input-comment" type="text" placeholder="댓글 달기...">
+        <button type="submit" class="submit-comment" onclick="saveComment('${i}', '${feed_idx}')">게시</button>
+    </div>
+    `
+    <div class="modal fade" id="exampleModal${i + 10000}" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="list-group">
+                    <button type="button" class="list-group-item list-group-item-action active" aria-current="true"
+                            onclick="police()">
+                        신고하기
+                    </button>
+                    <button type="button" class="list-group-item list-group-item-action"
+                            onclick="repost('${feed_idx}')">리포스트
+                    </button>
+                    <button type="button" class="list-group-item list-group-item-action" onclick="follow('${user_id}')">
+                        팔로우 / 팔로우 취소
+                    </button>
+                    <button type="button" class="list-group-item list-group-item-action"
+                            onclick="removefeed('${feed_idx}', '${user_id}')">게시물 삭제
+                    </button>
+                    <button type="button" class="list-group-item list-group-item-action" data-bs-dismiss="modal">취소
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 {% block script %}
 <script>
     //이미지 첨부 기능 script
     if (document.getElementById('img')) {
-        document.getElementById('img').addEventListener('change', function(e) {
+        document.getElementById('img').addEventListener('change', function (e) {
             const formData = new FormData();
             console.log(this, this.files);
             formData.append('img', this.files[0]);
@@ -85,8 +152,8 @@
         });
     }
     //팔로우 기능 script
-    document.querySelectorAll('.twit-follow').forEach(function(tag) {
-        tag.addEventListener('click', function() {
+    document.querySelectorAll('.twit-follow').forEach(function (tag) {
+        tag.addEventListener('click', function () {
             const myId = document.querySelector('#my-id');
             if (myId) {
                 const userId = tag.parentNode.querySelector('.twit-user-id').value;
@@ -106,8 +173,8 @@
     });
 
     //팔로우 끊기 기능 script
-    document.querySelectorAll('.twit-unfollow').forEach(function(tag) {
-        tag.addEventListener('click', function() {
+    document.querySelectorAll('.twit-unfollow').forEach(function (tag) {
+        tag.addEventListener('click', function () {
             const myId = document.querySelector('#my-id');
             if (myId) {
                 const userId = tag.parentNode.querySelector('.twit-user-id').value;
@@ -126,63 +193,63 @@
         });
     });
     //게시글 삭제 script
-    document.querySelectorAll('.twit-delete').forEach(function(tag) {
+    document.querySelectorAll('.twit-delete').forEach(function (tag) {
         tag.addEventListener('click', function () {
             const postId = tag.parentNode.querySelector('.twit-id').value;
             if (confirm("게시글을 삭제하시겠습니까?")) {
                 axios.delete(`/post/${postId}/delete`)
-                    .then(()=> {
+                    .then(() => {
                         console.log("게시글 삭제 성공");
                         location.reload();
                     })
-                    .catch((err)=>{
+                    .catch((err) => {
                         console.log(err);
                     });
             }
         });
     });
 
-    document.querySelectorAll('.twit-like').forEach(function(tag) {
-        tag.addEventListener('click', function() {
+    document.querySelectorAll('.twit-like').forEach(function (tag) {
+        tag.addEventListener('click', function () {
             const myId = document.querySelector('#my-id');
             if (myId) {
                 const postId = tag.parentNode.querySelector('.twit-id').value;
-                console.log("postID"+postId);
-                    axios.post(`/post/${postId}/like`)
-                        .then(() => {
-                            location.reload();
-                        })
-                        .catch((err) => {
-                            console.error(err);
-                        });
-                }
-            });
+                console.log("postID" + postId);
+                axios.post(`/post/${postId}/like`)
+                    .then(() => {
+                        location.reload();
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    });
+            }
+        });
     });
 
-    document.querySelectorAll('.twit-unlike').forEach(function(tag) {
-        tag.addEventListener('click', function() {
+    document.querySelectorAll('.twit-unlike').forEach(function (tag) {
+        tag.addEventListener('click', function () {
             const myId = document.querySelector('#my-id');
             if (myId) {
                 const postId = tag.parentNode.querySelector('.twit-id').value;
                 console.log(postId);
-                    axios.delete(`/post/${postId}/unlike`)
-                        .then(() => {
-                            location.reload();
-                        })
-                        .catch((err) => {
-                            console.error(err);
-                        });
-                }
-            });
+                axios.delete(`/post/${postId}/unlike`)
+                    .then(() => {
+                        location.reload();
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    });
+            }
+        });
     });
 
-    document.querySelectorAll('.twit-chat').forEach(function(tag){
-        tag.addEventListener("click",()=>{
-            const myId=document.querySelector('#my-id');
-            if (myId){
-                const opponentId=tag.parentNode.querySelector('.twit-user-id').value;
+    document.querySelectorAll('.twit-chat').forEach(function (tag) {
+        tag.addEventListener("click", () => {
+            const myId = document.querySelector('#my-id');
+            if (myId) {
+                const opponentId = tag.parentNode.querySelector('.twit-user-id').value;
                 console.log(opponentId);
-                    axios.post('/room/create',{opponentId:opponentId})
+                axios.post('/room/create', {opponentId: opponentId})
             }
         })
     });
@@ -196,6 +263,7 @@
     function fail(err) { // 위치 정보를 가져오는데 실패했을 때 호출되는 콜백 함수
         alert('현위치를 찾을 수 없습니다.');
     }
+
     navigator.geolocation.getCurrentPosition(success, fail);
 </script>
 {% endblock %}
