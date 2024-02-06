@@ -28,10 +28,11 @@ const upload = multer({
 });
 
 // POST /post/img
-router.post('/img', isLoggedIn, upload.single('img'), afterUploadImage);
+router.post('/img', isLoggedIn, upload.array('images',10), afterUploadImage);
 
 // POST /post
 const upload2 = multer();
+
 router.post('/', isLoggedIn, upload2.none(), uploadPost);
 
 router.post('/:id/like',isLoggedIn,like);
