@@ -1,11 +1,11 @@
-const User=require("../models/user.js");
-const crypto=require('crypto');
-const dotenv=require('dotenv');
-const passport=require('passport');
-const jwt=require("jsonwebtoken");
-const nodeMailer=require("nodemailer");
-const {sendEmail}=require('../utils/emailSender');
-const {pbkdf2}=require("../utils/encrypt");
+const User = require("../models/user.js");
+const crypto = require('crypto');
+const dotenv = require('dotenv');
+const passport = require('passport');
+const jwt = require("jsonwebtoken");
+const nodeMailer = require("nodemailer");
+const {sendEmail} = require('../utils/emailSender');
+const {pbkdf2} = require("../utils/encrypt");
 dotenv.config();
 
 
@@ -30,12 +30,17 @@ exports.login = (req, res, next) => {
 };
 
 //회원가입
-exports.join=async(req,res,next)=>{
-    const {email,nick,password}=req.body;
+exports.join = async (req, res, next) => {
+    const {email, nick, password} = req.body;
     try {
         const exUser = await User.findOne({where: {email}});
         if (exUser) {
-            return res.redirect("/join?error=아이디가 존재 합니다");
+            return res.status(400).send(
+                `<script>
+                    alert("아이디가 이미 존재합니다.");
+                    window.location.href = '/';
+                 </script>
+          `);
         }
         const hashedPassword = pbkdf2(password);
         await User.create({
@@ -44,14 +49,14 @@ exports.join=async(req,res,next)=>{
             password: hashedPassword,
         });
         res.redirect("/");
-    }catch(error){
+    } catch (error) {
         console.error(error);
         return next(error);
     }
 };
 
 //비밀번호 찾기
-exports.passwordFind=async(req,res)=> {
+exports.passwordFind = async (req, res) => {
     const userEmail = req.body.email;
 
     // 이메일이 데이터베이스에 있는지 확인
@@ -61,11 +66,11 @@ exports.passwordFind=async(req,res)=> {
         return res.status(404).send('해당 이메일로 가입된 사용자를 찾을 수 없습니다.');
     }
     const newPassword = Math.random().toString(36).slice(-8);
-    const hashedPassword=pbkdf2(newPassword);
+    const hashedPassword = pbkdf2(newPassword);
     try {
         await User.update({password: hashedPassword}, {where: {email: userEmail}});
         console.log("비밀번호 업데이트 성공");
-    }catch(err){
+    } catch (err) {
         console.log(err);
     }
     // 비밀번호를 업데이트하고 이메일로 전송
@@ -74,11 +79,11 @@ exports.passwordFind=async(req,res)=> {
 }
 
 //비밀번호 초기화
-exports.passwordInit=async(req,res)=>{
-    const userId=req.body.id;
-    const password=req.body.password;
-    const newPassword=pbkdf2(password);
-    await User.update({password:newPassword},{where:{id:userId}});
+exports.passwordInit = async (req, res) => {
+    const userId = req.body.id;
+    const password = req.body.password;
+    const newPassword = pbkdf2(password);
+    await User.update({password: newPassword}, {where: {id: userId}});
     res.redirect("/");
 }
 
@@ -90,27 +95,27 @@ exports.logout = (req, res) => {
 };
 
 //닉네임 수정
-exports.nickEdit=async(req,res)=>{
-    const userId=req.user.id;
-    const newNick=req.body.nick;
-    await User.update({nick:newNick},{where:{id:userId}});
+exports.nickEdit = async (req, res) => {
+    const userId = req.user.id;
+    const newNick = req.body.nick;
+    await User.update({nick: newNick}, {where: {id: userId}});
     console.log("닉네임 수정완료");
     res.redirect("/");
 }
 
 //비밀번호 수정
-exports.passwordEdit=async(req,res)=>{
-    const userId=req.user.id;
-    const newPassword=req.body.password;
-    const hashedPassword=pbkdf2(newPassword);
-    await User.update({password:hashedPassword},{where:{id:userId}});
+exports.passwordEdit = async (req, res) => {
+    const userId = req.user.id;
+    const newPassword = req.body.password;
+    const hashedPassword = pbkdf2(newPassword);
+    await User.update({password: hashedPassword}, {where: {id: userId}});
     console.log("비밀번호 수정 성공");
     res.redirect("/");
 }
 
 //회원탈퇴
-exports.unregister=async (req,res,next)=>{
-    await User.destroy({where:{id:req.user.id}});
+exports.unregister = async (req, res, next) => {
+    await User.destroy({where: {id: req.user.id}});
     res.redirect('/');
 }
 

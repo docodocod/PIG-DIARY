@@ -2,61 +2,65 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/login.css">
-    <title>Document</title>
+    <title>PIG DIARY</title>
 </head>
 <div class="wrapper">
     <div class="container">
         <div class="sign-up-container">
             <form id="joinForm" action="/auth/join" method="post">
-                <h1>Create Account</h1>
+                <h4>간편 회원가입</h4>
                 <div class="social-links">
                     <div>
-                        <a href="/auth/kakao"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                        <a href="/auth/google"><i class="fa fa-google-area" aria-hidden="true">G</i></a>
                     </div>
                     <div>
-                        <a href="/auth/kakao"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                        <a href="/auth/naver"><i class="fa fa-naver-area" aria-hidden="true">N</i></a>
                     </div>
                     <div>
-                        <a href="/auth/kakao"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                        <a href="/auth/kakao"><i class="fa fa-kakao-area" aria-hidden="true">K</i></a>
                     </div>
                 </div>
-                <span>or use your email for registration</span>
-                <input type="text" name="nick" placeholder="NickName">
-                <input type="email" name="email" placeholder="Email">
-                <input type="password" name="password" placeholder="Password">
-                <button class="form_btn">Sign Up</button>
+                <span></span>
+                <input type="text" name="nick" placeholder="닉네임">
+                <input type="email" name="email" placeholder="이메일">
+                <input type="password" name="password" placeholder="비밀번호">
+                <button class="form_btn">회원가입</button>
             </form>
         </div>
         <div class="sign-in-container">
             <form id="loginForm" action="/auth/login" method="post">
-                <h1>Sign In</h1>
+                <h4>간편 로그인</h4>
                 <div class="social-links">
                     <div>
-                        <a href="/auth/kakao"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                        <a href="/auth/google"><i class="fa fa-google-area" aria-hidden="true">G</i></a>
                     </div>
                     <div>
-                        <a href="/auth/kakao"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                        <a href="/auth/naver"><i class="fa fa-naver-area" aria-hidden="true">N</i></a>
                     </div>
                     <div>
-                        <a href="/auth/kakao"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                        <a href="/auth/kakao"><i class="fa fa-kakao-area" aria-hidden="true">K</i></a>
                     </div>
                 </div>
-                <span>or use your account</span>
-                <input type="email" id="email" name="email" placeholder="Email">
-                <input type="password" id="password" name="password" placeholder="Password">
-                <button class="form_btn">Sign In</button>
+                <span></span>
+                <input type="email" id="email" name="email" placeholder="이메일">
+                <input type="password" id="password" name="password" placeholder="비밀번호">
+                <button class="form_btn">로그인</button>
             </form>
         </div>
         <div class="overlay-container">
             <div class="overlay-left">
-                <h1>Welcome Back</h1>
-                <p>To keep connected with us please login with your personal info</p>
-                <button id="signIn" class="overlay_btn">Sign In</button>
+                <div class="logo">
+                    <span class="logo-text">PIG DIARY</span>
+                </div>
+                <p>지금 바로 로그인 해보세요.</p>
+                <button id="signIn" class="overlay_btn">로그인</button>
             </div>
             <div class="overlay-right">
-                <h1>Hello, Friend</h1>
-                <p>Enter your personal details and start journey with us</p>
-                <button id="signUp" class="overlay_btn">Sign Up</button>
+                <div class="logo">
+                    <span class="logo-text">PIG DIARY</span>
+                </div>
+                <p style="text-align:center">지금 바로 간편하게 <br>회원가입을 진행해보세요.</p>
+                <button id="signUp" class="overlay_btn">회원가입</button>
             </div>
         </div>
     </div>
