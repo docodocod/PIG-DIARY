@@ -2,18 +2,12 @@ const Sequelize=require("sequelize");
 class Room extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
-            id:{
-                type:Sequelize.INTEGER(200),
-                allowNull:false,
-                primaryKey:true,
-                autoIncrement:true,
-            },
-            opponent: {
+            opponent: { //상대방
                 type: Sequelize.STRING(200),
                 allowNull:false,
             },
-            owner: {
-                type: Sequelize.STRING(50),
+            owner: { //사용자
+                type: Sequelize.INTEGER(),
                 allowNull:false,
             },
         }, {
