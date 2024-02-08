@@ -34,7 +34,7 @@
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div
         mapOption = {
             center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
-            level: 3 // 지도의 확대 레벨
+            level: 4 // 지도의 확대 레벨
         };
 
     // 지도를 생성합니다
@@ -199,12 +199,11 @@
             itemStr += '    <span>' +  places.address_name  + '</span>';
         }
         itemStr += '  <span class="tel">' + places.phone  + '</span>' +
-            '<input type="button" id="submit" value="리스트 추가하기" onclick="onsubmitFavorite('+index+')">'+
+            '<span></span>'+
+            '<input type="button" class="custom-btn btn-2" value="리스트 추가하기" onclick="onsubmitFavorite('+index+')">'+
             '</div>';
-
         el.innerHTML = itemStr;
         el.className = 'item';
-
         return el;
     }
 
@@ -300,6 +299,7 @@
         })
             .then(()=>{
                 console.log("save complete");
+                alert("추가 되었습니다.");
             })
             .catch((err)=>{
                 console.error(err);
