@@ -6,61 +6,41 @@
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <!--    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
 </head>
-<!--<div class="bg">
-    <video class="video" muted autoplay loop>
-        <source src="/video/coffee.mp4" type="video/mp4">
-    </video>
-</div>-->
-<div class="title-container">
-    <h1 class="title">검색해주세요.</h1>
-    <h1 class="title-down">찾아볼까요?</h1>
-</div>
-<fieldset class="field-container">
-    <form id="search" action="/searchPage" method="post">
-        <input type="text" name="searchWord" placeholder="Search..." class="field" />
-        <input type="submit" value="맛집 검색"/>
-    </form>
-    <div class="icons-container">
-        <div class="icon-search"></div>
-        <div class="icon-close">
-            <div class="x-up"></div>
-            <div class="x-down"></div>
-        </div>
-    </div>
-    <form id="myPosition" action="/searchPage" method="post">
-        <input type="hidden" id="position" name="searchWord" value="" />
-        <input type="submit" id="myPosition_submit" value="내 주변 맛집 검색"/>
-    </form>
+<div class="container">
     <form id="curruntPosition" action="/user/{{userId}}/aroundMyList" method="post">
         <input type="hidden" id="lat" name="lat" value=""/>
         <input type="hidden" id="lng" name="lng" value=""/>
-        <input type="submit" id="myAround" value="내 주변 맛집 리스트"/>
+        <a id="curruntPosition_btn" class="button" >내 주변 맛집 리스트</a>
     </form>
-</fieldset>
+</div>
+<div class="container">
+    <form id="search" action="/searchPage" method="post">
+        <div class="search-container">
+        <input type="text" name="searchWord" placeholder="Search..." class="field" />
+        <a id="search_btn" class="button" >맛집 찾아보기</a>
+        </div>
+    </form>
+</div>
+<div class="container">
+    <form id="myPosition" action="/searchPage" method="post">
+        <input type="hidden" id="position" name="searchWord" value="" />
+        <a id="myPosition_btn" class="button">내 주변 맛집 찾기</a>
+    </form>
+</div>
+
+
+
 {% endblock %}
 {% include "footer.html" %}
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=22382396d3cba032b99b1fcc9ec5b4f1&libraries=services"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
-    const field=$('.field');
-    $(document).on("ready", function () {
-        field.on("focus", function () {
-            $("body").addClass("is-focus");
-        });
-
-        field.on("blur", function () {
-            $("body").removeClass("is-focus is-type");
-        });
-
-        field.on("keydown", function (event) {
-            $('body').addClass("is-type");
-            if (event.which === 8 && $(this).val() === "") {
-                $("body").removeClass("is-type");
-            }
-        });
+    document.getElementById("search_btn").addEventListener("click",()=>{
+       const search=$("#search");
+       search.submit();
     });
 
-    document.getElementById("myPosition").addEventListener("click",(e)=> {
+    document.getElementById("myPosition_btn").addEventListener("click",(e)=> {
         e.preventDefault();
 
         function success(pos) { // 위치 정보를 가져오는데 성공했을 때 호출되는 콜백 함수 (pos : 위치 정보 객체)
@@ -91,9 +71,8 @@
         }
     });
 
-        document.getElementById("curruntPosition").addEventListener("click", (e) => {
-            e.preventDefault();
-
+        document.getElementById("curruntPosition_btn").addEventListener("click", (e) => {
+            const curruntPosition=$("#curruntPosition");
             function success(pos) { // 위치 정보를 가져오는데 성공했을 때 호출되는 콜백 함수 (pos : 위치 정보 객체)
                 getMyPosition(pos.coords.latitude, pos.coords.longitude);
             }
