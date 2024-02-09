@@ -1,81 +1,189 @@
-body, html {
+html,
+body {
+    width: 100%;
     height: 100%;
     margin: 0;
+    padding: 0;
 }
-
 body {
-    background: #DBDBDB;
-    display: flex;
+    background-color: #ffecb3;
+    overflow: hidden;
 }
-
-.container {
-    margin: auto;
-    height:100px;
-}
-
-.button {
-    cursor: pointer;
-    margin-left: 5px;
-    margin-bottom: 15px;
-    text-shadow: 0 -2px 0 #4a8a65, 0 1px 1px #c2dece;
+* {
     box-sizing: border-box;
-    font-size: 2em;
-    font-family: Helvetica, Arial, Sans-Serif;
-    text-decoration: none;
-    font-weight: bold;
-    color: #5ea97d;
-    height: 65px;
-    line-height: 65px;
-    padding: 0 32.5px;
-    display: inline-block;
-    width: auto;
-    background: linear-gradient(to bottom, #9ceabd 0%, #9ddab6 26%, #7fbb98 100%);
-    border-radius: 5px;
-    border-top: 1px solid #c8e2d3;
-    border-bottom: 1px solid #c2dece;
-    top: 0;
-    transition: all 0.06s ease-out;
-    position: relative;
 }
-.button:visited {
-    color: #5ea97d;
-}
-
-.button:hover {
-    background: linear-gradient(to bottom, #baf1d1 0%, #b7e4ca 26%, #96c7ab 100%);
-}
-
-.button:active {
-    top: 6px;
-    text-shadow: 0 -2px 0 #7fbb98, 0 1px 1px #c2dece, 0 0 4px white;
-    color: white;
-}
-.button:active:before {
-    top: 0;
-    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.7), 0 3px 9px rgba(0, 0, 0, 0.2);
-}
-
-.button:before {
-    display: inline-block;
-    content: "";
+.container {
+    display: block;
     position: absolute;
-    left: 0;
-    right: 0;
+    text-align: center;
+    width: 100%;
+    top: 50%;
+    padding: 50px 0;
+    -moz-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    background-color: rgba(211,45,45,0.2);
+}
+.container:before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 150%;
+    height: 100%;
+    top: 0;
+    left: -25%;
+    -moz-transform: rotate(-3deg);
+    -webkit-transform: rotate(-3deg);
+    -o-transform: rotate(-3deg);
+    -ms-transform: rotate(-3deg);
+    transform: rotate(-3deg);
     z-index: -1;
-    top: 6px;
-    border-radius: 5px;
-    height: 65px;
-    background: linear-gradient(to top, #1e5033 0%, #378357 6px);
-    transition: all 0.078s ease-out;
-    box-shadow: 0 1px 0 2px rgba(0, 0, 0, 0.3), 0 5px 2.4px rgba(0, 0, 0, 0.5), 0 10.8px 9px rgba(0, 0, 0, 0.2);
+    background-color: rgba(244,67,54,0.15);
 }
-.search-container {
+h1 {
+    font-family: "Lato";
+    font-size: 2.0em;
+    color: #fff;
+    letter-spacing: 1px;
+    margin-bottom: 50px;
+}
+h3 {
+    display: block;
+    height: 19px;
+    margin-top: 30px;
+    font-family: "Lato";
+    font-size: 1em;
+    color: #fff;
+    opacity: 0;
+}
+.search-box-container {
+    display: inline-block;
+    box-sizing: content-box;
+    height: 50px;
+    width: 50px;
+    padding: 0;
+    background-color: #fff;
+    border: 3px solid #f44336;
+    border-radius: 28px;
+    overflow: hidden;
+}
+.search-box-container * {
+    display: inline-block;
+    margin: 0;
+    height: 100%;
+    padding: 5px;
+    border: 0;
+    outline: none;
+}
+.search-box {
+    width: calc(100% - 50px);
+    padding: 0 20px;
+    float: left;
+    font-family: "Lato";
+    font-size: 1em;
+    color: #212121;
+    background-color: #fff;
+}
+.submit {
+    float: right;
+    width: 50px;
+    left: 0;
+    top: 0;
+    font-size: 1.2em;
+    text-align: center;
+    cursor: pointer;
+    background-color: #fff;
+}
+.fa {
+    display: inline !important;
+    line-height: 100%;
+    pointer-event: none;
+    color: #d32f2f;
+}
+.left_container{
+    display: inline-block;
+}
+.search-box-main-container{
+    display:inline-block;
+    width:60%;
+}
+.right_container{
+    display: inline-block;
+}
+.btn {
+    display: block;
     position: relative;
+    float: left;
+    width: 170px;
+    height:70px;
+    padding: 0;
+    margin: 10px 10px 10px 0;
+    font-weight: 800;
+    font-size:1em;
+    text-align: center;
+    line-height: 50px;
+    color: #FFF;
+    border-radius: 5px;
+    transition: all 0.2s ;
+    background: #FFAA40;
+    cursor:pointer;
 }
-.field {
-    position: absolute;
-    top: -80px; /* 맛집 검색 버튼 위로 올리기 위한 값, 필요에 따라 조절 */
-    left: 50%; /* 맛집 검색 버튼 가운데 정렬 */
-    transform: translateX(-50%);
-    z-index: 1; /* 맛집 검색 버튼 위에 표시하기 위해 */
+.btn-jittery {
+    -webkit-animation: jittery 4s infinite;
+    animation: jittery 4s infinite;
+}
+@-webkit-keyframes jittery {
+    5%, 50% {
+        transform: scale(1);
+    }
+    10% {
+        transform: scale(0.9);
+    }
+    15% {
+        transform: scale(1.15);
+    }
+    20% {
+        transform: scale(1.15) rotate(-5deg);
+    }
+    25% {
+        transform: scale(1.15) rotate(5deg);
+    }
+    30% {
+        transform: scale(1.15) rotate(-3deg);
+    }
+    35% {
+        transform: scale(1.15) rotate(2deg);
+    }
+    40% {
+        transform: scale(1.15) rotate(0);
+    }
+}
+
+@keyframes jittery {
+    5%, 50% {
+        transform: scale(1);
+    }
+    10% {
+        transform: scale(0.9);
+    }
+    15% {
+        transform: scale(1.15);
+    }
+    20% {
+        transform: scale(1.15) rotate(-5deg);
+    }
+    25% {
+        transform: scale(1.15) rotate(5deg);
+    }
+    30% {
+        transform: scale(1.15) rotate(-3deg);
+    }
+    35% {
+        transform: scale(1.15) rotate(2deg);
+    }
+    40% {
+        transform: scale(1.15) rotate(0);
+    }
 }
