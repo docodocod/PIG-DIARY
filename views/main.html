@@ -62,12 +62,9 @@
         {% endfor %}
     </div>
 </div>-->
-{% for twit in twits %}
-<input type="hidden" value="{{twit.User.id}}" class="twit-user-id">
-<input type="hidden" value="{{twit.id}}" class="twit-id">
 <div class="feed">
     <div class="main-image">
-        <img src="{{twit.img}}"
+        <img src=""
              alt="" class="mainPic">
     </div>
     <div class="icons-react">
@@ -89,11 +86,10 @@
             <p><span class="like_size">좋아요</span> <span class="point-span">${like_count}개</span></p>
         </div>
         <div class="description">
-            <div><span class="point-span userID">{{twit.userid}</span><span class="mycontent${i}">${content}</span></div>
+            <div><span class="point-span userID">{{twit.userid}}</span><span class="mycontent${i}">{{content}}</span></div>
         </div>
         <div class="comment-section">
             <div class="comments" id="commentappend${i}">
-
             </div>
             <div class="time-log">
                 <span>${timeForToday(created_at)}</span>
@@ -132,6 +128,9 @@
     </div>
 </div>
 {% endblock %}
+<footer>
+    {% include 'footer.html' %}
+</footer>
 {% block script %}
 <script>
     //이미지 첨부 기능 script
