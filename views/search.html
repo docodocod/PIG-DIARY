@@ -3,43 +3,108 @@
     <title>search</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/search.css">
+    <link href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-<!--    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
-<div class="container">
-    <form id="curruntPosition" action="/user/{{userId}}/aroundMyList" method="post">
-        <input type="hidden" id="lat" name="lat" value=""/>
-        <input type="hidden" id="lng" name="lng" value=""/>
-        <a id="curruntPosition_btn" class="button" >내 주변 맛집 리스트</a>
-    </form>
-</div>
-<div class="container">
-    <form id="search" action="/searchPage" method="post">
-        <div class="search-container">
-        <input type="text" name="searchWord" placeholder="Search..." class="field" />
-        <a id="search_btn" class="button" >맛집 찾아보기</a>
+<div class='container'>
+    <div class="left_container">
+        <form id="myPosition" action="/searchPage" method="post">
+            <input type="hidden" id="position" name="searchWord" value="" />
+            <button id="myPosition_btn" class="btn btn-primary btn-jittery">
+                내 주변 맛집
+            </button>
+        </form>
+    </div>
+    <div class="search-box-main-container">
+        <h1>오늘은 어디로 가볼까요?</h1>
+        <div class='search-box-container'>
+            <form id="search_form" action="/searchPage" method="post">
+                <button class='submit'>
+                    <i class='fa fa-search'></i>
+                </button>
+                <input type="text" id="search_bar" class='search-box' name="searchWord" placeholder="맛집을 입력해주세요"/>
+            </form>
         </div>
-    </form>
+    </div>
+
+    <div class="right_container">
+        <form id="curruntPosition" action="/user/{{userId}}/aroundMyList" method="post">
+            <input type="hidden" id="lat" name="lat" value=""/>
+            <input type="hidden" id="lng" name="lng" value=""/>
+            <button id="curruntPosition_btn" class="btn btn-primary btn-jittery">
+                    내 주변 저장 맛집
+            </button>
+        </form>
+    </div>
 </div>
-<div class="container">
-    <form id="myPosition" action="/searchPage" method="post">
-        <input type="hidden" id="position" name="searchWord" value="" />
-        <a id="myPosition_btn" class="button">내 주변 맛집 찾기</a>
-    </form>
-</div>
-
-
-
 {% endblock %}
 {% include "footer.html" %}
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=22382396d3cba032b99b1fcc9ec5b4f1&libraries=services"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
-    document.getElementById("search_btn").addEventListener("click",()=>{
-       const search=$("#search");
-       search.submit();
-    });
+    $.fn.toggleState = function (b) {
+        $(this)
+            .stop()
+            .animate(
+                {
+                    width: b ? "300px" : "50px"
+                },
+                600,
+                "easeOutElastic"
+            );
+    };
 
+    $(document).ready(function () {
+        var container = $(".container");
+        var boxContainer = $(".search-box-container");
+        var submit = $(".submit");
+        var searchBox = $(".search-box");
+        var response = $(".response");
+        var isOpen = false;
+        submit.on("mousedown", function (e) {
+            e.preventDefault();
+            boxContainer.toggleState(!isOpen);
+            isOpen = !isOpen;
+            if (!isOpen) {
+                handleRequest();
+            } else {
+                searchBox.focus();
+            }
+        });
+        searchBox.keypress(function (e) {
+            if (e.which === 13) {
+                boxContainer.toggleState(false);
+                isOpen = false;
+                handleRequest();
+            }
+        });
+        searchBox.blur(function () {
+            boxContainer.toggleState(false);
+            isOpen = false;
+        });
+        function handleRequest() {
+            // You could do an ajax request here...
+            var value = searchBox.val();
+            if (value.length > 0) {
+                response.text('Searching for "' + value + '" . . .');
+                response
+                    .animate(
+                        {
+                            opacity: 1
+                        },
+                        300
+                    )
+                    .delay(2000)
+                    .animate(
+                        {
+                            opacity: 0
+                        },
+                        300
+                    );
+            }
+        }
+    });
     document.getElementById("myPosition_btn").addEventListener("click",(e)=> {
         e.preventDefault();
 
