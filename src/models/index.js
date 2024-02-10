@@ -8,6 +8,7 @@ const Room=require('../models/room');
 const Chat=require('../models/chat')
 const Favorite=require('../models/favorite');
 const Comment=require('../models/comment');
+const Upload=require('../models/upload');
 
 
 const db={};
@@ -26,6 +27,7 @@ db.Room=Room;
 db.Chat=Chat;
 db.Favorite=Favorite;
 db.Comment=Comment;
+db.Upload=Upload;
 
 User.init(sequelize);
 Post.init(sequelize);
@@ -34,6 +36,7 @@ Room.init(sequelize);
 Chat.init(sequelize);
 Favorite.init(sequelize);
 Comment.init(sequelize);
+Upload.init(sequelize);
 
 
 User.associate(db);
@@ -43,6 +46,7 @@ Room.associate(db);
 Chat.associate(db);
 Favorite.associate(db);
 Comment.associate(db);
+Upload.associate(db);
 
 
 module.exports=db;

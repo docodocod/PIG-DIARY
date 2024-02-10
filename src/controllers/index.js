@@ -1,6 +1,7 @@
 const User=require("../models/user.js");
 const Post=require("../models/post.js");
 const Hashtag=require("../models/hashtag.js");
+const Comment=require('../models/comment');
 
 exports.renderProfile = (req, res) => {
     res.render('profile', { title: '내 정보 - NodeBird' });
@@ -44,12 +45,14 @@ exports.renderMain=async(req, res, next)=>{ //메인 페이지에서 정보 불�
                 model:User,
                 attributes:['id','nick'],
                 as:"Liker",
-        }],
+        },{
+                model:Comment,
+                attributes:['writer','comment'],
+            }],
             order: [['createdAt', 'DESC']],
         });
-        res.render('main', { //메인페이지가 로딩 될때 데이터를 뿌려줍니다.
-            title: 'Nodetwitter',
-            twits: posts,
+        res.render('main',{
+            feeds:posts
         });
     } catch (err) {
         console.error(err);
@@ -69,7 +72,7 @@ exports.renderHashtag=async(req, res, next)=>{//
             posts = await hashtag.getPosts({ include: [{ model: User }] });
         }
         return res.render('main', {
-            title: `${query} | NodeTwitter`,
+            title: `${query} | PIG DIARY`,
             twits: posts,
         });
     } catch (error) {
