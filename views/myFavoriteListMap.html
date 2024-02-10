@@ -26,15 +26,15 @@
 <footer>
 {% include "footer.html" %}
 </footer>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=22382396d3cba032b99b1fcc9ec5b4f1&libraries=services"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=&libraries=services"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     var myLists = {{Lists|safe}};
     console.log(myLists);
     const lat={{myPosition_lat}};
-    console.log(lat);
+    console.log("lat:"+lat);
     const lng={{myPosition_lng}};
-    console.log(lng);
+    console.log("lng:"+lng);
     // 마커를 담을 배열입니다
 
     var markers = [];
@@ -44,8 +44,8 @@
             center: new kakao.maps.LatLng(lat,lng), // 지도의 중심좌표
             level: 3 // 지도의 확대 레벨
         };
+    // 지도를 생성합니다
 
-        // 지도를 생성합니다
     var map = new kakao.maps.Map(mapContainer, mapOption);
 
     // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
@@ -97,7 +97,6 @@
 
     // 검색 결과 목록과 마커를 표출하는 함수입니다
     function displayPlaces(places) {
-
         var listEl = document.getElementById('placesList'),
             menuEl = document.getElementById('menu_wrap'),
             fragment = document.createDocumentFragment(),
@@ -165,7 +164,6 @@
 
     // 검색결과 항목을 Element로 반환하는 함수입니다
     function getListItem(index, places) {
-        console.log(places);
         var el = document.createElement('li'),
             itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
                 '<div class="info">' +
@@ -177,6 +175,7 @@
             itemStr += '    <span>' +  places.addressName  + '</span>';
         }
         itemStr += '  <span class="tel">' + places.phone  + '</span>' +
+            '<input type="button" class="custom-btn btn-2" value="리스트 삭제하기" onclick="onRemoveFavorite('+places.id+')">'+
             '</div>';
 
         el.innerHTML = itemStr;
@@ -213,7 +212,21 @@
         }
         markers = [];
     }
-
+    function onRemoveFavorite(idx){
+        var userId=$("#user-id").val();
+        axios.delete(`/user/${userId}/removeFavorite`,{
+            data:{
+                favoriteId:idx
+            }
+        })
+            .then(()=>{
+                alert("삭제 되었습니다.");
+                location.reload();
+            })
+            .catch((err)=>{
+                console.error(err);
+            });
+    }
     // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
     /*function displayPagination(pagination) {
         var paginationEl = document.getElementById('pagination'),

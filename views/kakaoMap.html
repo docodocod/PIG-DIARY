@@ -24,8 +24,10 @@
     </div>
 </div>
 {% endblock %}
-{% include "footer.html" %}
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=22382396d3cba032b99b1fcc9ec5b4f1&libraries=services"></script>
+<footer>
+    {% include "footer.html" %}
+</footer>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=&libraries=services"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     // 마커를 담을 배열입니다
@@ -287,7 +289,7 @@
         var lat= $('[name=lat_'+idx+']').val();
         var lng= $('[name=lng_'+idx+']').val();
         var placeUrl = $('[name=place_url_'+idx+']').val();
-        axios.post(`/user/${userId}/favorite`,{
+        axios.post(`/user/${userId}/addFavorite`,{
             placeName:placeName,
             roadAddressName:roadAddressName,
             addressName:addressName,
