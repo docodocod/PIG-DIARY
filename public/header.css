@@ -114,9 +114,14 @@ nav img {
     background-position: center left;
     background-image: url('../img/cancel.png');
 }
-.CurrIcon, .CurrTemp{
+.CurrIcon, .CurrTemp,{
     display:inline-block;
     font-size: 1.2rem;
+    text-align: center;
+    margin-right:10px;
+}
+.CurrTemp_max, .CurrTemp_min{
+    font-size: 0.9rem;
     text-align: center;
     margin-right:10px;
 }
@@ -126,4 +131,5 @@ nav img {
 .City{
     font-size:1.2rem;
     text-align:center;
+    margin-right:10px;
 }
