@@ -9,11 +9,7 @@ class Post extends Sequelize.Model {
             content: {
                 type: Sequelize.STRING(140),
                 allowNull: false,
-            },
-            img: {
-                type: Sequelize.STRING(200),
-                allowNull: true,
-            },
+            }
         }, {
             sequelize,
             timestamps: true,
@@ -27,6 +23,7 @@ class Post extends Sequelize.Model {
     }
     static associate(db) {
         db.Post.hasMany(db.Comment);
+        db.Post.hasMany(db.Upload);
         db.Post.belongsTo(db.User);
         db.Post.belongsToMany(db.Hashtag, {through: 'PostHashtag'});
         db.Post.belongsToMany(db.User,{through: "Like", as: "Liker"});

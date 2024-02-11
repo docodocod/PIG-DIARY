@@ -2,6 +2,7 @@ const Post = require("../models/post.js");
 const Hashtag = require("../models/hashtag.js");
 const User = require("../models/user");
 const Comment = require('../models/comment');
+const Upload=require('../models/Upload');
 
 
 //게시글 업로드
@@ -9,9 +10,14 @@ exports.uploadPost = async (req, res, next) => { //게시글 업로드
     try {
         const post = await Post.create({
             content: req.body.content,
-            img: req.body.url,
             UserId: req.user.id,
         });
+        for(let i=0; i<req.body.url.length; i++){
+            await Upload.create({
+                files:req.body.url[i],
+                postId:post.id,
+            })
+        }
         const hashtags = req.body.content.match(/#[^\s#]*/g);
         if (hashtags) {
             const result = await Promise.all(
@@ -23,7 +29,7 @@ exports.uploadPost = async (req, res, next) => { //게시글 업로드
             );
             await post.addHashtags(result.map(r => r[0]));
         }
-        res.redirect('/');
+        res.redirect('/main')
     } catch (error) {
         console.error(error);
         next(error);
@@ -34,7 +40,7 @@ exports.uploadPost = async (req, res, next) => { //게시글 업로드
 exports.afterUploadImage = (req, res) => {
     try {
         console.log("파일 이름 : ", req.files);
-        const urlArr = new Array();
+        const urlArr = [];
         for (let i = 0; i < req.files.length; i++) {
             urlArr.push(`/img/${req.files[i].filename}`);
             console.log(urlArr[i]);
@@ -52,7 +58,7 @@ exports.postEdit = async (req, res) => {
     const postId = req.params.id;
     const newContent = req.body.content;
     await Post.update({content: newContent}, {where: {id: postId}});
-    res.redirect('/');
+    res.redirect('/main');
 }
 
 //게시글 삭제
