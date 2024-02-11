@@ -1,7 +1,7 @@
 const express = require('express');
 
 const { isLoggedIn } = require('../middlewares');
-const { follow,unfollow,favorite,favoriteList,aroundMyList } = require('../controllers/user');
+const { follow,unfollow,addFavorite,removeFavorite,favoriteList,aroundMyList } = require('../controllers/user');
 
 
 const router = express.Router();
@@ -11,7 +11,9 @@ router.post('/:id/follow', isLoggedIn, follow);
 
 router.delete('/:id/unfollow',isLoggedIn,unfollow);
 
-router.post('/:id/favorite',isLoggedIn,favorite);
+router.post('/:id/addFavorite',isLoggedIn,addFavorite);
+
+router.delete('/:id/removeFavorite',isLoggedIn,removeFavorite);
 
 router.get("/:id/favoriteList",isLoggedIn,favoriteList);
 
