@@ -1,95 +1,146 @@
-{% extends 'layout.html' %}
-
+<head>
+    <meta charset="utf-=8">
+    <title>채팅목록</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="description" content="Kakao Talk Clone Chat Main Page">
+    <meta name="keywords" content="KakaoTalk, Clone, Chat">
+    <meta name="robotos" content="noindex, nofollow">
+    <link rel="stylesheet" href="/chatting.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+</head>
 {% block content %}
-<h1>채팅방</h1>
-<fieldset>
-    <legend>채팅방 목록</legend>
-    <table>
-        <thead>
-        <tr>
-            <th>방 제목</th>
-            <th>종류</th>
-            <th>허용 인원</th>
-            <th>방장</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for room in rooms %}
-        <tr data-id="{{room._id}}">
-            <td>{{room.title}}</td>
-            <td>{{'비밀방' if room.password else '공개방'}}</td>
-            <td>{{room.max}}</td>
-            <td style="color: {{room.owner}}">{{room.owner}}</td>
-            <td>
-                <button
-                        data-password="{{'true' if room.password else 'false'}}"
-                        data-id="{{room.id}}"
-                        class="join-btn"
-                >입장
-                </button>
-            </td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <div class="error-message">{{error}}</div>
-    <a href="/room/create">채팅방 생성</a>
-</fieldset>
+<header>
+    {% include "header.html" %}
+</header>
+<div id="content">
+    <!-- 설정바(최소화, 닫기 버튼 등) -->
+    <div class="setting_bar">
+        <i class="icon-window-minimize" alt="최소화버튼" title="최소화"></i>
+        <i class="icon-window-maximize" alt="최대화버튼" title="최대화"></i>
+        <i class="icon-cancel" alt="닫기버튼" title="닫기"></i>
+    </div>
+    <!-- 헤더: 제목, 친구 찾기 버튼, 친구 추가 버튼 -->
+    <header>
+        <h1>채팅방 목록</h1>
+        <i class="icon-down-dir"></i>
+        <span alt="새로운채팅버튼" title="새로운 채팅">&#xe80a</span>
+        <span alt="오픈채팅버튼" title="오픈 채팅">&#xe809</span>
+        <span alt="통합검색버튼" title="통합검색">&#xe801</span>
+    </header>
+    <!-- 친구창, 대화창, 설정창 등 이동 가능한 네비게이터 -->
+    <nav id="main-nav">
+        <div class="main-menu">
+            <a href="friend.html">
+                <i class="icon-adult" alt="친구메뉴" title="친구"></i>
+            </a>
+            <a href="chatting.html">
+                <i class="icon-chat" alt="채팅메뉴" title="채팅"></i>
+                <span class="alert-balloon" alt="알림수">3</span>
+            </a>
+            <a href="more_menu.html">
+                <i class="icon-ellipsis" alt="더보기버튼" title="더보기"></i>
+                <span class="alert-balloon" alt="알림수">N</span>
+            </a>
+        </div>
+        <div class="sub-menu">
+            <a href="temp.html" target="_blank">
+                <i class="icon-smile" alt="이모티콘샵바로가기" title="이모티콘샵"></i></a>
+            <i class="icon-bell" alt="알림버튼" title="알림"></i>
+            <i class="icon-cog" alt="설정버튼" title="설정"></i>
+        </div>
+    </nav>
+    <!-- 메인: 채팅 리스트 화면 -->
+    <main class="chat_list_main">
+        <ul>
+            {% for room in rooms %}
+            <li data-id="{{room.id}}">
+                <a href="/room/{{room.id}}">
+                    <img src="./pic/k-pay.png" class="profile-img" alt="프로필 사진">
+                    <div class="talk">
+                        <p class="friend-name">{{room.opponent}}</p>
+                        <p class="chat-content">안녕하세요</p>
+                    </div>
+                    <div class="chat-status">
+                        <time datetime="15:40:00+09:00">{{room.createdAt}}</time>
+                        <span class="chat-balloon">??</sapn>
+                    </div>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </main>
+    <!-- aside: 광고 -->
+    <aside>
+        <img src="./pic/ad.png" alt="광고이미지">
+    </aside>
+</div>
+<footer>
+    {% include "footer.html" %}
+</footer>
+{% endblock %}
 <script src="/socket.io/socket.io.js"></script>
 <script>
     const socket = io.connect('http://localhost:4161/room', { // 네임스페이스
         path: '/socket.io',
     });
+
     socket.on('newRoom', function (data) { // 새 방 이벤트 시 새 방 생성
-        const tr = document.createElement('tr');
-        let td = document.createElement('td');
-        td.textContent = data.title;
-        tr.appendChild(td);
-        td = document.createElement('td');
-        td.textContent = data.password ? '비밀방' : '공개방';
-        tr.appendChild(td);
-        td = document.createElement('td');
-        td.textContent = data.max;
-        tr.appendChild(td);
-        td = document.createElement('td');
-        td.style.color = data.owner;
-        td.textContent = data.owner;
-        tr.appendChild(td);
-        td = document.createElement('td');
-        const button = document.createElement('button');
-        button.textContent = '입장';
-        button.dataset.password = data.password ? 'true' : 'false';
-        button.dataset.id = data.id;
-        button.addEventListener('click', addBtnEvent);
-        td.appendChild(button);
-        tr.appendChild(td);
-        tr.dataset.id = data.id;
-        document.querySelector('table tbody').appendChild(tr); // 화면에 추가
+        const li = document.createElement("li");
+        li.setAttribute('data-id', data.room.id);
+
+        const a = document.createElement('a');
+        a.setAttribute('href', `/room/${data.room.id}`);
+
+        const img = document.createElement('img');
+        img.setAttribute('src');
+        img.setAttribute('class', 'profile-img');
+        img.setAttribute('alt', '프로필 사진');
+        a.appendChild(img);
+
+        const talkDiv = document.createElement('div');
+        talkDiv.setAttribute('class', 'talk');
+
+        const friendName = document.createElement('p');
+        friendName.setAttribute('class', 'friend-name');
+        friendName.textContent = data.room.opponent;
+        talkDiv.appendChild(friendName);
+
+        const chatContent= document.createElement('p');
+        chatContent.setAttribute('class', 'chat-content');
+        chatContent.textContent = '안녕하세요';
+        talkDiv.appendChild(chatContent);
+
+        a.appendChild(talkDiv);
+
+        const chatStatusDiv = document.createElement('div');
+        chatStatusDiv.setAttribute('class', 'chat-status');
+
+        const timeElement = document.createElement('time');
+        timeElement.setAttribute('datetime');
+        timeElement.textContent = data.room.createdAt;
+        chatStatusDiv.appendChild(timeElement);
+
+        const chatBalloonSpan = document.createElement('span');
+        chatBalloonSpan.setAttribute('class', 'chat-balloon');
+        chatBalloonSpan.textContent = '??';
+        chatStatusDiv.appendChild(chatBalloonSpan);
+        a.appendChild(chatStatusDiv);
+        li.appendChild(a);
+
+        const chatList = document.getElementById('chat-list');
+        chatList.appendChild(li);
     });
 
     socket.on('removeRoom', function (data) { // 방 제거 이벤트 시 id가 일치하는 방 제거
-        document.querySelectorAll('tbody tr').forEach(function (tr) {
-            if (tr.dataset.id === data) {
-                tr.parentNode.removeChild(tr);
+        document.querySelectorAll('li').forEach(function (li) {
+            if (li.dataset.id === data) {
+                li.parentNode.removeChild(li);
             }
         });
     });
-
-    function addBtnEvent(e) { // 방 입장 클릭 시
-        if (e.target.dataset.password === 'true') {
-            const password = prompt('비밀번호를 입력하세요');
-            location.href = '/room/' + e.target.dataset.id + '?password=' + password;
-        } else {
-            location.href = '/room/' + e.target.dataset.id;
-        }
-    }
-
-    document.querySelectorAll('.join-btn').forEach(function (btn) {
-        btn.addEventListener('click', addBtnEvent);
-    });
 </script>
-{% endblock %}
-
 {% block script %}
 <script>
     window.onload = () => {

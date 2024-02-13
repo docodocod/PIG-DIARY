@@ -3,19 +3,21 @@ const Chat=require("../models/chat.js");
 const {removeRoom} = require("../services/roomDelete");
 
 
-exports.renderRoom=async(req, res, next)=>{ //채팅방 목록 불러오기 기능
+//채팅방 목록 불러오기
+exports.renderRoom=async(req, res, next)=>{
     try {
         const rooms = await Room.findAll({where:{owner:req.user.id}}); //현재 생성되어 있는 모든 방 찾아서 담기
-        res.render('roomList', { rooms, title: '채팅방 목록' }); //데이터 담아서 채팅방 목록 페이지에 뿌려주기
+        res.render('roomList', { rooms, title: "채팅방 목록" }); //데이터 담아서 채팅방 목록 페이지에 뿌려주기
     } catch (error) {
         console.error(error);
         next(error);
     }
 };
 
-exports.createRoom=async(req, res, next)=>{ //채팅방 생성
+//채팅방 만들기
+exports.createRoom=async(req, res, next)=>{
     try {
-        const newRoom=await Room.create({ //새로운 방 만들기
+        const newRoom=await Room.create({
             opponent: req.body.opponentId,
             owner: req.user.id,
         });
@@ -29,7 +31,8 @@ exports.createRoom=async(req, res, next)=>{ //채팅방 생성
     }
 };
 
-exports.enterRoom=async(req, res, next)=>{ //채팅방 입장
+//채팅방 입장
+exports.enterRoom=async(req, res, next)=>{
     try {
         const room = await Room.findOne({where:{ id: req.params.id }}); //해당 아이디 채팅방 찾기
         console.log("room: "+room);
@@ -45,6 +48,7 @@ exports.enterRoom=async(req, res, next)=>{ //채팅방 입장
             opponent: room.opponent,
             chats,
             user: req.user.id,
+            
         });
     } catch (error) {
         console.error(error);
@@ -52,7 +56,8 @@ exports.enterRoom=async(req, res, next)=>{ //채팅방 입장
     }
 };
 
-exports.removeRoom=async(req, res, next)=>{ //채팅방 제거
+//채팅방 제거
+exports.removeRoom=async(req, res, next)=>{
     try {
         await removeRoom(req.params.id);
         res.send('채팅방을 나갔습니다.');
@@ -62,7 +67,8 @@ exports.removeRoom=async(req, res, next)=>{ //채팅방 제거
     }
 };
 
-exports.sendChat=async(req, res, next)=>{ //채팅 전송
+//채팅 전송
+exports.sendChat=async(req, res, next)=>{
     try {
         const chat = await Chat.create({
             room: req.params.id,
@@ -77,7 +83,8 @@ exports.sendChat=async(req, res, next)=>{ //채팅 전송
     }
 };
 
-exports.sendGif=async(req, res, next)=>{ //채팅방 사진 보내기
+//채팅 GIF 보내기
+exports.sendGif=async(req, res, next)=>{
     try {
         const chat = await Chat.create({
             room: req.params.id,

@@ -3,10 +3,11 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const {isLoggedIn,isNotLoggedIn}=require("../middlewares");
-
 const {
     renderMain, renderRoom, createRoom, enterRoom, removeRoom,sendChat, sendGif,
 } = require('../controllers/room.js');
+
+const router = express.Router();
 
 try {
     fs.readdirSync('uploads/chats');
@@ -27,8 +28,6 @@ const upload = multer({
     }),
     limits: { fileSize: 5 * 1024 * 1024 },
 });
-
-const router = express.Router();
 
 router.get('/',renderRoom); // 채팅방 리스트 호출
 
