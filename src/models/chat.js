@@ -2,11 +2,7 @@ const Sequelize=require("sequelize");
 class Chat extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
-            room: { //room 아이디
-                type: Sequelize.INTEGER(200),
-                allowNull:false,
-            },
-            user: { //생성자
+            user: { //사용자
                 type: Sequelize.STRING(200),
                 allowNull:false,
             },

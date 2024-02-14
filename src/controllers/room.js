@@ -39,16 +39,14 @@ exports.enterRoom=async(req, res, next)=>{
         if (!room) { //room data 없으면
             return res.redirect('/?error=존재하지 않는 방입니다.');
         }
-        const io = req.app.get('io'); //socket.io
         const chats = await Chat.findAll(
-            { room: room.id },
+            { RoomId: room.id },
             {order: "createdAt"});
         return res.render('chat', { //채팅 창에 데이터 뿌려주기
             room,
             opponent: room.opponent,
             chats,
             user: req.user.id,
-            
         });
     } catch (error) {
         console.error(error);
@@ -57,7 +55,7 @@ exports.enterRoom=async(req, res, next)=>{
 };
 
 //채팅방 제거
-exports.removeRoom=async(req, res, next)=>{
+/*exports.removeRoom=async(req, res, next)=>{
     try {
         await removeRoom(req.params.id);
         res.send('채팅방을 나갔습니다.');
@@ -65,15 +63,15 @@ exports.removeRoom=async(req, res, next)=>{
         console.error(error);
         next(error);
     }
-};
+};*/
 
 //채팅 전송
 exports.sendChat=async(req, res, next)=>{
     try {
         const chat = await Chat.create({
-            room: req.params.id,
             user: req.user.id,
             chat: req.body.chat,
+            RoomId: req.params.id,
         });
         req.app.get('io').of('/chat').to(req.params.id).emit('chat', chat);
         res.send('채팅을 정상적으로 전송');

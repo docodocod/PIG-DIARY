@@ -1,107 +1,100 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <div class="chat_wrap">
-        <div calss="header">
-            CHAT
-        </div>
-        <div class="chat">
-            <ul>
-                <!--동적생성-->
-            </ul>
-        </div>
-        <div class="input-div">
-            <testarea placeholder="채팅 보내기"></testarea>
-        </div>
-        <div class="chat format">
-            <ul>
-                <li>
-                    <div class="sender">
-                        <span></span>
-                    </div>
-                    <div class="message">
-                       <span></span>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
+{% block content %}
+<h1>GIF 채팅방</h1>
+<fieldset>
+    <legend>채팅방 목록</legend>
+    <table>
+        <thead>
+        <tr>
+            <th>방 제목</th>
+            <th>종류</th>
+            <th>허용 인원</th>
+            <th>방장</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for room in rooms %}
+        <tr data-id="{{room._id}}">
+            <td>{{room.title}}</td>
+            <td>{{'비밀방' if room.password else '공개방'}}</td>
+            <td>{{room.max}}</td>
+            <td style="color: {{room.owner}}">{{room.owner}}</td>
+            <td>
+                <button
+                        data-password="{{'true' if room.password else 'false'}}"
+                        data-id="{{room._id}}"
+                        class="join-btn"
+                >입장
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="error-message">{{error}}</div>
+    <a href="/room">채팅방 생성</a>
+</fieldset>
+<script src="/socket.io/socket.io.js"></script>
 <script>
-    const Chat=(()=>{
-        const myName="";
-
-        function init(){
-            $(document).on("keydown","div.input-div textarea",(e)=>{
-                if(e.keyCode===13 && !e.shiftKey){
-                    e.preventDefault();
-                    const message=$(this).val();
-                    //메세지 전송
-                    sendMessage(message);
-                    //입력창
-                    clearTextarea();
-                }
-            })
-        }
-
-        //메세지 태그 생성
-        function createMessageTag(LR_className, senderName,message){
-            //형식 가져오기
-            const chatLi=$('div.chat.format ul li').clone();
-
-            //값 채우기
-            chatLi.addClass(LR_className);
-            chatLi.find('.sender span').text(senderName);
-            chatLi.find('.message span').text(message);
-
-            return chatLi;
-        }
-
-        // 메세지 태그
-        function appendMessageTag(LR_className, senderName, message){
-            const chatLi= createMessageTag(LR_className, senderName, message);
-
-            $('div.chat:not(.format) ul').append(chatLi);
-
-            //스크롤바 아래 고정
-            $('div.chat').scrollTop($('div.chat').prop('scrollHeight'));
-        }
-
-        // 메세지 전송
-        function sendMessage(message){
-            const data={
-                "senderName":"",
-                "message":message
-            };
-            reseive(data);
-        }
-
-        // 메세지 입력박스 내용 지우기
-        function clearTextarea(){
-            $('div.input-div textarea').val("");
-        }
-
-        //메세지 수신
-        function reseive(data){
-            const LB=(data.senderName !=myName)? "left" : "right";
-            appendMessageTag("right",data.senderName.data.message);
-        }
-        return {
-            "init":init
-        };
-    })();
-
-    $(function(){
-        Chat.init();
+    const socket = io.connect('http://localhost:8005/room', { // 네임스페이스
+        path: '/socket.io',
     });
 
-</script>
-</body>
+    socket.on('newRoom', function (data) { // 새 방 이벤트 시 새 방 생성
+        const tr = document.createElement('tr');
+        let td = document.createElement('td');
+        td.textContent = data.title;
+        tr.appendChild(td);
+        td = document.createElement('td');
+        td.textContent = data.password ? '비밀방' : '공개방';
+        tr.appendChild(td);
+        td = document.createElement('td');
+        td.textContent = data.max;
+        tr.appendChild(td);
+        td = document.createElement('td');
+        td.style.color = data.owner;
+        td.textContent = data.owner;
+        tr.appendChild(td);
+        td = document.createElement('td');
+        const button = document.createElement('button');
+        button.textContent = '입장';
+        button.dataset.password = data.password ? 'true' : 'false';
+        button.dataset.id = data._id;
+        button.addEventListener('click', addBtnEvent);
+        td.appendChild(button);
+        tr.appendChild(td);
+        tr.dataset.id = data._id;
+        document.querySelector('table tbody').appendChild(tr); // 화면에 추가
+    });
 
-</html>
+    socket.on('removeRoom', function (data) { // 방 제거 이벤트 시 id가 일치하는 방 제거
+        document.querySelectorAll('tbody tr').forEach(function (tr) {
+            if (tr.dataset.id === data) {
+                tr.parentNode.removeChild(tr);
+            }
+        });
+    });
+
+    function addBtnEvent(e) { // 방 입장 클릭 시
+        if (e.target.dataset.password === 'true') {
+            const password = prompt('비밀번호를 입력하세요');
+            location.href = '/room/' + e.target.dataset.id + '?password=' + password;
+        } else {
+            location.href = '/room/' + e.target.dataset.id;
+        }
+    }
+
+    document.querySelectorAll('.join-btn').forEach(function (btn) {
+        btn.addEventListener('click', addBtnEvent);
+    });
+</script>
+{% endblock %}
+
+{% block script %}
+<script>
+    window.onload = () => {
+        if (new URL(location.href).searchParams.get('error')) {
+            alert(new URL(location.href).searchParams.get('error'));
+        }
+    };
+</script>
+{% endblock %}

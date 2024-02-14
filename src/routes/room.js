@@ -29,13 +29,13 @@ const upload = multer({
     limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-router.get('/',renderRoom); // 채팅방 리스트 호출
+router.get('/',isLoggedIn,renderRoom); // 채팅방 리스트 호출
 
 router.post('/create',createRoom); // 채팅방 생성
 
 router.get('/:id', enterRoom); //방 입장
 
-router.delete('/:id', removeRoom); //방 퇴장
+/*router.delete('/:id', removeRoom); //방 퇴장*/
 
 router.post('/:id/chat',sendChat); //채팅 전송
 
