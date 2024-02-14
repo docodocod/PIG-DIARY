@@ -57,11 +57,10 @@ exports.join = async (req, res, next) => {
 
 //비밀번호 찾기
 exports.passwordFind = async (req, res) => {
+    const nickName=req.body.nickName;
     const userEmail = req.body.email;
-
     // 이메일이 데이터베이스에 있는지 확인
-    const user = await User.findOne({where: {email: userEmail}});
-
+    const user = await User.findOne({where: {[Op.and]:[{email: userEmail},{nick: nickName}]}});
     if (!user) {
         return res.status(404).send('해당 이메일로 가입된 사용자를 찾을 수 없습니다.');
     }
@@ -80,17 +79,22 @@ exports.passwordFind = async (req, res) => {
 
 //비밀번호 초기화
 exports.passwordInit = async (req, res) => {
-    const userId = req.body.id;
-    const password = req.body.password;
-    const newPassword = pbkdf2(password);
-    await User.update({password: newPassword}, {where: {id: userId}});
-    res.redirect("/");
+    const userId = req.user.id
+    const password = req.body.currPassword;
+    const hashedPassword=pbkdf2(password);
+    const user=await User.findOne({where:{id:userId}});
+    if(hashedPassword===user.password){
+        const changePassword=req.body.changePassword;
+        const newPassword = pbkdf2(changePassword);
+        await User.update({password: newPassword}, {where: {id: userId}});
+        res.send("success");
+    }
 }
 
 //로그아웃
 exports.logout = (req, res) => {
     req.logout(() => {
-        res.redirect('/');
+        res.redirect('/main');
     });
 };
 

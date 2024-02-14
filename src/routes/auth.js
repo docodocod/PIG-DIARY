@@ -34,7 +34,7 @@ router.get('/logout',isLoggedIn,logout);
 router.get("/unregister",isLoggedIn,unregister);
 
 //비밀번호 찾기
-router.post("/findPassword",passwordFind);
+router.post("/passwordFind",passwordFind);
 
 //비밀번호 재설정
 router.post("/passwordInit",passwordInit);
