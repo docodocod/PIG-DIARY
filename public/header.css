@@ -31,7 +31,6 @@ span.point-span {
 }
 
 .like_size {
-
     font-weight: 700;
     font-size: 14.5px;
     color: #262626;
@@ -60,6 +59,9 @@ nav div.nav-1, nav div.nav-2 {
 }
 div.nav-2 {
     justify-content: flex-end;
+    border: 1px solid;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 nav img {
     height: 22px;
@@ -113,23 +115,4 @@ nav img {
     background-size: 13px;
     background-position: center left;
     background-image: url('../img/cancel.png');
-}
-.CurrIcon, .CurrTemp,{
-    display:inline-block;
-    font-size: 1.2rem;
-    text-align: center;
-    margin-right:10px;
-}
-.CurrTemp_max, .CurrTemp_min{
-    font-size: 0.9rem;
-    text-align: center;
-    margin-right:10px;
-}
-.CurrIcon{
-    margin-right:10px;
-}
-.City{
-    font-size:1.2rem;
-    text-align:center;
-    margin-right:10px;
 }

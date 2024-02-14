@@ -14,19 +14,17 @@
 <nav>
     <div class="nav-container">
         <div class="nav-1">
-            <!-- <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/logo.png" alt="logo_img">
-            <div class="vl"></div> -->
             <a href="/main"><img class="logo_instagram_txt" src="/img/PIG_DIARY.jpg" alt="logo_text"></a>
         </div>
         <input id="searchInput" type="search" class="input-search" placeholder="검색">
         <div class="nav-2">
-            <div class="CurrIcon"></div>
-            <div class="CurrTemp"></div>
-            <div class="City"></div>
-            <div class="Temp_container">
-                <div class="CurrTemp_max"></div>
-                <div class="CurrTemp_min"></div>
-            </div>
+            {% if user and user.id %}
+                <div>{{user.nick}}님 반갑습니다.</div>
+                <a href="/auth/logout">로그아웃</a>
+            {% else %}
+                <a href="/">로그인  </a>
+                <a href="/">회원가입  </a>
+            {% endif %}
         </div>
         <!--<div class="nav-2">
             <a href="/"><img src="/img/home.png" alt="홈"></a>
@@ -56,11 +54,9 @@
                 </ul>
             </div>
         </div>-->
-
     </div>
 </nav>
 <script>
-
     function success(pos) { // 위치 정보를 가져오는데 성공했을 때 호출되는 콜백 함수 (pos : 위치 정보 객체)
         const lat = pos.coords.latitude;
         const lng = pos.coords.longitude;
