@@ -11,6 +11,6 @@ async function callChatGPT(prompt) {
         messages: [{role: "user", content: prompt}],
         max_tokens:500,
     });
-    return chatCompletion.choices[0].message.content;
+    return chatCompletion;
 }
 module.exports = { callChatGPT };
