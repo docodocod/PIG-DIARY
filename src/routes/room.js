@@ -1,29 +1,30 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
 const {isLoggedIn,isNotLoggedIn}=require("../middlewares");
 const {
-    renderMain, renderRoom, createRoom, enterRoom, removeRoom,sendChat, sendGif,
+    renderMain, renderRoom, createRoom, enterRoom, removeRoom,sendChat, sendImg,
 } = require('../controllers/room.js');
+const {chatShowUploadImage} = require("../controllers/room");
+const fs = require("fs");
 
 const router = express.Router();
 
 try {
     fs.readdirSync('uploads/chats');
-} catch (error) {
-    console.error('chats 폴더가 없어 chats 폴더를 생성합니다.');
+} catch (err) {
+    console.error('uploads/chat 폴더가 없어 uploads 폴더를 생성합니다.');
     fs.mkdirSync('uploads/chats');
 }
 
 const upload = multer({
     storage: multer.diskStorage({
-        destination(req, file, cb) {
-            cb(null, 'uploads/chat');
+        destination(req, file, done) {
+            done(null, 'uploads/chats');
         },
-        filename(req, file, cb) {
+        filename(req, file, done) {
             const ext = path.extname(file.originalname);
-            cb(null, path.basename(file.originalname, ext) + Date.now() + ext);
+            done(null, path.basename(file.originalname, ext ) + Date.now() + ext);
         },
     }),
     limits: { fileSize: 5 * 1024 * 1024 },
@@ -39,6 +40,6 @@ router.get('/:id', enterRoom); //방 입장
 
 router.post('/:id/chat',sendChat); //채팅 전송
 
-router.post('/room/:id/gif', upload.single('gif'), sendGif);
+router.post('/:id/img', upload.single('image'), sendImg);
 
 module.exports = router;

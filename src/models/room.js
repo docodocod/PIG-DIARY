@@ -3,7 +3,7 @@ class Room extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
             opponent: { //상대방
-                type: Sequelize.STRING(200),
+                type: Sequelize.INTEGER(),
                 allowNull:false,
             },
             owner: { //사용자

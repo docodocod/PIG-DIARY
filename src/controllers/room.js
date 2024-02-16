@@ -1,12 +1,20 @@
 const Room=require("../models/room.js");
 const Chat=require("../models/chat.js");
 const {removeRoom} = require("../services/roomDelete");
+const {Op} = require("sequelize");
 
 
 //채팅방 목록 불러오기
 exports.renderRoom=async(req, res, next)=>{
     try {
-        const rooms = await Room.findAll({where:{owner:req.user.id}}); //현재 생성되어 있는 모든 방 찾아서 담기
+        const rooms = await Room.findAll({
+            where: {
+                [Op.or]: [
+                    { owner: req.user.id },
+                    { opponent: req.user.id }
+                ]
+            }
+        });//현재 생성되어 있는 모든 방 찾아서 담기
         res.render('roomList', { rooms, title: "채팅방 목록" }); //데이터 담아서 채팅방 목록 페이지에 뿌려주기
     } catch (error) {
         console.error(error);
@@ -39,9 +47,11 @@ exports.enterRoom=async(req, res, next)=>{
         if (!room) { //room data 없으면
             return res.redirect('/?error=존재하지 않는 방입니다.');
         }
-        const chats = await Chat.findAll(
-            { RoomId: room.id },
-            {order: "createdAt"});
+        const chats = await Chat.findAll({
+            where:{
+                RoomId:room.id
+            }
+        });
         return res.render('chat', { //채팅 창에 데이터 뿌려주기
             room,
             opponent: room.opponent,
@@ -55,7 +65,7 @@ exports.enterRoom=async(req, res, next)=>{
 };
 
 //채팅방 제거
-/*exports.removeRoom=async(req, res, next)=>{
+exports.removeRoom=async(req, res, next)=>{
     try {
         await removeRoom(req.params.id);
         res.send('채팅방을 나갔습니다.');
@@ -63,7 +73,7 @@ exports.enterRoom=async(req, res, next)=>{
         console.error(error);
         next(error);
     }
-};*/
+};
 
 //채팅 전송
 exports.sendChat=async(req, res, next)=>{
@@ -82,10 +92,11 @@ exports.sendChat=async(req, res, next)=>{
 };
 
 //채팅 GIF 보내기
-exports.sendGif=async(req, res, next)=>{
+exports.sendImg=async(req, res, next)=>{
+    console.log(req.file.filename);
     try {
         const chat = await Chat.create({
-            room: req.params.id,
+            RoomId: req.params.id,
             user: req.user.id,
             gif: req.file.filename,
         });
