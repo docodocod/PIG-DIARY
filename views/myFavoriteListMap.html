@@ -7,7 +7,7 @@
 </head>
 <input type="hidden" value="{{userId}}" id="user-id">
 <div class="map_wrap">
-    <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+    <div id="map" style="width:100%;height:93%;position:relative;overflow:hidden;"></div>
     <div id="menu_wrap" class="bg_white">
         <div class="option">
             <div>
@@ -26,7 +26,7 @@
 <footer>
 {% include "footer.html" %}
 </footer>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=&libraries=services"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=22382396d3cba032b99b1fcc9ec5b4f1&libraries=services"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     var myLists = {{Lists|safe}};
@@ -110,14 +110,16 @@
         removeMarker();
 
         // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
+        let count=0;
 
         for ( var i=0; i<places.length; i++ ) {
             let myDistance=calculateDistance(lat,lng,places[i].lat,places[i].lng);
             if(myDistance<=2) {
                 // 마커를 생성하고 지도에 표시합니다
                 var placePosition = new kakao.maps.LatLng(places[i].lat, places[i].lng),
-                    marker = addMarker(placePosition, i),
-                    itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
+                    marker = addMarker(placePosition, count),
+                    itemEl = getListItem(count, places[i]); // 검색 결과 항목 Element를 생성합니다
+                count+=1;
 
 
                 // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
