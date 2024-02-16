@@ -24,6 +24,10 @@ class User extends Sequelize.Model {
                 type: Sequelize.STRING(100),
                 allowNull: true,
             },
+        /*    profileImg:{
+                type: Sequelize.STRING(100),
+                allowNull:true,
+            }*/
         }, {
             sequelize,
             timestamps: true, //createAt 생성
