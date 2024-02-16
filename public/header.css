@@ -42,26 +42,29 @@ nav {
     height: 54px;
     position: fixed;
     display: flex;
-    justify-content: center;
     background-color: white;
     border-bottom: 1px solid #DBDBDB;
+    justify-content: space-between;
 }
 .nav-container {
-    max-width: 1000px;
+    width: 100%;
     padding: 0 20px;
     display: flex;
-    align-items: center;
 }
-nav div.nav-1, nav div.nav-2 {
-    width: 370px;
+.nav-1, .nav-3 {
+    width: 30%;
     display: flex;
-    align-items: center;
 }
-div.nav-2 {
+.nav-1 > a{
+    margin:auto;
+}
+.nav-2 {
     justify-content: flex-end;
-    border: 1px solid;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+    width:40%;
+    text-align:center;
+}
+.user-state{
+    margin:auto;
 }
 nav img {
     height: 22px;
@@ -79,9 +82,9 @@ nav img {
     margin-left: 20px;
 }
 .input-search {
-    width: 200px;
+    width: 400px;
     height: 12px;
-    padding: 7px;
+    padding: 10px;
     box-sizing: content-box;
     background-color: #fafafa;
     border: 1px solid #DBDBDB;
@@ -92,6 +95,7 @@ nav img {
     background-position: 38% center;
     text-indent: 10%;
     font-size: 14px;
+    margin-top:10px;
 }
 .input-search:focus {
     background-position: 4% center;
@@ -115,4 +119,8 @@ nav img {
     background-size: 13px;
     background-position: center left;
     background-image: url('../img/cancel.png');
+}
+.post-button{
+    margin:auto;
+    cursor:pointer;
 }
