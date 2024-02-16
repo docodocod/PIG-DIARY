@@ -6,6 +6,11 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const morganMiddelware=require("./src/middlewares/morganMiddleware");
+const {sequelize} = require("./src/models/index.js");
+const passportConfig = require("./src/passport/index.js");
+const path = require("path");
+const {webSocket} = require("./src/utils/socket");
+const {morganMiddleware} = require("./src/middlewares/morganMiddleware");
 dotenv.config();
 
 const indexRouter = require("./src/routes/index.js");
@@ -15,25 +20,18 @@ const userRouter=require('./src/routes/user.js');
 const roomRouter=require('./src/routes/room.js');
 const chatBotRouter=require('./src/routes/chatBot.js');
 
-
-const {sequelize} = require("./src/models/index.js");
-const passportConfig = require("./src/passport/index.js");
-const path = require("path");
-const {webSocket} = require("./src/utils/socket");
-const {morganMiddleware} = require("./src/middlewares/morganMiddleware");
-
 const app = express();
 passportConfig();
 
-app.set('port', process.env.SERVER_PORT || 8001); //Config.PORT를 앞에 붙여준 이유는 배포와 개발할때 서로 다른 포트를 사용할거라서
+app.set('port', process.env.SERVER_PORT || 4161); //Config.PORT를 앞에 붙여준 이유는 배포와 개발할때 서로 다른 포트를 사용할거라서
 app.set('view engine', 'html');
 nunjucks.configure('views', {
     express: app,
     watch: true,
 });
 
-sequelize.sync({force: false}) //true로 하면 강제적으로 데이터베이스를 초기화하고 다시만든다.
-    .then(() => { //sequelize를 실행 시켜 mySQL과 연결해준다.
+sequelize.sync({force: false})
+    .then(() => {
         console.log('데이터베이스 연결 성공');
     })
     .catch((err) => {
@@ -49,8 +47,9 @@ app.use(session({
         secure: false,
     },
 }));
+
 //테스트
-app.use(morgan('dev')); // 데이터의 흐름을 자세히 보여줌
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(morganMiddleware);
 app.use(express.urlencoded({extended: true}));
@@ -59,7 +58,10 @@ app.use(passport.initialize());
 app.use(passport.session()); //passport->index.js로 넘어가서 deserialize로 넘어간다.
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/img', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads/chats', express.static(path.join(__dirname, 'uploads','chats')));
+app.use('/uploads/profiles', express.static(path.join(__dirname, 'uploads','profiles')));
+app.use('/uploads/posts', express.static(path.join(__dirname, 'uploads','posts')));
 
 app.use('/', indexRouter);
 app.use('/auth',authRouter);
