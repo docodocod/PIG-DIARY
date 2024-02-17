@@ -1,7 +1,10 @@
 const User=require("../models/user.js");
 const Post=require("../models/post.js");
+const Upload=require('../models/upload');
 const Hashtag=require("../models/hashtag.js");
 const Comment=require('../models/comment');
+const dotenv=require('dotenv');
+dotenv.config();
 
 exports.renderProfile = (req, res) => {
     res.render('profile', { title: '내 정보 - NodeBird' });
@@ -45,14 +48,17 @@ exports.renderMain=async(req, res, next)=>{ //메인 페이지에서 정보 불�
                 model:User,
                 attributes:['id','nick'],
                 as:"Liker",
-        },{
+            },{
                 model:Comment,
                 attributes:['writer','comment'],
+            },{
+                model:Upload,
+                attributes:["files","PostId"],
             }],
             order: [['createdAt', 'DESC']],
         });
-        res.render('main',{
-            feeds:posts
+        res.render("main",{
+            feeds:posts,
         });
     } catch (err) {
         console.error(err);
