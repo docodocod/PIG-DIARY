@@ -9,6 +9,14 @@ class Post extends Sequelize.Model {
             content: {
                 type: Sequelize.STRING(140),
                 allowNull: false,
+            },
+            likeCount:{
+                type:Sequelize.INTEGER(),
+                allowNull:true,
+            },
+            viewCount:{
+                type:Sequelize.INTEGER(),
+                allowNull:true,
             }
         }, {
             sequelize,

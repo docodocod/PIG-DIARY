@@ -2,7 +2,7 @@ const Post = require("../models/post.js");
 const Hashtag = require("../models/hashtag.js");
 const User = require("../models/user");
 const Comment = require('../models/comment');
-const Upload=require('../models/Upload');
+const Upload = require('../models/Upload');
 
 
 //게시글 업로드
@@ -12,10 +12,10 @@ exports.uploadPost = async (req, res, next) => { //게시글 업로드
             content: req.body.content,
             UserId: req.user.id,
         });
-        for(let i=0; i<req.body.url.length; i++){
+        for (let i = 0; i < req.body.url.length; i++) {
             await Upload.create({
-                files:req.body.url[i],
-                postId:post.id,
+                files: req.body.url[i],
+                postId: post.id,
             })
         }
         const hashtags = req.body.content.match(/#[^\s#]*/g);
@@ -85,21 +85,30 @@ exports.postReply = async (req, res, next) => {
     res.redirect('/');
 }
 
+
 //게시글 좋아요
 exports.like = async (req, res, next) => { //좋아요 기능
     try {
         const post = await Post.findOne({where: {id: req.params.id}});
-        if (post) {
+        if(post){
             await post.addLiker(parseInt(req.user.id, 10));
-            res.send('success');
-        } else {
-            res.status(404).send('no user');
+        }else {
+            res.send.status(500);
         }
-    } catch (error) {
+    }catch (error) {
         console.error(error);
         next(error);
     }
 };
+
+exports.getLike=async(req,res,next)=>{
+    try{
+        const post=await Post.update({likeCount:1},{where:{id:1}});
+        res.send({post});
+    }catch(err){
+        console.log(err);
+    }
+}
 
 //게시글 좋아요 취소
 exports.unlike = async (req, res, next) => { //좋아요 해제 기능
