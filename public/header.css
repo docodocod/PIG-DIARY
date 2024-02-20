@@ -1,5 +1,9 @@
 /* general */
 
+header{
+    position:fixed;
+}
+
 ul,li {
     margin: 0;
     padding: 0;

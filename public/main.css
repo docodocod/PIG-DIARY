@@ -1,9 +1,10 @@
 /* main */
-main {
-    width: 960px;
+.main {
+    width:100%;
     margin: 0 auto;
-    padding-top: 94px;
     padding-bottom: 40px;
+    display: flex;
+    justify-content: space-between; /* 자식 요소들을 동등한 간격으로 배치 */
 }
 .main-right {
     width: 310px;
@@ -11,12 +12,6 @@ main {
     position: fixed;
     top: 94px;
     z-index: 0;
-}
-
-.feeds {
-    width: 614px;
-    margin-right: 34px;
-    display: inline-block;
 }
 article, .section-recommend {
     background-color: #fff;
@@ -56,6 +51,7 @@ header {
 .main-image{
     text-align: center; /* 이미지를 가운데 정렬합니다. */
     margin-bottom: 20px;
+
 }
 
 .main-image img {
@@ -359,4 +355,99 @@ input[type=file]::file-selector-button {
     font-size: 18px;
     font-weight: 600;
     color: black;
+}
+.left-container{
+    width:30%;
+    display:flex;
+}
+.weather-container{
+    width: 200px; /* 너비 설정 */
+    height: 150px; /* 높이 설정 */
+    background-color: #f0f0f0; /* 배경색 설정 */
+    border-radius: 20px; /* 둥근 모서리 설정 */
+    padding: 4px; /* 내부 여백 설정 */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+    margin-top:80px;
+    position:fixed;
+    margin-left:120px;
+}
+.right-container{
+    width:30%;
+    display:inline-block;
+}
+.center-container {
+    width:40%;
+    margin-top:50px;
+    display:inline-block;
+}
+.right-box{
+    height:200px;
+    background: #00376B;
+    width:300px;
+    margin:auto;
+}
+.CurrIcon{
+    font-size: 1.2rem;
+    text-align: center;
+    margin-right:10px;
+}
+.CurrTemp {
+    font-size: 1.2rem;
+    text-align: center;
+    margin-right: 10px;
+    margin-top:20px;
+}
+.CurrTemp_max, .CurrTemp_min{
+    font-size: 0.9rem;
+    text-align: center;
+    margin-right:10px;
+}
+.CurrIcon{
+    margin-right:10px;
+}
+.City{
+    font-size:1.5rem;
+    text-align:center;
+    margin-right:10px;
+}
+.weather-box{
+    margin-left: 5px;
+    text-align: center;
+    display: inline-block;
+    height: 100px;
+    padding-top: 50px;
+    width: 60px;
+}
+.Temp_container{
+    display:inline-block;
+}
+.img-box{
+    width:300px;
+    height:300px;
+}
+
+.profile-box{
+    padding:10px;
+}
+
+.profile-box > div {
+    display: inline-block; /* 자식 요소들을 가로로 정렬합니다. */
+    vertical-align: middle; /* 세로 정렬을 가운데로 설정합니다. */
+}
+
+.profile-img {
+    width: 40px; /* 이미지의 너비를 적절히 설정합니다. */
+    height: 40px; /* 이미지의 높이를 적절히 설정합니다. */
+    border-radius: 50%; /* 모서리를 원 형태로 만듭니다. */
+    overflow: hidden; /* 모서리를 둥글게 만들 때 초과되는 부분을 잘라냅니다. */
+    background-image: url('your_image_url.jpg'); /* 이미지 경로를 설정합니다. */
+    background-size: cover; /* 배경 이미지를 커버하도록 설정합니다. */
+    margin-right:10px;
+}
+.feed-content{
+    display:flex;
+    font-size:15px;
+}
+#profileModal{
+    margin-top: 30px;
 }

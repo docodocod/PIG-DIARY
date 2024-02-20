@@ -1,0 +1,114 @@
+body, ul, li {
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+
+.slider-2 {
+    height:400px;
+    position:relative;
+    width:600px;
+    border: 1px solid #DBDBDB;
+}
+
+.slider-2 .slides > div >img{
+    text-align:center;
+    width:600px;
+    height:400px;
+
+}
+.slider-2 .slides > div {
+    top:0;
+    left:0;
+    position:absolute;
+    width:600px;
+    height:400px;
+    background-position:center;
+    /* 이미지를 최대한 안짤리게 한다. */
+    background-size:cover;
+    /* 배경 반복 금지 */
+    background-repeat:no-repeat;
+    opacity:0;
+    transition: opacity 0.5s;
+}
+
+.slider-2 .slides > div.active {
+    opacity:1;
+}
+
+@media ( max-width:700px ) {
+    .slider-2 {
+        height:300px;
+    }
+}
+
+.slider-2 .page-nav {
+    position:absolute;
+    width:100%;
+    text-align:center;
+    bottom:0;
+    left:0;
+}
+
+.slider-2 .page-nav > div {
+    display:inline-block;
+    width:15px;
+    height:15px;
+    /*background-color:rgba(255,255,255,0.5);*/
+    background-color: rgba(255, 255, 255, 0.3);
+    cursor:pointer;
+    border-radius: 50%; /* 모서리를 원 형태로 만듭니다. */
+    overflow: hidden; /* 모서리를 둥글게 만들 때 초과되는 부분을 잘라냅니다. */
+}
+
+.slider-2 .page-nav > div.active {
+    background-color:black;
+    border-radius: 50%; /* 모서리를 원 형태로 만듭니다. */
+    overflow: hidden; /* 모서리를 둥글게 만들 때 초과되는 부분을 잘라냅니다. */
+}
+
+.slider-2>.side-btns>div{
+    position:absolute;
+    top:0;
+    left:0;
+    width:30%;
+    height:100%;
+    cursor:pointer;
+    z-index:1;
+
+}
+
+.slider-2>.side-btns>div>span:active{
+    transform:translatey(-40%);
+}
+.slider-2>.side-btns>div:last-child{
+    left:auto;
+    right:0;
+}
+
+.slider-2>.side-btns>div>span{
+    position:absolute;
+    top:50%;
+    transform:translatey(-50%);
+    left:inherit;
+    right:inherit;
+    width:10px;
+    height:10px;
+    background-color:rgba(255,255,255,0.4);
+    border-radius:100%;
+    margin:0 10px;
+}
+.slider-2>.side-btns>div>span > i{
+    position:absolute;
+    top:50%;
+    left:50%;
+    font-size:3rem;
+    color:rgba(0,0,0,0.4);
+    transform:translateX(-70%) translateY(-50%);
+}
+
+.slider-2>.side-btns>div:last-child>span > i {
+    transform:translateX(-20%) translateY(-50%);
+}
+
+/* 슬라이드 버튼 끝 */
