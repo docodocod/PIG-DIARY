@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="/header.css">
+</head>
+<body>
+<script>
+    $(document).ready(function() {
+        getFeed();
+    });
+
+    function getFeed() {
+        $.ajax({
+            type: "GET",
+            url: "/",
+            data: {},
+            success: function (response) {
+                let users = response['all_users'];
+                let feeds = response['all_feeds'];
+                let likes = response['all_likes'];
+                let feed = feeds.reverse()
+                for (let i = 0; i < feed.length; i++) {
+                    let created_at = feeds[i]['created_at'];
+                    let content = feeds[i]['content'];
+                    let feed_img_src = feeds[i]['feed_img_src'];
+                    let user_id = feeds[i]['user_id'];
+                    let feed_idx = feeds[i]['_id'];
+                    let like_count = 0;
+
+
+                    for (let k = 0; k < likes.length; k++) {
+                        if (likes[k]['feed_idx'] === feed_idx) {
+                            like_count++
+                        }
+
+                    }
+                    for (let j = 0; j < users.length; j++) {
+                        if (user_id === users[j]['user_id']) {
+                            let profile_img_src = users[j]['profile_img_src'];
+                            let temp_html = `<article>
+                <header>
+                    <div class="profile-of-article">
+                        <img class="img-profile pic"
+                             src="${profile_img_src}"
+                             alt="">
+                        <span class="userID main-id point-span">${user_id}</span>
+                    </div>
+                        <button type="button" class="feedadd" data-bs-toggle="modal" data-bs-target="#exampleModal${i + 10000}">
+                            <img class="icon-react icon-more"
+                             src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/more.png" alt="more">
+                        </button>
+                </header>
+                <div class="main-image">
+                    <img src="${feed_img_src}"
+                         alt="" class="mainPic">
+                </div>
+                <div class="icons-react">
+                    <div class="icons-left">
+                        <button class="like_button" onclick="saveLike('${feed_idx}')">
+                            <img class="icon-react" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="좋아요">
+                        </button>
+                        <img class="icon-react"
+                             src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/comment.png" alt="말풍선">
+<!--                        <img class="icon-react" src="../static/img/dm.png" alt="DM">-->
+                    </div>
+                    <img class="icon-react"
+                         src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/bookmark.png" alt="북마크">
+                </div>
+                <!-- article text data -->
+                <div class="reaction">
+                    <div class="liked-people">
+                        <p><span class="like_size">좋아요</span> <span class="point-span">${like_count}개</span></p>
+                    </div>
+                    <div class="description">
+                        <div><span class="point-span userID">${user_id}</span><span class="mycontent${i}">${content}</span></div>
+                    </div>
+                    <div class="comment-section">
+                        <div class="comments" id="commentappend${i}">
+
+                        </div>
+                        <div class="time-log">
+                            <span>${timeForToday(created_at)}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hl"></div>
+                <div class="comment">
+                    <input id="input-comment${i}" class="input-comment" type="text" placeholder="댓글 달기...">
+                    <button type="submit" class="submit-comment" onclick="saveComment('${i}', '${feed_idx}')">게시</button>
+                </div>
+            </article>`
+                            $('#feeds').append(temp_html);
+
+                        }
+
+                    }
+                    comment_count(i, feed_idx)
+                    let content_txt = $('.mycontent').text();
+                    let content_txt_short = content_txt.substring(0, 30) + "..." + `<a href="javascript:void(0)" class="more" onclick="viewmore('${i}', '${content}')">더보기</a>`;
+
+                    if (content.length >= 30) {
+                        $('.mycontent' + i).html(content_txt_short);
+                    }
+                    let modal2_html =
+                        `<div class="modal fade" id="exampleModal${i + 10000}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                                                      <div class="list-group">
+  <button type="button" class="list-group-item list-group-item-action active" aria-current="true" onclick="police()">
+    신고하기
+  </button>
+  <button type="button" class="list-group-item list-group-item-action" onclick="repost('${feed_idx}')">리포스트</button>
+  <button type="button" class="list-group-item list-group-item-action" onclick="follow('${user_id}')">팔로우 / 팔로우 취소</button>
+  <button type="button" class="list-group-item list-group-item-action" onclick="removefeed('${feed_idx}', '${user_id}')">게시물 삭제</button>
+  <button type="button" class="list-group-item list-group-item-action" data-bs-dismiss="modal">취소</button>
+</div>
+                        </div>
+                      </div>
+                    </div>
+                    `
+                    $('#modals').append(modal2_html);
+                    let modal_html = `<!-- Modal -->
+<div class="modal fade" id="exampleModal${i}" tabindex="-1" aria-labelledby="exampleModalLabel${i}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel${i}">${user_id} 게시물의 댓글</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul id="modalcomment${i}">
+
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>`
+                    $('#modals').append(modal_html);
+
+                }
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

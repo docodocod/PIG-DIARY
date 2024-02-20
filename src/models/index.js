@@ -38,7 +38,6 @@ Favorite.init(sequelize);
 Comment.init(sequelize);
 Upload.init(sequelize);
 
-
 User.associate(db);
 Post.associate(db);
 Hashtag.associate(db);

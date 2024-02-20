@@ -43,7 +43,7 @@ exports.renderMain=async(req, res, next)=>{ //메인 페이지에서 정보 불�
         const posts = await Post.findAll({ //해당 유저가 가지고 있는 게시글들을 담아줍니다.
             include: [{
                 model: User,
-                attributes: ['id', 'nick'],
+                attributes: ['id', 'nick','profileImg'],
             },{
                 model:User,
                 attributes:['id','nick'],
