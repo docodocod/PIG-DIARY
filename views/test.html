@@ -1,20 +1,75 @@
-{% block content %}
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>asd</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+    <link rel="stylesheet" href="/slider.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 </head>
+{% for feed in feeds %}
+<div class="slider-2">
+    <div class="side-btns">
+        <div><span><i class="fas fa-caret-left"></i></span></div>
+        <div><span><i class="fas fa-caret-right"></i></span></div>
+    </div>
+    <div class="slides">
+        {% for upload in feed.Uploads %}
+        <div class=""><img src="/img/{{upload.files}}" alt=""/></div>
+        {% endfor %}
+    </div>
+    <div class="page-nav">
+        {% for upload in feed.Uploads %}
+        <div class=""></div>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
 <script>
-    // Accessing the 'Lists' array in JavaScript
-    const myLists = {{Lists|safe}};
+    $(document).ready(function(){
+        $('.slider-2 .slides > div:nth-child(1)').classList.add('active');
+    });
 
-    console.log("myLists:"+myLists);
+    $('.slider-2 .page-nav > div').click(function() {
 
-    // You can iterate through the array and perform other JavaScript operations
-    for (var i = 0; i < myLists.length; i++) {
-        console.log(myLists[i].lat);
-    }
+        var $this = $(this);
+        var $pagenav = $this.parent()
+        var $current = $pagenav.find('.active');
+
+        $current.removeClass('active');
+        $this.addClass('active');
+
+        var index = $this.index();
+        var $슬라이더 = $this.closest('.slider-2');
+
+        $슬라이더.find('.slides > div.active').removeClass('active');
+        $슬라이더.find('.slides > div').eq(index).addClass('active');
+
+
+    });
+
+    $('.slider-2 > .side-btns > div:first-child').click(function() {
+        var $this = $(this);
+        var $slider = $this.closest('.slider-2');
+
+        var $current = $slider.find('.page-nav > div.active');
+        var $post = $current.prev();
+
+        if ( $post.length == 0 ) {
+            $post = $slider.find('.page-nav > div:last-child');
+        }
+
+        $post.click();
+    });
+
+    $('.slider-2 > .side-btns > div:last-child').click(function() {
+        var $this = $(this);
+        var $slider = $this.closest('.slider-2');
+
+        var $current = $slider.find('.page-nav > div.active');
+        var $post = $current.next();
+
+        if ( $post.length == 0 ) {
+            $post = $slider.find('.page-nav > div:first-child');
+        }
+
+        $post.click();
+    });
 </script>
-{% endblock %}

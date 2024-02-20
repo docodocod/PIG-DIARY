@@ -26,7 +26,7 @@
 <footer>
 {% include "footer.html" %}
 </footer>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=22382396d3cba032b99b1fcc9ec5b4f1&libraries=services"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=&libraries=services"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     var myLists = {{Lists|safe}};
@@ -62,7 +62,7 @@
             '        </div>' +
             '        <div class="body">' +
             '            <div class="img">' +
-            '                <img src="" width="73" height="70">' +
+            '                <img src="/img/img-preparing.jpg" width="73" height="70">' +
             '           </div>' +
             '            <div class="desc">' +
             '                <div class="ellipsis">'+ places.roadAddressName + '</div>' +

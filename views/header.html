@@ -6,6 +6,7 @@
     <script src="https://kit.fontawesome.com/01a517b5c8.js" crossorigin="anonymous"></script>
 </head>
 {% block content %}
+<header>
 <nav>
     <div class="nav-container">
         <div class="nav-1">
@@ -32,14 +33,14 @@
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header" style="padding: 10px 10px;">
                 <h5 class="modal-title" id="exampleModalLabel">게시글 작성</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <form>
+            <div class="modal-body" style="padding: 5px 20px 10px 20px;">
+                <form action="">
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">게시글 제목</label>
                         <input type="text" class="form-control" id="recipient-name">
@@ -50,10 +51,11 @@
                     </div>
                     <div class="">
                         <label for="img" class=""></label>
-                        <input type="file" class="" />
+                        <input type="file" class="" multiple/>
                     </div>
                 </form>
             </div>
+            <div class="img-prepare">adfasdf</div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
                 <button type="button" class="btn btn-primary">공유하기</button>
@@ -61,6 +63,7 @@
         </div>
     </div>
 </div>
+</header>
 {% endblock %}
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -73,12 +76,13 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 <script>
-    $('#exampleModal').on('show.bs.modal', function (event) {
+ /*   $('#exampleModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget) // Button that triggered the modal
         var recipient = button.data('whatever') // Extract info from data-* attributes
         // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
         // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
         var modal = $(this)
         modal.find('.modal-title').text('New message to ' + recipient)
-        modal.find('.modal-body input').val(recipient)
+        modal.find('.modal-body input').val(recipient);
+    });*/
 </script>
