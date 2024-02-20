@@ -4,11 +4,11 @@ class Room extends Sequelize.Model {
         return super.init({
             opponent: { //상대방
                 type: Sequelize.INTEGER(),
-                allowNull:false,
+                allowNull: false,
             },
             owner: { //사용자
                 type: Sequelize.INTEGER(),
-                allowNull:false,
+                allowNull: false,
             },
         }, {
             sequelize,
@@ -20,8 +20,9 @@ class Room extends Sequelize.Model {
             collate: 'utf8mb4_general_ci',
         });
     };
+
     static associate(db) {
         db.Room.hasMany(db.Chat);
     }
-};
+}
 module.exports=Room;

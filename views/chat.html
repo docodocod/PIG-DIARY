@@ -1,56 +1,116 @@
-{% extends 'layout.html' %}
-
-{% block content %}
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="/room.css">
+    <title>채팅화면</title>
+    <meta name="robotos" content="noindex, nofollow">
+    <link rel="stylesheet" href="/chat-room.css">
+    <link rel="stylesheet" href="/general.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap">
 </head>
-<h1>{{title}}</h1>
-<a href="/" id="exit-btn">방 나가기</a>
-<fieldset>
-    <legend>채팅 내용</legend>
-    <div id="chat-list">
-        {% for chat in chats %}
-        {% if chat.user === user %}
-        <div class="mine" style="color: {{chat.user}}">
-            <div>{{chat.user}}</div>
-            {% if chat.gif %}}
-            <img src="/gif/{{chat.gif}}">
-            {% else %}
-            <div>{{chat.chat}}</div>
-            {% endif %}
-        </div>
-        {% elif chat.user === 'system' %}
-        <div class="system">
-            <div>{{chat.chat}}</div>
-        </div>
-        {% else %}
-        <div class="other" style="color: {{chat.user}}">
-            <div>{{chat.user}}</div>
-            {% if chat.gif %}
-            <img src="/gif/{{chat.gif}}">
-            {% else %}
-            <div>{{chat.chat}}</div>
-            {% endif %}
-        </div>
-        {% endif %}
-        {% endfor %}
+{% block content %}
+<header>
+    {% include "header.html" %}
+</header>
+<div id="chat-body">
+    <!-- 설정바(최소화, 닫기 버튼 등) -->
+    <div class="setting_bar">
+        <i class="icon-window-minimize" alt="최소화버튼" title="최소화"></i>
+        <i class="icon-window-maximize" alt="최대화버튼" title="최대화"></i>
+        <i class="icon-cancel" alt="닫기버튼" title="닫기"></i>
     </div>
-</fieldset>
-<form action="/chat" id="chat-form" method="post" enctype="multipart/form-data">
-    <label for="gif">GIF 올리기</label>
-    <input type="file" id="gif" name="gif" accept="image/gif">
-    <input type="text" id="chat" name="chat">
-    <button type="submit">전송</button>
-</form>
+    <!-- 알림, 메뉴 기능 -->
+    <div class="main-menu">
+        <i class="icon-bell" title="알림"></i>
+        <i class="icon-ellipsis" title="메뉴"></i>
+    </div>
+    <!-- 상대방 프로필 사진, 프로필명 -->
+    <header>
+
+    </header>
+
+    <main class="chat-container">
+        <!-- 채팅 내용 시작 -->
+        <div class="main-header">
+            <img class="profile-img" src="./pic/default.png" alt="쀼프로필사진">
+            <div class="profile-col">
+                <span class="profile-name">쀼사원</span>
+                <div class="sub-menu">
+                    <i class="icon-box" title="채팅방 서랍"></i>
+                    <i class="icon-search" title="검색"></i>
+                </div>
+            </div>
+        </div>
+        <div class="main-chat">
+            {% for chat in chats %}
+            {% if chat.user==user %}
+            <div class="me-chat">
+                <div class="me-chat-col">
+                    {% if chat.gif %}
+                    <img src="/uploads/chats/{{chat.gif}}" class="img_class"/>
+                    {% else %}
+                    <span class="balloon">{{chat.chat}}</span>
+                    {% endif %}
+                </div>
+                <span class="date-time">{{chat.createdAt}}</span>
+            </div>
+            {% else %}
+            <div class="friend-chat">
+                <img class="profile-img" src="./pic/default.png" alt="쀼프로필사진">
+                <div class="friend-chat-col">
+                    <span class="profile-name"></span>
+                    {% if chat.gif %}
+                    <img src="/uploads/chats/{{chat.gif}}" class="img_class"/>
+                    {% else %}
+                    <span class="balloon">{{chat.chat}}</span>
+                    {% endif %}
+                </div>
+                <span class="date-time"></span>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <!-- 채팅 입력창 -->
+        <div id="insert-content">
+            <form id="chat-form" method="post" enctype="multipart/form-data">
+                <input type="file" id="image" name="image" accept="image/gif">
+                <input type="text" id="chat" name="chat"/>
+                <button type="submit" id="submit" class="chat-submit" style="float:right">전송</button>
+            </form>
+        </div>
+    </main>
+</div>
+{% endblock %}
+<footer>
+    {% include "footer.html" %}
+</footer>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-    //헷갈려서 이해하기 위해 주석 설명 처리
+    /*const today = new Date();
+
+    // 날짜 포맷 설정 함수
+    function formatDate(date) {
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        month = (month < 10 ? "0" : "") + month;
+        day = (day < 10 ? "0" : "") + day;
+        return year + "년 " + month + "월 " + day + "일";
+    }
+
+    let formattedDate = formatDate(today);
+    // 출력된 포맷된 날짜를 해당 타임 엘리먼트에 추가
+    let timeElement = document.querySelector('.date-line time');
+    timeElement.textContent = formattedDate;
+    /!*--------------------------------------------------------------------------*!/*/
 
     const socket = io.connect('http://localhost:4161/chat', {
         path: '/socket.io',
     });
+    socket.onclose = async function (e) {
+        setTimeout(() => {
+            socket()
+        }, 1000);
+    }
     socket.emit('join', new URL(location).pathname.split('/').at(-1)); // 서버에 'join' 이벤트명으로 현재 주소에 있는 id 값을 보낸다.
     socket.on('join', function (data) { //서버에서 'join' 이벤트명으로 데이터 보낸걸 받는다.
         const div = document.createElement('div');
@@ -58,42 +118,84 @@
         const chat = document.createElement('div');
         chat.textContent = data.chat;
         div.appendChild(chat);
-        document.querySelector('#chat-list').appendChild(div);
+        document.querySelector('.chat-content').appendChild(div);
     });
+
     socket.on('exit', function (data) { //서버에서 'exit' 이벤트명으로 데이터 보낸걸 받는다.
         const div = document.createElement('div');
         div.classList.add('system');
         const chat = document.createElement('div');
         chat.textContent = data.chat;
         div.appendChild(chat);
-        document.querySelector('#chat-list').appendChild(div);
+        document.querySelector('.chat-list').appendChild(div);
     });
     socket.on('chat', function (data) { //서버에서 'chat' 이벤트명으로 데이터 보낸걸 받는다.
         const div = document.createElement('div');
-        if (data.user === '{{user}}') {
-            div.classList.add('mine');
+        if (data.user === user) {
+            div.classList.add('me-chat');
+            if (data.chat) {
+                const chat = document.createElement('div');
+                chat.classList.add("me-chat-col")
+                const chat_span = document.createElement("span");
+                chat_span.classList.add('balloon');
+                chat_span.textContent = data.chat;
+                chat.appendChild(chat_span);
+                div.appendChild(chat);
+            } else {
+                const chat = document.createElement('div');
+                chat.classList.add("me-chat-col")
+                const gif = document.createElement('img');
+                gif.src = '/uploads/chats/' + data.gif;
+                chat.appendChild(gif);
+                div.appendChild(chat);
+            }
+            /*const date_span = document.createElement("span");
+            date_span.classList.add("date-time");
+            date_span.textContent = data.chat;
+            div.appendChild(date_span);*/
         } else {
-            div.classList.add('other');
+            div.classList.add('friend-chat');
+            const name = document.createElement('div');
+            name.textContent = data.user;
+            div.appendChild(name);
+            const profile_img = document.createElement("img");
+            profile_img.src = "";
+            div.appendChild(profile_img);
+            if (data.chat) {
+                const chat = document.createElement('div');
+
+                chat.classList.add("friend-chat-col");
+
+                const profile_span = document.createElement("span");
+                profile_span.classList.add("profile-name");
+                /*profile_span.textContent = /!*data.chat.user.nickname*!/*/
+
+                const chat_span = document.createElement("span");
+                chat_span.classList.add('balloon');
+                chat_span.textContent = data.chat;
+                div.appendChild(profile_span);
+                chat.appendChild(chat_span);
+                div.appendChild(chat);
+            } else {
+                const chat = document.createElement('div');
+                chat.classList.add("friend-chat-col")
+                const gif = document.createElement('img');
+                gif.src = '/uploads/chats/' + data.gif;
+                chat.appendChild(gif);
+                div.appendChild(chat);
+            }
+
+            /*const date_span = document.createElement("span");
+            date_span.classList.add("date-time");
+            date_span.textContent = data.chat;
+            div.appendChild(date_span);*/
         }
-        const name = document.createElement('div');
-        name.textContent = data.user;
-        div.appendChild(name);
-        if (data.chat) {
-            const chat = document.createElement('div');
-            chat.textContent = data.chat;
-            div.appendChild(chat);
-        } else {
-            const gif = document.createElement('img');
-            gif.src = '/gif/' + data.gif;
-            div.appendChild(gif);
-        }
-        div.style.color = data.user;
-        document.querySelector('#chat-list').appendChild(div);
+        document.querySelector('.chat-content').appendChild(div);
     });
     document.querySelector('#chat-form').addEventListener('submit', function (e) {
         e.preventDefault();
         if (e.target.chat.value) {
-            axios.post('/room/{{room.id}}/chat', { //axios 비동기로 서버에 post 요청을 해서 chat data를 보낸다.
+            axios.post('/room/{{room.id}}/chat', {
                 chat: this.chat.value,
             })
                 .then(() => {
@@ -104,11 +206,12 @@
                 });
         }
     });
-    document.querySelector('#gif').addEventListener('change', function (e) {
+    document.querySelector('#image').addEventListener('change', function (e) {
         console.log(e.target.files);
         const formData = new FormData();
-        formData.append('gif', e.target.files[0]);
-        axios.post('/room/{{room.id}}/gif', formData)
+        formData.append('image', e.target.files[0]);
+        console.log(formData);
+        axios.post('/room/{{room.id}}/img', formData)
             .then(() => {
                 e.target.file = null;
             })
@@ -117,4 +220,3 @@
             });
     });
 </script>
-{% endblock %}

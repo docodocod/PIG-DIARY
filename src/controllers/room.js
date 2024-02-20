@@ -2,18 +2,24 @@ const Room=require("../models/room.js");
 const Chat=require("../models/chat.js");
 const {removeRoom} = require("../services/roomDelete");
 const {Op} = require("sequelize");
+const User = require("../models/user");
 
 
 //채팅방 목록 불러오기
 exports.renderRoom=async(req, res, next)=>{
     try {
         const rooms = await Room.findAll({
+            include: {
+                model: Chat,
+                attributes: ['user', 'chat', 'gif'],
+            },
             where: {
                 [Op.or]: [
-                    { owner: req.user.id },
-                    { opponent: req.user.id }
+                    {owner: req.user.id},
+                    {opponent: req.user.id}
                 ]
-            }
+            },
+            order: [['createdAt', 'DESC']]
         });//현재 생성되어 있는 모든 방 찾아서 담기
         res.render('roomList', { rooms, title: "채팅방 목록" }); //데이터 담아서 채팅방 목록 페이지에 뿌려주기
     } catch (error) {

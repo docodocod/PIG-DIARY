@@ -1,3 +1,4 @@
+/*
 const Room=require("../models/room.js");
 const Chat=require( "../models/chat.js");
 
@@ -8,4 +9,4 @@ exports.removeRoom=async(roomId)=>{
     } catch (error) {
         throw error;
     }
-};
+};*/
