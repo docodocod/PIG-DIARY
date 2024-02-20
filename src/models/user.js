@@ -24,10 +24,10 @@ class User extends Sequelize.Model {
                 type: Sequelize.STRING(100),
                 allowNull: true,
             },
-        /*    profileImg:{
+            profileImg:{
                 type: Sequelize.STRING(100),
                 allowNull:true,
-            }*/
+            }
         }, {
             sequelize,
             timestamps: true, //createAt 생성
@@ -53,7 +53,6 @@ class User extends Sequelize.Model {
             through: 'Follow',
         });
         db.User.belongsToMany(db.Post,{through: "like"});
-
     };
 }
 

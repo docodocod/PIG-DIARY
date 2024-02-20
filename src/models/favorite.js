@@ -37,7 +37,7 @@ class Favorite extends Sequelize.Model {
             underscored: false, //카멜케이스로 생성
             modelName: 'Favorite', // 프로젝트상 네임
             tableName: 'favorites', // db 생성 이름
-            paranoid: true, //테이블 삭제시 기록 여부
+            paranoid: false, //테이블 삭제시 기록 여부
             charset: 'utf8',
             collate: 'utf8_general_ci',
         });

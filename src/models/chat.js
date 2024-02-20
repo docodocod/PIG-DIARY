@@ -24,7 +24,7 @@ class Chat extends Sequelize.Model {
         });
     };
     static associate(db){
-        db.Chat.belongsTo(db.Room);
+        db.Chat.belongsTo(db.Room,{ foreignKey: 'RoomId' });
     }
 }
 module.exports=Chat;
