@@ -4,9 +4,43 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="/header.css" rel="stylesheet" type="text/css"/>
     <script src="https://kit.fontawesome.com/01a517b5c8.js" crossorigin="anonymous"></script>
+
 </head>
 {% block content %}
-<header>
+<div class="nav-bar" >
+    <a href="/main"><img src="/img/PIG_DIARY.jpg" alt="main-logo"/></a>
+    <div class="list-box">
+        <div class="list-1">
+            <div class="home-icon"><i class="fa-solid fa-house fa-xl" style="width:30px; height:30px;"></i></div>
+            <div>홈</div>
+        </div>
+        <div class="list-2">
+            <div class="message-icon"><img src="/img/logout_icon.png" style="width:30px; height:30px" alt="logout"/></div>
+            <div>메세지</div>
+        </div>
+        <div class="list-3">
+            <div class="food-search-icon"><img src="/img/logout_icon.png" style="width:30px; height:30px" alt="logout"/></div>
+            <div>맛집 찾기</div>
+        </div>
+        <div class="list-4">
+            <div class="food-list-icon"><img src="/img/logout_icon.png" style="width:30px; height:30px" alt="logout"/></div>
+            <div>맛집 리스트</div>
+        </div>
+        <div class="list-5">
+            <div class="feed-icon"><img src="/img/logout_icon.png" style="width:30px; height:30px" alt="logout"/></div>
+            <div>피드 작성</div>
+        </div>
+        <div class="list-6">
+            <div class="my-profile-icon"><img src="/img/logout_icon.png" style="width:30px; height:30px" alt="logout"/></div>
+            <div>마이 프로필</div>
+        </div>
+        <div class="list-7">
+            <div class="logout-icon"><img src="/img/logout_icon.png" style="width:30px; height:30px" alt="logout"/></div>
+            <div>로그아웃</div>
+        </div>
+    </div>
+</div>
+<!--<header>
 <nav>
     <div class="nav-container">
         <div class="nav-1">
@@ -63,7 +97,7 @@
         </div>
     </div>
 </div>
-</header>
+</header>-->
 {% endblock %}
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -86,3 +120,4 @@
         modal.find('.modal-body input').val(recipient);
     });*/
 </script>
+

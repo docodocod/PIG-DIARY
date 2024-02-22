@@ -6,32 +6,22 @@
     <link rel="stylesheet" href="/slider.css">
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 </head>
-<header>
-    {% include 'header.html' %}
-</header>
 {% block content %}
-    <div class="main">
-        <div class="left-container">
-            <div class="weather-container">
-                <div class="City"></div>
-                <div class="weather-box">
-                    <div class="CurrIcon"></div>
-                    <div class="CurrTemp"></div>
-                </div>
-                <div class="Temp_container">
-                    <div class="CurrTemp_max"></div>
-                    <div class="CurrTemp_min"></div>
-                </div>
-            </div>
+<body>
+{% include "header.html" %}
+<div class="main">
+    <div class="center-container">
+        <div class="nav-2" style="text-align:center; margin-bottom:25px;">
+            <input id="searchInput" type="search" class="input-search" placeholder="검색">
         </div>
-        <div class="center-container">
             {% for feed in feeds %}
+        <div class="feed-container">
             <div class="modal fade" id="profileModal{{feed.id}}" role="dialog" aria-labelledby="exampleModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-body" style="padding:0px;">
-                            <div class="wrapper">
+                            <div class="wrapper" style="margin-top:50px">
                                 <div class="img-area">
                                     <div class="inner-area">
                                         <img src="/uploads/profiles/{{feed.User.profileImg}}"
@@ -40,17 +30,22 @@
                                     </div>
                                 </div>
                                 <div class="name">{{feed.User.nick}}</div>
-                                <div class="about" style="margin-bottom:10px;" >Designer & Developer</div>
+                                <div class="about" style="margin-bottom:10px;">Designer & Developer</div>
                                 <div class="buttons">
                                     <form action="/room/create" method="post" style="width:130px;">
-                                        <input type="hidden" name="opponentId_{{feed.User.id}}" value="{{feed.User.id}}"/>
+                                        <input type="hidden" name="opponentId_{{feed.User.id}}"
+                                               value="{{feed.User.id}}"/>
                                         <button>메세지 보내기</button>
                                     </form>
                                     {% if not followingIdList.includes(feed.User.id) and feed.User.id !== user.id %}
-                                        <button style="width:130px;" class="friend-follow-{{feed.User.id}}" onclick="friendFollow(`{{feed.User.id}}`)">팔로우</button>
+                                    <button style="width:130px;" class="friend-follow-{{feed.User.id}}"
+                                            onclick="friendFollow(`{{feed.User.id}}`)">팔로우
+                                    </button>
                                     {% endif %}
                                     {% if followingIdList.includes(feed.User.id) and feed.User.id !== user.id %}
-                                        <button style="width:130px;" class="friend-unfollow-{{feed.User.id}}" onclick="friendFollow(`{{feed.User.id}}`)">팔로잉</button>
+                                    <button style="width:130px;" class="friend-unfollow-{{feed.User.id}}"
+                                            onclick="friendFollow(`{{feed.User.id}}`)">팔로잉
+                                    </button>
                                     {% endif %}
                                 </div>
                                 <div class="social-share">
@@ -77,7 +72,8 @@
             <div class="profile-box">
                 <div class="profile-img"><img src="/uploads/profiles/{{feed.User.profileImg}}" alt=""
                                               style="width:40px; height:40px;"/></div>
-                <a data-toggle="modal" data-target="#profileModal{{feed.id}}" style="cursor:pointer">{{feed.User.nick}}</a>
+                <a data-toggle="modal" data-target="#profileModal{{feed.id}}"
+                   style="cursor:pointer">{{feed.User.nick}}</a>
             </div>
             <div class="hl"></div>
             <div class="slider-2">
@@ -154,111 +150,59 @@
                 <input id="input-comment${i}" class="input-comment" type="text" placeholder="댓글 달기...">
                 <button type="submit" class="submit-comment" onclick="saveComment('${i}', '${feed_idx}')">게시</button>
             </div>
-            {% endfor %}
         </div>
-        <!--<div class="modal fade" id="exampleModal${i + 10000}" tabindex="-1" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="list-group">
-                        <button type="button" class="list-group-item list-group-item-action active" aria-current="true"
-                                onclick="police()">
-                            신고하기
-                        </button>
-                        <button type="button" class="list-group-item list-group-item-action"
-                                onclick="repost('${feed_idx}')">리포스트
-                        </button>
-                        <button type="button" class="list-group-item list-group-item-action"
-                                onclick="follow('${user_id}')">
-                            팔로우 / 팔로우 취소
-                        </button>
-                        <button type="button" class="list-group-item list-group-item-action"
-                                onclick="removefeed('${feed_idx}', '${user_id}')">게시물 삭제
-                        </button>
-                        <button type="button" class="list-group-item list-group-item-action" data-bs-dismiss="modal">취소
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>-->
-        <div class="right-container">
-            {% if user.id %}
-            <div class="wrapper">
-                <div class="img-area">
-                    <div class="inner-area">
-                        <img src="/uploads/profiles/{{user.profileImg}}" style="width:125px; height:125px;" alt="">
-                    </div>
-                </div>
-                <div class="name">{{user.nick}}</div>
-                <div class="about" style="margin-bottom:10px;">Designer & Developer</div>
-                <div class="buttons">
-                    <button>채팅 목록</button>
-                    <button>팔로잉 목록</button>
-                </div>
-                <div class="social-share">
-                    <div class="row">
-                        <i class="far fa-heart"></i>
-                        <i class="icon-2 fas fa-heart"></i>
-                        <span>20.4k</span>
-                    </div>
-                    <div class="row">
-                        <i class="far fa-comment"></i>
-                        <i class="icon-2 fas fa-comment"></i>
-                        <span>14.3k</span>
-                    </div>
-                    <div class="row">
-                        <i class="fas fa-share"></i>
-                        <span>12.8k</span>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-        </div>
-        <div class="modal fade" id="profileModal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="wrapper">
-                    <div class="img-area">
-                        <div class="inner-area">
-                            <img src="/uploads/profiles/{{feed.User.profileImg}}" style="width:125px; height:125px;"
-                                 alt="">
-                        </div>
-                    </div>
-                    <div class="icon arrow"><i class="fas fa-arrow-left"></i></div>
-                    <div class="icon dots"><i class="fas fa-ellipsis-v"></i></div>
-                    <div class="name">{{feed.User.nick}}</div>
-                    <div class="about" style="margin-bottom:10px;">Designer & Developer</div>
-                    <div class="buttons">
-                        <button>메세지 보내기</button>
-                        <button>팔로우</button>
-                    </div>
-                    <div class="social-share">
-                        <div class="row">
-                            <i class="far fa-heart"></i>
-                            <i class="icon-2 fas fa-heart"></i>
-                            <span>20.4k</span>
-                        </div>
-                        <div class="row">
-                            <i class="far fa-comment"></i>
-                            <i class="icon-2 fas fa-comment"></i>
-                            <span>14.3k</span>
-                        </div>
-                        <div class="row">
-                            <i class="fas fa-share"></i>
-                            <span>12.8k</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
-    <div>
-        {% include "chat-bot.html" %}
+    <div class="right-container">
+        <div class="weather-container">
+            <div class="City"></div>
+            <div class="weather-box">
+                <div class="CurrIcon"></div>
+                <div class="CurrTemp"></div>
+            </div>
+            <div class="Temp_container">
+                <div class="CurrTemp_max"></div>
+                <div class="CurrTemp_min"></div>
+            </div>
+        </div>
+        {% if user.id %}
+        <div class="wrapper">
+            <div class="img-area">
+                <div class="inner-area">
+                    <img src="/uploads/profiles/{{user.profileImg}}" style="width:125px; height:125px;" alt="">
+                </div>
+            </div>
+            <div class="name">{{user.nick}}</div>
+            <div class="about" style="margin-bottom:10px;">Designer & Developer</div>
+            <div class="buttons">
+                <button>채팅 목록</button>
+                <button>팔로잉 목록</button>
+            </div>
+            <div class="social-share">
+                <div class="row">
+                    <i class="far fa-heart"></i>
+                    <i class="icon-2 fas fa-heart"></i>
+                    <span>20.4k</span>
+                </div>
+                <div class="row">
+                    <i class="far fa-comment"></i>
+                    <i class="icon-2 fas fa-comment"></i>
+                    <span>14.3k</span>
+                </div>
+                <div class="row">
+                    <i class="fas fa-share"></i>
+                    <span>12.8k</span>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
-    {% endblock %}
-    <footer>
-        {% include 'footer.html' %}
-    </footer>
+</div>
+<div class="chat-bot-container">
+    {% include "chat-bot.html" %}
+</div>
+{% endblock %}
+</body>
 {% block script %}
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
@@ -407,25 +351,25 @@
             })
     };
 
-    function friendFollow(userId){
-        const value=$(`.friend-follow-${userId}`).text();
+    function friendFollow(userId) {
+        const value = $(`.friend-follow-${userId}`).text();
         console.log(value);
-        if(value==="팔로우"){
+        if (value === "팔로우") {
             axios.post(`/user/${userId}/follow`)
-                .then(()=>{
+                .then(() => {
                     $(`.friend-follow-${userId}`).text("팔로잉");
                     console.log("팔로잉 완료");
                 })
-                .catch((err)=>{
+                .catch((err) => {
                     console.log(err);
                 })
-        }else{
+        } else {
             axios.delete(`/user/${userId}/unfollow`)
-                .then(()=>{
+                .then(() => {
                     $(`.friend-unfollow-${userId}`).text("팔로우");
                     console.log("언팔로우 완료");
                 })
-                .catch((err)=>{
+                .catch((err) => {
                     console.log(err);
                 })
         }
