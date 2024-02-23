@@ -70,7 +70,7 @@
                 </div>
             </div>
             <div class="profile-box">
-                <div class="profile-img"><img src="/uploads/profiles/{{feed.User.profileImg}}" alt=""
+                <div data-toggle="modal" data-target=#profileModal{{feed.id}} class="profile-img"><img src="/uploads/profiles/{{feed.User.profileImg}}" alt=""
                                               style="width:40px; height:40px;"/></div>
                 <a data-toggle="modal" data-target="#profileModal{{feed.id}}"
                    style="cursor:pointer">{{feed.User.nick}}</a>
@@ -138,17 +138,21 @@
                     </div>
                 </div>
                 <div class="comment-section">
+                    {% for comment in feed.Comments %}
                     <div class="comments" id="commentappend${i}">
+                        <span class="writer-box">{{comment.writer}}</span>
+                        <span class="comment-box">{{comment.comment}}</span>
                     </div>
                     <div class="time-log">
                         <!--<span>${timeForToday(created_at)}</span>-->
                     </div>
+                    {% endfor %}
                 </div>
             </div>
             <div class="hl"></div>
             <div class="comment">
-                <input id="input-comment${i}" class="input-comment" type="text" placeholder="댓글 달기...">
-                <button type="submit" class="submit-comment" onclick="saveComment('${i}', '${feed_idx}')">게시</button>
+                <input id="input-comment-{{feed.id}}" class="input-comment" type="text" placeholder="댓글 달기...">
+                <button type="submit" class="submit-comment" onclick="saveComment('{{feed.id}}')">게시</button>
             </div>
         </div>
         {% endfor %}
@@ -165,7 +169,6 @@
                 <div class="CurrTemp_min"></div>
             </div>
         </div>
-        {% if user.id %}
         <div class="wrapper">
             <div class="img-area">
                 <div class="inner-area">
@@ -174,10 +177,17 @@
             </div>
             <div class="name">{{user.nick}}</div>
             <div class="about" style="margin-bottom:10px;">Designer & Developer</div>
+            {% if user.id %}
             <div class="buttons">
-                <button>채팅 목록</button>
+                <button><a href="/room">채팅 목록</a></button>
                 <button>팔로잉 목록</button>
             </div>
+            {% else %}
+            <div class="buttons">
+                <button><a href="/">로그인</a></button>
+                <button><a href="/">회원가입</a></button>
+            </div>
+            {% endif %}
             <div class="social-share">
                 <div class="row">
                     <i class="far fa-heart"></i>
@@ -195,7 +205,6 @@
                 </div>
             </div>
         </div>
-        {% endif %}
     </div>
 </div>
 <div class="chat-bot-container">
@@ -373,6 +382,19 @@
                     console.log(err);
                 })
         }
+    }
+
+    function saveComment(feedId){
+        const comment = $(`#input-comment-${feedId}`).val();
+        axios.post(`/post/${feedId}/reply`,{
+            comment:comment,
+        })
+            .then(()=> {
+                console.log("댓글달기 성공");
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
     }
 </script>
 {% endblock %}
