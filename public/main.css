@@ -6,13 +6,6 @@
     display: flex;
     justify-content: space-between; /* 자식 요소들을 동등한 간격으로 배치 */
 }
-.main-right {
-    width: 310px;
-    display: inline-block;
-    position: fixed;
-    top: 94px;
-    z-index: 0;
-}
 article, .section-recommend {
     background-color: #fff;
     border-radius: 3px;
@@ -447,6 +440,7 @@ input[type=file]::file-selector-button {
     background-image: url('your_image_url.jpg'); /* 이미지 경로를 설정합니다. */
     background-size: cover; /* 배경 이미지를 커버하도록 설정합니다. */
     margin-right:10px;
+    cursor:pointer;
 }
 .feed-content{
     display:flex;

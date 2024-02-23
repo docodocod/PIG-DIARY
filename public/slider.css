@@ -52,8 +52,8 @@ body, ul, li {
 
 .slider-2 .page-nav > div {
     display:inline-block;
-    width:15px;
-    height:15px;
+    width:8px;
+    height:8px;
     /*background-color:rgba(255,255,255,0.5);*/
     background-color: rgba(255, 255, 255, 0.3);
     cursor:pointer;
@@ -102,7 +102,7 @@ body, ul, li {
     position:absolute;
     top:50%;
     left:50%;
-    font-size:3rem;
+    font-size:2rem;
     color:rgba(0,0,0,0.4);
     transform:translateX(-70%) translateY(-50%);
 }

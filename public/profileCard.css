@@ -6,6 +6,10 @@
     box-shadow: -3px -3px 7px #ffffff,
     3px 3px 5px #ceced1;
 }
+.buttons > button >  a {
+    text-decoration: none; /* 밑줄 없애기 */
+    color: inherit; /* 링크 색상을 부모 요소의 색상으로 상속 */
+}
 .wrapper{
     width: 350px;
     padding: 30px;

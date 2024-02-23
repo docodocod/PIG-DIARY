@@ -1,3 +1,4 @@
+@import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
 /*
 !* general *!
 
@@ -144,7 +145,8 @@ nav img {
     overflow: auto;
     width:250px;
     height:100%;
-    border-right: 1px solid;
+    background-color:white;
+    z-index: 1;
 }
 .main-logo{
     width: 230px;
@@ -159,12 +161,10 @@ img{
     width:230px;
     height:420px;
     margin:auto;
-    background-color:yellow;
 }
 .list-box > div{
     width:230px;
     height:80px;
-    border:solid 1px;
 }
 .list-1, .list-2, .list-3, .list-4, .list-5, .list-6, .list-7{
     padding:10px 10px 10px 10px;
@@ -221,4 +221,28 @@ li a.active {
 li a:hover:not(.active) {
     background-color: #555;
     color: white;
+}
+.profile-img {
+    width: 40px; /* 이미지의 너비를 적절히 설정합니다. */
+    height: 40px; /* 이미지의 높이를 적절히 설정합니다. */
+    border-radius: 50%; /* 모서리를 원 형태로 만듭니다. */
+    overflow: hidden; /* 모서리를 둥글게 만들 때 초과되는 부분을 잘라냅니다. */
+    background-size: cover; /* 배경 이미지를 커버하도록 설정합니다. */
+    margin-right:10px;
+    cursor:pointer;
+}
+.list-box > .list-tag>  a{
+    text-decoration: none; /* 밑줄 없애기 */
+    color: inherit; /* 링크 색상을 부모 요소의 색상으로 상속 */
+}
+.list-box > .list-tag{
+    padding: 25px 40px 20px 40px;
+}
+.list-box > .list-tag:hover{
+    border-radius:10%;
+    cursor:pointer;
+    opacity: 1;
+    box-shadow:#babebc;
+    background-color:#babebc;
+
 }

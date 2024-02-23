@@ -2,7 +2,11 @@
     list-style-type: none;
     margin: 0;
     padding: 0;
-    text-align: center;
+    width: 25%;
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
 }
 
 .menu-details ul li {
@@ -12,20 +16,17 @@
 }
 
 .menu-details ul li a {
-    color: #333;
+    display: block;
+    color: #000;
+    padding: 8px 16px;
     text-decoration: none;
 }
 .menu {
     background-color: white;
     padding: 5px 1px 10px 1px;
-    position: fixed;
     width: 100%;
     bottom: 0;
     left: 0;
     border-top:solid 1px #DBDBDB;
     display:block;
-}
-footer{
-    padding-top:10px;
-    position:fixed;
 }
