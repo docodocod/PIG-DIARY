@@ -1,6 +1,6 @@
 const express = require('express');
 const { isLoggedIn } = require('../middlewares');
-const { follow,unfollow,addFavorite,removeFavorite,favoriteList,aroundMyList } = require('../controllers/user');
+const { follow,unfollow,addFavorite,removeFavorite,favoriteList,aroundMyList,getMyProfile,previewMyImg,changeNick } = require('../controllers/user');
 const fs = require("fs");
 const multer = require("multer");
 const path = require("path");
@@ -26,12 +26,11 @@ const upload = multer({
     limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-router.post('/:id/profileImg', isLoggedIn, upload.array('images',10), afterUploadImage);
 
 // POST /post
 const upload2 = multer();
 
-router.post('/', isLoggedIn, upload2.none(), uploadPost);
+/*router.post('/', isLoggedIn, upload2.none(), uploadPost);*/
 
 //팔로우 하기
 router.post('/:id/follow', isLoggedIn, follow);
@@ -50,5 +49,14 @@ router.get("/:id/favoriteList",isLoggedIn,favoriteList);
 
 //내 주변 맛집 찾기
 router.post("/:id/aroundMyList",isLoggedIn,aroundMyList);
+
+//마이 프로필 들어가기
+router.get("/:id/myProfile",isLoggedIn,getMyProfile);
+
+//변경할 이미지 미리보기
+router.post("/previewMyImg",upload.single('img'),previewMyImg);
+
+//닉네임 변경
+router.post("/changeNick",changeNick)
 
 module.exports = router;

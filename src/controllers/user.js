@@ -88,3 +88,20 @@ exports.aroundMyList=async(req,res,next)=>{
         userId:userId,
     });
 };
+
+exports.getMyProfile=async(req,res,next)=>{
+    res.render("myProfile");
+}
+
+exports.previewMyImg=async(req,res,next)=>{
+    console.log("files:"+req.file[0]);
+    console.log("파일 이름 : ", req.file.filename);
+    res.json(req.file.filename);
+}
+
+exports.changeNick=async(req,res,next)=>{
+    const changeNick=req.body.nick;
+    console.log(changeNick);
+    await User.update({nick:changeNick},{where:{id:req.user.id}});
+    res.send("success");
+}
