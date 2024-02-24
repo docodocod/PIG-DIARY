@@ -28,13 +28,13 @@ const upload = multer({
 });
 
 // POST /post/img
-router.post('/:id/img', isLoggedIn, upload.single('ima',10), afterUploadImage);
+router.post('/img', isLoggedIn, upload.array('img',10), afterUploadImage);
 
 // POST /post
 const upload2 = multer();
 
 //포스트 업로드
-router.post('/', isLoggedIn, upload2.none(), uploadPost);
+router.post('/', isLoggedIn, upload2.array('img',10), uploadPost);
 
 //좋아요 기능
 router.post('/:id/like',isLoggedIn,like);

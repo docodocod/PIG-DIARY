@@ -9,15 +9,10 @@ const Upload = require('../models/Upload');
 exports.uploadPost = async (req, res, next) => { //게시글 업로드
     try {
         const post = await Post.create({
-            content: req.body.content,
+            title: req.body.title,
+            content: req.body.content || "",
             UserId: req.user.id,
         });
-        for (let i = 0; i < req.body.url.length; i++) {
-            await Upload.create({
-                files: req.body.url[i],
-                postId: post.id,
-            })
-        }
         const hashtags = req.body.content.match(/#[^\s#]*/g);
         if (hashtags) {
             const result = await Promise.all(
@@ -38,19 +33,15 @@ exports.uploadPost = async (req, res, next) => { //게시글 업로드
 
 //게시글 이미지 업로드
 exports.afterUploadImage = (req, res) => {
-    try {
-        console.log("파일 이름 : ", req.files);
-        const urlArr = [];
-        for (let i = 0; i < req.files.length; i++) {
-            urlArr.push(`/img/${req.files[i].filename}`);
-            console.log(urlArr[i]);
-        }
-        const jsonUrl = JSON.stringify(urlArr);
-        res.json({url: jsonUrl});
-    } catch (err) {
-        console.error(err);
-        res.status(400).send("Error uploding files");
+    console.log("files:"+req.files);
+    console.log("파일 이름 : ", req.files);
+    let urlArr =new Array();
+    for (let i = 0; i < req.files.length; i++) {
+        urlArr.push(req.files[i].filename);
+        console.log(urlArr[i]);
     }
+    let jsonUrl = JSON.stringify(urlArr);
+    res.json(jsonUrl);
 };
 
 //게시글 수정
@@ -75,14 +66,15 @@ exports.postDelete = async (req, res, next) => { //게시글 삭제
 //댓글 달기
 exports.postReply = async (req, res, next) => {
     const postId = req.params.id;
-    const userId = req.user.id;
+    const writerId = req.user.id;
     const comment = req.body.comment;
+    console.log("postId:"+postId);
     await Comment.create({
-        postId: postId,
-        writer: userId,
+        writer: writerId,
         comment: comment,
+        PostId: postId,
     })
-    res.redirect('/');
+    res.send("success");
 }
 
 
@@ -103,8 +95,8 @@ exports.like = async (req, res, next) => { //좋아요 기능
 
 exports.getLike=async(req,res,next)=>{
     try{
-        const post=await Post.update({likeCount:1},{where:{id:1}});
-        res.send({post});
+        const post=await Post.findOne({where:{id:req.body.idx}});
+        await Post.update({likeCount:post.likeCount+1},{where:{id:req.params.id}});
     }catch(err){
         console.log(err);
     }
