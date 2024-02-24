@@ -50,7 +50,7 @@ exports.renderMain=async(req, res, next)=>{ //메인 페이지에서 정보 불�
                 as:"Liker",
             },{
                 model:Comment,
-                attributes:['writer','comment'],
+                attributes:['id','writer','comment'],
             },{
                 model:Upload,
                 attributes:["files","PostId"],

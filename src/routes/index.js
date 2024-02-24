@@ -1,7 +1,8 @@
 const express = require('express');
 const { isLoggedIn, isNotLoggedIn } = require('../middlewares');
 const {
-    renderProfile, renderJoin, renderMain, renderHashtag,renderLogin,renderSearch,renderSearchPage,getSearchContent
+    renderProfile, renderJoin, renderMain, renderHashtag,renderLogin,renderSearch,renderSearchPage,getSearchContent,
+    getWeatherApi
 } = require('../controllers/index.js');
 const {renderChat} = require("../controllers");
 const multer = require('multer');
@@ -40,6 +41,8 @@ router.get('/test',(req,res)=>{
 router.get("/kakaoMap",function(req,res){
     res.render("kakaoMap",{title:"kakaoMap"});
 })
+
+
 
 try {
     fs.readdirSync('uploads');
