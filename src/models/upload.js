@@ -3,7 +3,7 @@ class Upload extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
             files:{
-                type:Sequelize.STRING(200),
+                type:Sequelize.STRING(500),
                 allowNull:true
             },
         }, {
@@ -11,10 +11,8 @@ class Upload extends Sequelize.Model {
             timestamps: true,
             underscored: false,
             modelName: 'Upload',
-            tableName: 'Uploads',
-            paranoid: true,
-            charset: 'utf8mb4',
-            collate: 'utf8mb4_general_ci',
+            tableName: 'uploads',
+            paranoid: false,
         });
     };
     static associate(db){
