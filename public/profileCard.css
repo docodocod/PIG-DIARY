@@ -170,10 +170,18 @@
     height: 100%;
     width: 2px;
     background: #e0e6eb;
-    margin-left: -25px;
+    margin-left: -40px;
 }
 .row:first-child::before{
     background: none;
+}
+
+.social-share > .row > div > img {
+    border-radius:50%;
+    overflow:hidden;
+}
+.social-share > .row > div{
+    display:block;
 }
 .social-share .row i.icon-2{
     position: absolute;

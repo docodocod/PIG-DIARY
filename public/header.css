@@ -153,10 +153,6 @@ nav img {
     height:80px;
     margin:auto;
 }
-img{
-    width:230px;
-    height:80px;
-}
 .list-box{
     width:230px;
     height:420px;
@@ -245,4 +241,8 @@ li a:hover:not(.active) {
     box-shadow:#babebc;
     background-color:#babebc;
 
+}
+.main-logo{
+    width:230px;
+    height:80px;
 }
