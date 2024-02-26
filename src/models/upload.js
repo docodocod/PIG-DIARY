@@ -4,8 +4,12 @@ class Upload extends Sequelize.Model {
         return super.init({
             files:{
                 type:Sequelize.STRING(500),
-                allowNull:true
+                allowNull:true,
             },
+            PostId:{
+                type:Sequelize.INTEGER(),
+                allowNull:true,
+            }
         }, {
             sequelize,
             timestamps: true,
@@ -13,10 +17,13 @@ class Upload extends Sequelize.Model {
             modelName: 'Upload',
             tableName: 'uploads',
             paranoid: false,
+            charset: 'utf8',
+            collate: 'utf8_general_ci',
         });
     };
     static associate(db){
         db.Upload.belongsTo(db.Post);
     }
 }
-module.exports=Upload
+
+module.exports=Upload;
