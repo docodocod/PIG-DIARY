@@ -6,10 +6,10 @@ const Post=require('../models/post');
 const Hashtag=require('../models/hashtag');
 const Room=require('../models/room');
 const Chat=require('../models/chat')
+const Upload=require('../models/upload');
 const Favorite=require('../models/favorite');
 const Comment=require('../models/comment');
-const Upload=require('../models/upload');
-
+const Test=require('../models/test');
 
 const db={};
 const sequelize=new Sequelize(
@@ -25,27 +25,29 @@ db.Post=Post;
 db.Hashtag=Hashtag;
 db.Room=Room;
 db.Chat=Chat;
+db.Upload=Upload;
 db.Favorite=Favorite;
 db.Comment=Comment;
-db.Upload=Upload;
+db.Test=Test;
 
 User.init(sequelize);
 Post.init(sequelize);
 Hashtag.init(sequelize);
+Upload.init(sequelize);
 Room.init(sequelize);
 Chat.init(sequelize);
 Favorite.init(sequelize);
 Comment.init(sequelize);
-Upload.init(sequelize);
+Test.init(sequelize);
 
 User.associate(db);
 Post.associate(db);
 Hashtag.associate(db);
 Room.associate(db);
+Upload.associate(db);
 Chat.associate(db);
 Favorite.associate(db);
 Comment.associate(db);
-Upload.associate(db);
-
+Test.associate(db);
 
 module.exports=db;

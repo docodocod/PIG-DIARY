@@ -2,14 +2,10 @@ const Sequelize=require("sequelize");
 class Upload extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
-            files:{
+            fileName:{
                 type:Sequelize.STRING(500),
                 allowNull:true,
             },
-            PostId:{
-                type:Sequelize.INTEGER(),
-                allowNull:true,
-            }
         }, {
             sequelize,
             timestamps: true,
@@ -17,13 +13,14 @@ class Upload extends Sequelize.Model {
             modelName: 'Upload',
             tableName: 'uploads',
             paranoid: false,
-            charset: 'utf8',
-            collate: 'utf8_general_ci',
+            charset: 'utf8mb4',
+            collate: 'utf8mb4_general_ci',
         });
-    };
-    static associate(db){
+    }
+    static associate(db) {
         db.Upload.belongsTo(db.Post);
     }
 }
 
 module.exports=Upload;
+
