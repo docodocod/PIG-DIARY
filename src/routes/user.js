@@ -1,6 +1,6 @@
 const express = require('express');
 const { isLoggedIn } = require('../middlewares');
-const { follow,unfollow,addFavorite,removeFavorite,favoriteList,aroundMyList,getMyProfile,previewMyImg,changeNick,saveProfileImg } = require('../controllers/user');
+const { follow,unfollow,addFavorite,removeFavorite,favoriteList,aroundMyList,getMyProfile,previewMyImg,changeNick,saveProfileImg,introduce } = require('../controllers/user');
 const fs = require("fs");
 const multer = require("multer");
 const path = require("path");
@@ -61,5 +61,6 @@ router.post('/saveProfileImg',saveProfileImg);
 //닉네임 변경
 router.post("/changeNick",changeNick)
 
-
+//한줄 자기 소개
+router.post('/changeIntroduce',introduce);
 module.exports = router;

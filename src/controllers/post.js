@@ -3,18 +3,6 @@ const Hashtag = require("../models/hashtag.js");
 const User = require("../models/user");
 const postUpload = require('../models/upload');
 const Comment = require('../models/comment');
-const Test=require('../models/test');
-
-exports.test=async(req,res,next)=>{
-    try{
-        await postUpload.create({
-            fileName:"",
-        })
-        res.send("success");
-    }catch(err){
-        console.log(err);
-    }
-}
 
 //피드 업로드
 exports.uploadPost = async (req, res, next) => { //게시글 업로드

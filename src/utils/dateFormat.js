@@ -2,6 +2,12 @@
 exports.timeForToday=(value)=>{
     const today = new Date();
     const timeValue = new Date(value);
+    const year = timeValue.getFullYear();
+    const month = timeValue.getMonth() + 1;
+    const day = timeValue.getDate();
+
+    const formattedMonth = month < 10 ? `0${month}` : month;
+    const formattedDay = day < 10 ? `0${day}` : day;
 
     const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
     if (betweenTime < 1) return '방금전';
@@ -15,21 +21,20 @@ exports.timeForToday=(value)=>{
     }
 
     const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
-    if (betweenTimeDay < 365) {
+    if (betweenTimeDay < 3) {
         return `${betweenTimeDay}일전`;
     }
 
-    return `${Math.floor(betweenTimeDay / 365)}년전`;
+    return `${year}-${formattedMonth}-${formattedDay}`;
 }
 
 //년 월 일 변환 메서드
 exports.formatDate=(dateString)=>{
     const date = new Date(dateString);
     const year = date.getFullYear();
-    const month = date.getMonth() + 1; // 월은 0부터 시작하므로 1을 더합니다.
+    const month = date.getMonth() + 1;
     const day = date.getDate();
 
-    // 월과 일이 한 자리 수인 경우 앞에 0을 붙여 두 자리로 만듭니다.
     const formattedMonth = month < 10 ? `0${month}` : month;
     const formattedDay = day < 10 ? `0${day}` : day;
 

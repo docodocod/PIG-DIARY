@@ -83,11 +83,15 @@ exports.getMyProfile=async(req,res,next)=>{
     res.render("myProfile");
 }
 
-//프로필 변경 이미지 미리보기
-exports.previewMyImg=async(req,res,next)=>{
-    console.log("files:"+req.file[0]);
-    console.log("파일 이름 : ", req.file.filename);
-    res.json(req.file.filename);
+//한줄 자기 소개
+exports.introduce=async(req,res,next)=> {
+    try {
+        const description = req.body.introduce;
+        await User.update({introduce: description}, {where: {id: {req.user.id}}});
+        res.send("success");
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 //닉네임 변경
@@ -101,6 +105,12 @@ exports.changeNick=async(req,res,next)=>{
         console.log(err);
         res.send("fail");
     }
+}
+//프로필 변경 이미지 미리보기
+exports.previewMyImg=async(req,res,next)=>{
+    console.log("files:"+req.file[0]);
+    console.log("파일 이름 : ", req.file.filename);
+    res.json(req.file.filename);
 }
 
 //프로필 이미지 저장

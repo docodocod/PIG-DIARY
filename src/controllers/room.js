@@ -33,8 +33,14 @@ exports.renderRoom=async(req, res, next)=>{
                 ['createdAt', 'DESC'],
                 [Chat, 'createdAt', 'DESC']
             ],
-        });//현재 생성되어 있는 모든 방 찾아서 담기
-        res.render('roomList', { rooms, title: "채팅방 목록" }); //데이터 담아서 채팅방 목록 페이지에 뿌려주기
+        });
+        const transFormRoomTime=rooms.map(room=>{
+            return{
+                ...room.toJSON(),
+                createdAt: formatDateWithTime(room.createdAt),
+            }
+        })
+        res.render('roomList', { rooms:transFormRoomTime, title: "채팅방 목록" }); //데이터 담아서 채팅방 목록 페이지에 뿌려주기
     } catch (error) {
         console.error(error);
         next(error);
