@@ -3,11 +3,11 @@
     <link rel="stylesheet" href="/chatting.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 </head>
 {% block content %}
-<header>
-    {% include "header.html" %}
-</header>
+<body>
+{% include "header.html" %}
 <div id="content">
     <!-- 설정바(최소화, 닫기 버튼 등)
     <div class="setting_bar">
@@ -49,13 +49,25 @@
     <div class="chat_list_main">
         <ul>
             {% for room in rooms %}
-            <li data-id="{{room.id}}">
-                <a href="/room/{{room.id}}">
-                    <img src="./pic/k-pay.png" class="profile-img" alt="프로필 사진">
-                    <div class="talk">
-                        <p class="friend-name">{{room.opponent}}</p>
-                        <p class="chat-content">{{room.Chat}}</p>
+            <li class="chat-li" data-id="{{room.id}}">
+                <a href="/room/{{room.id}}" style="width: 500px; height: 80px;">
+                    {% if room.Owner.id==user.id %}
+                    <div class="chat-list-profile-div">
+                        <img src="/uploads/profiles/{{room.Friend.profileImg}}" class="chat-list-profile-img" alt="프로필 사진">
                     </div>
+                    <div class="talk">
+                        <p class="friend-name">{{room.Friend.nick}}</p>
+                        <p class="chat-content">{{room.Chats[0].chat}}</p>
+                    </div>
+                    {% else %}
+                    <div class="chat-list-profile-div">
+                        <img src="/uploads/profiles/{{room.Owner.profileImg}}" class="chat-list-profile-img" alt="프로필 사진">
+                    </div>
+                    <div class="talk">
+                        <p class="friend-name">{{room.Owner.nick}}</p>
+                        <p class="chat-content">{{room.Chats[0].chat}}</p>
+                    </div>
+                    {% endif %}
                     <div class="chat-status">
                         <time datetime="15:40:00+09:00">{{room.createdAt}}</time>
                         <span class="chat-balloon">??</sapn>
@@ -66,10 +78,11 @@
         </ul>
     </div>
 </div>
+</body>
 {% endblock %}
-<footer>
-    {% include "footer.html" %}
-</footer>
+<script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
     const socket = io.connect('http://localhost:4161/room', { // 네임스페이스
@@ -94,12 +107,12 @@
 
         const friendName = document.createElement('p');
         friendName.setAttribute('class', 'friend-name');
-        friendName.textContent = data.room.opponent;
+        friendName.textContent = data.room.friend;
         talkDiv.appendChild(friendName);
 
-        const chatContent= document.createElement('p');
+        const chatContent = document.createElement('p');
         chatContent.setAttribute('class', 'chat-content');
-        chatContent.textContent = '안녕하세요';
+        chatContent.textContent = data.room.chat;
         talkDiv.appendChild(chatContent);
 
         a.appendChild(talkDiv);
