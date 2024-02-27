@@ -3,7 +3,7 @@ class Comment extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
             writer:{
-                type:Sequelize.STRING(50),
+                type:Sequelize.INTEGER(),
                 allowNull:false,
             },
             comment: {

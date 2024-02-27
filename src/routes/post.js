@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { afterUploadImage, uploadPost,postDelete,like,unlike,postReply,getLike} = require('../controllers/post');
+const { afterUploadImage, uploadPost,postDelete,like,unlike,postReply,getLike,test} = require('../controllers/post');
 const { isLoggedIn } = require('../middlewares');
 
 const router = express.Router();
@@ -32,14 +32,13 @@ router.post('/img', isLoggedIn, upload.array('img',10), afterUploadImage);
 
 // POST /post
 const upload2 = multer();
+console.log("typeof upload2:"+typeof upload2)
 
 //포스트 업로드
-router.post('/', isLoggedIn, upload2.array('img',10), uploadPost);
+router.post('/',isLoggedIn, uploadPost);
 
 //좋아요 기능
 router.post('/:id/like',isLoggedIn,like);
-
-router.get("/:id/like",isLoggedIn,getLike);
 
 //좋아요 해제
 router.delete('/:id/unlike',isLoggedIn,unlike);
@@ -49,5 +48,7 @@ router.delete('/:id/delete',isLoggedIn,postDelete);
 
 //댓글 달기
 router.post('/:id/reply',isLoggedIn,postReply);
+
+router.post("/db/test",test);
 
 module.exports = router;

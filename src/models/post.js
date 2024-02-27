@@ -7,7 +7,7 @@ class Post extends Sequelize.Model {
                 allowNull:false,
             },
             content: {
-                type: Sequelize.STRING(140),
+                type: Sequelize.STRING(500),
                 allowNull: false,
             },
             likeCount:{

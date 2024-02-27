@@ -3,7 +3,7 @@ class Chat extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
             user: { //사용자
-                type: Sequelize.STRING(200),
+                type: Sequelize.INTEGER(),
                 allowNull:false,
             },
             chat: {//채팅 내용
@@ -11,6 +11,14 @@ class Chat extends Sequelize.Model {
             },
             gif: {//사진
                 type: Sequelize.STRING(200)
+            },
+            RoomId: {
+                type: Sequelize.INTEGER(),
+                allowNull: false,
+                references: {
+                    model: 'Rooms', // 참조하는 모델
+                    key: 'id',      // 참조하는 모델의 기본 키
+                }
             },
         }, {
             sequelize,
@@ -24,7 +32,8 @@ class Chat extends Sequelize.Model {
         });
     };
     static associate(db){
-        db.Chat.belongsTo(db.Room,{ foreignKey: 'RoomId' });
+        db.Chat.belongsTo(db.Room, { foreignKey: 'RoomId' }); // 외래 키 설정
+        db.Chat.belongsTo(db.User,{foreignKey:"user"});
     }
 }
 module.exports=Chat;

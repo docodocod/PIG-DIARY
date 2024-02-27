@@ -2,14 +2,21 @@ const Sequelize=require("sequelize");
 class Room extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
-            opponent: { //상대방
+            owner: {
                 type: Sequelize.INTEGER(),
                 allowNull: false,
+                references: {
+                    model: 'Users', // 참조하는 모델
+                    key: 'id',      // 참조하는 모델의 기본 키
+                }
             },
-            owner: { //사용자
-                type: Sequelize.INTEGER(),
-                allowNull: false,
-            },
+            friend:{
+                type:Sequelize.INTEGER(),
+                references: {
+                    model: 'Users', // 참조하는 모델
+                    key: 'id',      // 참조하는 모델의 기본 키
+                }
+            }
         }, {
             sequelize,
             timestamps: true,
@@ -23,6 +30,8 @@ class Room extends Sequelize.Model {
 
     static associate(db) {
         db.Room.hasMany(db.Chat);
+        db.Room.belongsTo(db.User,{foreignKey: 'friend',as:"Friend"});
+        db.Room.belongsTo(db.User,{foreignKey: 'owner',as:"Owner"});
     }
 }
 module.exports=Room;

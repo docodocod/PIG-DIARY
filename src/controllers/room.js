@@ -9,18 +9,32 @@ const User = require("../models/user");
 exports.renderRoom=async(req, res, next)=>{
     try {
         const rooms = await Room.findAll({
-            include: {
+            include: [{
                 model: Chat,
-                attributes: ['user', 'chat', 'gif'],
-            },
+                attributes: ['user','chat','gif'],
+            },{
+                model:User,
+                attributes:["id","nick","profileImg"],
+                as:"Owner",
+            },{
+                model:User,
+                attributes:['id','nick','profileImg'],
+                as:'Friend',
+            }],
             where: {
-                [Op.or]: [
+                [Op.or]:[
                     {owner: req.user.id},
-                    {opponent: req.user.id}
-                ]
+                    {friend: req.user.id},
+                    ]
             },
-            order: [['createdAt', 'DESC']]
+            order: [
+                ['createdAt', 'DESC'],
+                [Chat, 'createdAt', 'DESC']
+            ],
         });//현재 생성되어 있는 모든 방 찾아서 담기
+        rooms.forEach(room => {
+            console.log(room.toJSON()); // 데이터의 JSON 형태로 출력
+        });
         res.render('roomList', { rooms, title: "채팅방 목록" }); //데이터 담아서 채팅방 목록 페이지에 뿌려주기
     } catch (error) {
         console.error(error);
@@ -30,10 +44,33 @@ exports.renderRoom=async(req, res, next)=>{
 
 //채팅방 만들기
 exports.createRoom=async(req, res, next)=>{
+    const room = await Room.findOne({
+        where: {
+            [Op.or]: [
+                {
+                    [Op.and]: [
+                        { owner: req.user.id },
+                        { friend: req.body.friend }
+                    ]
+                },
+                {
+                    [Op.and]: [
+                        { owner:req.body.friend },
+                        { friend:req.user.id }
+                    ]
+                }
+            ]
+        },
+        order: [['createdAt', 'DESC']]
+    });
+    //채팅방이 있다면
+    if(room){
+        return res.redirect(`/room/${room.id}`);
+    }
     try {
         const newRoom=await Room.create({
-            opponent: req.body.opponentId,
             owner: req.user.id,
+            friend: req.body.friend,
         });
         console.log(newRoom.id);
         const io = req.app.get('io'); //채팅방 기능을 위해 socket.io에서 받아온거 담기
@@ -48,19 +85,35 @@ exports.createRoom=async(req, res, next)=>{
 //채팅방 입장
 exports.enterRoom=async(req, res, next)=>{
     try {
-        const room = await Room.findOne({where:{ id: req.params.id }}); //해당 아이디 채팅방 찾기
+        const room = await Room.findOne({
+            include:[{
+                model:User,
+                attributes:['nick','profileImg'],
+                as:"Owner",
+            }, {
+                model: User,
+                attributes: ['nick', 'profileImg'],
+                as: "Friend",
+            }],
+            where:{
+                id:req.params.id,
+            }
+        });
         console.log("room: "+room);
         if (!room) { //room data 없으면
             return res.redirect('/?error=존재하지 않는 방입니다.');
         }
         const chats = await Chat.findAll({
+            include:[{
+                model:User,
+                attributes:["nick","profileImg"]
+            }],
             where:{
                 RoomId:room.id
             }
         });
         return res.render('chat', { //채팅 창에 데이터 뿌려주기
             room,
-            opponent: room.opponent,
             chats,
             user: req.user.id,
         });
@@ -89,7 +142,10 @@ exports.sendChat=async(req, res, next)=>{
             chat: req.body.chat,
             RoomId: req.params.id,
         });
-        req.app.get('io').of('/chat').to(req.params.id).emit('chat', chat);
+        const user=await User.findOne({
+            where:{id:req.user.id},
+        })
+        req.app.get('io').of('/chat').to(req.params.id).emit('chat',chat,user);
         res.send('채팅을 정상적으로 전송');
     } catch (error) {
         console.error(error);

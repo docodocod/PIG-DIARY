@@ -30,7 +30,7 @@ exports.webSocket=(server, app)=>{
             const roomId = new URL(referer).pathname.split('/').at(-1); //roomId 추출하기
             const currentRoom = chat.adapter.rooms.get(roomId); //현재 채팅방 데이터를 가져온다.
             const userCount = currentRoom?.size || 0;
-            if (userCount === 0) { // 유저가 0명이면 방 삭제
+            /*if (userCount === 0) { // 유저가 0명이면 방 삭제
                 await removeRoom(roomId); // 컨트롤러 대신 서비스를 사용
                 room.emit('removeRoom', roomId);
                 console.log('방 제거 요청 성공');
@@ -39,7 +39,7 @@ exports.webSocket=(server, app)=>{
                     user: req.user.id,
                     chat: `${req.user.nick}님이 퇴장하셨습니다.`,
                 });
-            }
+            }*/
         });
     });
 };
