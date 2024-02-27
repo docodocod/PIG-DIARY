@@ -8,15 +8,23 @@
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 </head>
 {% block content %}
+<body>
 {% include "header.html" %}
 <div id="chat-body">
     <main class="chat-container">
         <!-- 채팅 내용 시작 -->
-        <div class="main-header">
+        <div class="main-header" style="border:1px solid;">
+            {% if room.Owner.id==user.id %}
             <img class="profile-img" src="/uploads/profiles/{{room.Friend.profileImg}}" alt="">
             <div class="profile-col">
-                <span class="profile-name">{{room.User.nick}}</span>
+                <span class="profile-name">{{room.Friend.nick}}</span>
             </div>
+            {% else %}
+            <img class="profile-img" src="/uploads/profiles/{{room.Owner.profileImg}}" alt="">
+            <div class="profile-col">
+                <span class="profile-name">{{room.Owner.nick}}</span>
+            </div>
+            {% endif %}
         </div>
         <div class="main-chat">
             {% for chat in chats %}
@@ -29,7 +37,7 @@
                     <span class="balloon">{{chat.chat}}</span>
                     {% endif %}
                 </div>
-                <!--<span class="date-time">{{chat.createdAt}}</span>-->
+                <span class="me-date-time">{{chat.createdAt}}</span>
             </div>
             {% else %}
             <div class="friend-chat">
@@ -42,13 +50,13 @@
                     <span class="balloon">{{chat.chat}}</span>
                     {% endif %}
                 </div>
-                <!--<span class="date-time"></span>-->
+                <span class="friend-date-time">{{chat.createdAt}}</span>
             </div>
             {% endif %}
             {% endfor %}
         </div>
         <!-- 채팅 입력창 -->
-        <div id="insert-content">
+        <div id="insert-content" style="border:1px solid;">
             <form id="chat-form" method="post" enctype="multipart/form-data">
                 <input type="file" id="image" name="image" accept="image/gif">
                 <input type="text" id="chat" name="chat"/>
@@ -57,6 +65,7 @@
         </div>
     </main>
 </div>
+</body>
 {% endblock %}
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
@@ -100,10 +109,11 @@
         div.appendChild(chat);
         document.querySelector('.chat-list').appendChild(div);
     });
-    socket.on('chat', function (data,userData) { //서버에서 'chat' 이벤트명으로 데이터 보낸걸 받는다.
+    socket.on('chat', function (data, userData,dateTime) { //서버에서 'chat' 이벤트명으로 데이터 보낸걸 받는다.
         const div = document.createElement('div');
-        console.log("userData:"+userData);
-        if (data.user === {{user}}) {
+        console.log("userData:" + userData);
+        if (data.user === {{user}})
+        {
             div.classList.add('me-chat');
             if (data.chat) {
                 const chat = document.createElement('div');
@@ -111,8 +121,12 @@
                 const chat_span = document.createElement("span");
                 chat_span.classList.add('balloon');
                 chat_span.textContent = data.chat;
+                const date_span=document.createElement('span');
+                date_span.classList.add("me-date-time");
+                date_span.textContent=dateTime;
                 chat.appendChild(chat_span);
                 div.appendChild(chat);
+                div.appendChild(date_span);
             } else {
                 const chat = document.createElement('div');
                 chat.classList.add("me-chat-col")
@@ -121,24 +135,28 @@
                 chat.appendChild(gif);
                 div.appendChild(chat);
             }
-        } else {
+        }else{
             div.classList.add('friend-chat');
             const profile_img = document.createElement("img");
             profile_img.classList.add('profile-img');
-            profile_img.src ='/uploads/profiles/'+userData.profileImg;
+            profile_img.src = '/uploads/profiles/' + userData.profileImg;
             div.appendChild(profile_img);
             if (data.chat) {
                 const chat = document.createElement('div');
                 chat.classList.add("friend-chat-col");
                 const profile_span = document.createElement("span");
                 profile_span.classList.add("profile-name");
-                profile_span.textContent =userData.nick;
+                profile_span.textContent = userData.nick;
                 const chat_span = document.createElement("span");
                 chat_span.classList.add('balloon');
                 chat_span.textContent = data.chat;
+                const date_span=document.createElement('span');
+                date_span.classList.add("friend-date-time");
+                date_span.textContent=dateTime;
                 chat.appendChild(profile_span);
                 chat.appendChild(chat_span);
                 div.appendChild(chat);
+                div.appendChild(date_span);
             } else {
                 const chat = document.createElement('div');
                 chat.classList.add("friend-chat-col")
@@ -177,7 +195,7 @@
                 console.error(err);
             });
     });
-    $(document).ready(function() {
+    $(document).ready(function () {
         // 채팅창의 jQuery 객체를 가져옵니다.
         var $chatContainer = $('.main-chat');
 

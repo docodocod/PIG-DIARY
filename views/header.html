@@ -56,7 +56,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header" style="padding: 10px 10px;">
-                <h5 class="modal-title" id="feed-ModalLabel">게시글 작성</h5>
+                <h5 class="modal-title" id="feed-ModalLabel">피드 작성</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -64,11 +64,11 @@
             <div class="modal-body" style="padding: 5px 20px 10px 20px;">
                 <form action="/post" method="post" id="feed-form">
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">게시글 제목</label>
+                        <label for="recipient-name" class="col-form-label">피드 제목</label>
                         <input type="text" class="form-control" id="recipient-name" name="title">
                     </div>
                     <div class="form-group">
-                        <label for="message-text" class="col-form-label">게시글 내용</label>
+                        <label for="message-text" class="col-form-label">피드 내용</label>
                         <textarea class="form-control" id="message-text" style="height:300px;" name="content"></textarea>
                     </div>
                     <div class="">
@@ -81,32 +81,28 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                <button type="button" id="feed-submit" class="btn btn-primary">공유하기</button>
+                <button type="button" id="feed-submit" class="btn btn-primary">기록하기</button>
             </div>
         </div>
     </div>
 </div>
 <!-- Weather-Clothe-Modal -->
-<div class="modal fade" id="weather-list-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade" id="weather-list-modal" tabindex="-1" aria-labelledby="exampleModalLabel-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" >오늘의 먹차림</h1>
+                <h1 class="modal-title fs-4" id="exampleModalLabel-1" style="text-align:center;"></h1>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" style="overflow-y:auto; max-height:300px;">
+            <div class="modal-body" style="max-height:500px;">
                 <div>
-                    <div class="weather-temp"></div>
-                </div>
-                <div>
-                    <img src="" class="weather-clothe" width="300px;" height="400px;"/>
+                    <img src="" class="weather-clothe" style="width: 700px; height:480px;margin-left: 40px;"/>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                <button type="button" class="btn btn-primary">저장</button>
             </div>
         </div>
     </div>

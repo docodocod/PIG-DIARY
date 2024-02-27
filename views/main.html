@@ -14,7 +14,10 @@
 {% include "header.html" %}
 <div class="main">
     <div class="nav-2">
-        <input id="searchInput" type="search" class="input-search" placeholder="검색">
+        <form action="/hashtag">
+            <input id="searchInput" type="search" class="input-search" placeholder="검색" name="hashtag"/>
+<!--            <button>검색</button>-->
+        </form>
     </div>
     <div class="center-container">
         {% for feed in feeds %}
@@ -118,9 +121,9 @@
                     <!--<div class="liked-people">
                         <p><span class="like_size">좋아요</span> <span class="point-span-like">{{feed.likeCount}}</span></p>
                     </div>-->
-                    <div class=4"description">
+                    <div class="description">
                         <div>
-<!--                            <span class="point-span userID" style="font-size:20px;">{{feed.User.nick}}</span>-->
+                            <span class="feed-date">{{feed.createdAt}}</span>
                             <span class="feed-title" style="font-size:19px;">{{feed.title}}</span>
                             <span class="feed-content" style="font-size:15px;">{{feed.content}}</span>
                         </div>
@@ -133,7 +136,7 @@
                                 <img src="/uploads/profiles/{{comment.User.profileImg}}" width="35px;" height="28px;"/>
                             </div>
                             <span class="writer-box" style="font-size: 13px;">{{comment.User.nick}} :</span>
-                            <span class="comment-box"style="font-size: 13px;">{{comment.comment}}</span>
+                            <span class="comment-box" style="font-size: 13px;">{{comment.comment}}</span>
                         </div>
                         {% endfor %}
                     </div>
@@ -146,10 +149,12 @@
                     <input id="input-comment-{{feed.id}}" class="input-comment" type="text" placeholder="댓글 달기...">
                     <button type="submit" class="submit-comment" onclick="saveComment('{{feed.id}}')">작성</button>
                     {% if not Likers.includes(user.id) and feed.User.id !== user.id and user %}
-                        <div class="stamp" onclick="addLike('{{feed.id}}')"><img src="/img/stamp.jpg" class="img-stamp"/></div>
+                    <div class="stamp" onclick="addLike('{{feed.id}}')"><img src="/img/stamp.jpg" class="img-stamp"/>
+                    </div>
                     {% endif %}
                     {% if Likers.includes(user.id) and feed.User.id !== user.id and user %}
-                        <div class="stamp" onclick="removeLike('{{feed.id}}')" ><img src="/img/stamp.jpg" class="img-stamp-active"/></div>
+                    <div class="stamp" onclick="removeLike('{{feed.id}}')"><img src="/img/stamp.jpg"
+                                                                                class="img-stamp-active"/></div>
                     {% endif %}
                 </div>
             </div>
@@ -324,7 +329,7 @@
     navigator.geolocation.getCurrentPosition(success, fail);
 
     function getMyPosition(lat, lng) {
-        const apiKey = "";
+        const apiKey = "71ba2b86d3d6f505572760d694c63b56";
         const curLat = lat;
         const curLng = lng;
         const lang = "kr";
@@ -357,9 +362,7 @@
                 $('.CurrTemp_max').append("최고 기온:" + maxTemp);
                 $('.CurrTemp_min').append("최저 기온:" + minTemp);
 
-                weatherClothe(Math.floor(data["main"]["temp"]));
-
-
+                weatherClothe(Math.floor(data["main"]["temp"]),weather);
             },
             fail: function (err) {
                 console.log(err);
@@ -367,7 +370,7 @@
         })
     }
 
-    function weatherClothe(temp){
+    function weatherClothe(temp,weather) {
         let imageUrl = '/img/weather/weather-1.jpg'; // 기본 이미지 URL
         if (temp >= 23) {
             imageUrl = '/img/weather/weather-8.jpg';
@@ -385,6 +388,7 @@
             imageUrl = '/img/weather/weather-2.jpg';
         }
         $('.weather-clothe').attr('src', imageUrl);
+        $('#exampleModalLabel-1').text(`현재 기온은 ${temp}°C이며 날씨는 ${weather}입니다.`)
     }
 
     $('.slider-2 .page-nav > div').click(function () {
@@ -478,29 +482,6 @@
             .catch((err) => {
                 console.log(err);
             })
-    }
-    function elapsedTime(date) {
-        const start = new Date(date);
-        const end = new Date();
-
-        const diff = (end - start) / 1000;
-
-        const times = [
-            { name: '년', milliSeconds: 60 * 60 * 24 * 365 },
-            { name: '개월', milliSeconds: 60 * 60 * 24 * 30 },
-            { name: '일', milliSeconds: 60 * 60 * 24 },
-            { name: '시간', milliSeconds: 60 * 60 },
-            { name: '분', milliSeconds: 60 },
-        ];
-
-        for (const value of times) {
-            const betweenTime = Math.floor(diff / value.milliSeconds);
-
-            if (betweenTime > 0) {
-                return `${betweenTime}${value.name} 전`;
-            }
-        }
-        return '방금 전';
     }
 </script>
 {% endblock %}
