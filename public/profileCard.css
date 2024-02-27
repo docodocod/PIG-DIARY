@@ -11,6 +11,7 @@
     color: inherit; /* 링크 색상을 부모 요소의 색상으로 상속 */
 }
 .wrapper{
+    font-family: "MapoBackpacking", serif;
     width: 350px;
     padding: 30px;
     border-radius: 10px;
@@ -164,17 +165,7 @@
     cursor: pointer;
     position: relative;
 }
-.social-share .row::before{
-    position: absolute;
-    content: "";
-    height: 100%;
-    width: 2px;
-    background: #e0e6eb;
-    margin-left: -40px;
-}
-.row:first-child::before{
-    background: none;
-}
+
 
 .social-share > .row > div > img {
     border-radius:50%;

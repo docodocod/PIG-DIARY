@@ -4,7 +4,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
 }
 .chatbot-toggler {
     position: fixed;
@@ -21,6 +20,7 @@
     border-radius: 50%;
     background: #724ae8;
     transition: all 0.2s ease;
+    font-family: "Poppins", sans-serif;
 }
 body.show-chatbot .chatbot-toggler {
     transform: rotate(90deg);
@@ -37,6 +37,7 @@ body.show-chatbot .chatbot-toggler span:last-child {
     opacity: 1;
 }
 .chatbot {
+    font-family: "MapoBackpacking", serif;
     position: fixed;
     right: 35px;
     bottom: 90px;

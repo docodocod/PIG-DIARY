@@ -10,27 +10,16 @@
     height:150px;
 }
 
-/* grid container 적용 */
-#chat-body{
-    top: 0;
-    left: 0;
-    display: grid;
-    grid-template-columns: minmax(3.125rem, auto) 6.25rem;
-    grid-template-rows: 2.5rem 2.5rem auto;
-    align-items: stretch;
-    grid-template-areas:
-        " header   setting  "
-        " header  main_menu "
-        "  main     main    ";
-}
-
 /* 배경화면 설정 */
-#chat-body, .setting_bar, .main-menu, header{
+/*#chat-body, .setting_bar, .main-menu, header{
     background-image: url(../pic/talk_background.jpg);
     background-repeat: repeat;
     background-position: top left;
     background-attachment: fixed;
     z-index: 98;
+}*/
+#chat-body{
+    margin-left: 250px;
 }
 
 /* 설정바 스타일 지정 */
@@ -212,6 +201,7 @@ main{
 /* 채팅 말풍선의 시간(time) 아래로 정렬 (flex item들) */
 .main-chat{
     height:400px;
+    overflow-y: auto;
 }
 .main-chat time{
     align-self: flex-end;
@@ -249,11 +239,12 @@ main{
 }
 
 /* 채팅 입력차 스타일 지정 */
-.insert-content{
+#insert-content{
     background-color: white;
     padding: 0.4375rem;
     position: sticky;
     bottom: 0;
+    margin-top: 30px;
 }
 textarea{
     resize: none;

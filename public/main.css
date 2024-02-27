@@ -1,4 +1,13 @@
 /* main */
+@font-face {
+    font-family: "MapoBackpacking";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/MapoBackpackingA.woff")
+    format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 .main {
     margin-left:250px;
     height:100%;
@@ -153,17 +162,36 @@ div.time-log span {
 }
 .hl {
     border-top: 1px solid #DBDBDB;
-    width: 612px;
+    width: 600px;
+}
+.stamp{
+    display: inline-block;
+    padding-bottom: 5px;
+    cursor:pointer;
+}
+.img-stamp{
+    width: 80px;
+    height: 70px;
+    filter:grayscale(90%);
+    opacity: 0.5;
+    border-radius: 50%;
+}
+.img-stamp-active{
+    width: 80px;
+    height: 70px;
+    border-radius: 50%;
 }
 /* comment input */
 .input-comment {
     font-size: 14px;
-    width: 560px;
+    width: 450px;
     height: 18px;
     padding: 28px 16px;
+    padding-left: 20;
     border-style: none;
     box-sizing: border-box;
     color: #262626;
+    background-color: rgba( 255, 255, 255, 0.5 );
 }
 .input-comment:focus {
     outline: none;
@@ -180,6 +208,7 @@ button.submit-comment {
     padding: 4px;
     font-size: 14px;
     font-weight: 600;
+    background-color: rgba(255, 255, 255, 0.5);
 }
 .submit-comment:disabled {
     color: #B9DFFC;
@@ -209,6 +238,7 @@ button.submit-comment:focus {
 }
 .myProfile div span.userID {
     margin-bottom: 4px;
+    font-size:14px;
 }
 /* story & recommendation */
 .menu-title {
@@ -376,6 +406,8 @@ input[type=file]::file-selector-button {
 }
 .feed-container{
     margin-left:140px;
+    width:600px;
+    margin-top:55px;
 }
 .right-box{
     height:200px;
@@ -424,7 +456,10 @@ input[type=file]::file-selector-button {
 }
 
 .profile-box{
-    padding:10px;
+    padding: 10px;
+    border: 2px solid #2035a7;
+    box-shadow: -5px -5px 10px #fff, 5px 5px 10px #babebc;
+    font-weight: bold;
 }
 
 .profile-box > div {
@@ -432,7 +467,7 @@ input[type=file]::file-selector-button {
     vertical-align: middle; /* 세로 정렬을 가운데로 설정합니다. */
 }
 
-.profile-img {
+.feed-profile-img {
     width: 40px; /* 이미지의 너비를 적절히 설정합니다. */
     height: 40px; /* 이미지의 높이를 적절히 설정합니다. */
     border-radius: 50%; /* 모서리를 원 형태로 만듭니다. */
@@ -450,7 +485,7 @@ input[type=file]::file-selector-button {
     margin-top: 30px;
 }
 .input-search {
-    width: 400px;
+    width: 300px;
     height: 12px;
     padding: 10px;
     box-sizing: content-box;
@@ -487,4 +522,34 @@ input[type=file]::file-selector-button {
     background-size: 13px;
     background-position: center left;
     background-image: url('../img/cancel.png');
+}
+.followings-half{
+    display: inline-block;
+    width: 48%;
+}
+.followers-half{
+    display: inline-block;
+    width: 48%;
+}
+.nav-2{
+    text-align: center;
+    margin-bottom: 25px;
+    position: fixed;
+    z-index: 2;
+    margin-left:300px;
+}
+.comment-profile-img{
+    width: 35px;
+    height: 28px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-size: cover;
+    margin-right: 5px;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+}
+.comment{
+    padding-top: 5px;
+    font-size: 13px;
 }
