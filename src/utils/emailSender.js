@@ -1,6 +1,8 @@
 const nodemailer=require('nodemailer');
 const dotenv=require('dotenv');
 dotenv.config();
+
+//임시 비밀번호 메일 전송
 exports.sendEmail=(to, newPassword)=> {
     const transporter = nodemailer.createTransport({
         service: 'naver',

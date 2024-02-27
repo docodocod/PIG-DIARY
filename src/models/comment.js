@@ -2,10 +2,12 @@ const Sequelize=require("sequelize");
 class Comment extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
+            //작성자
             writer:{
                 type:Sequelize.INTEGER(),
                 allowNull:false,
             },
+            //댓글
             comment: {
                 type: Sequelize.STRING(140),
                 allowNull: false,

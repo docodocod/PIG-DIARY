@@ -48,7 +48,11 @@ exports.join = async (req, res, next) => {
             nick,
             password: hashedPassword,
         });
-        res.redirect("/");
+        res.send(`
+            <script>
+                alert("회원가입이 완료되었습니다.");
+                window.location.href="/";
+            </script>`);
     } catch (error) {
         console.error(error);
         return next(error);
@@ -83,7 +87,9 @@ exports.passwordInit = async (req, res) => {
     const password = req.body.currPassword;
     const hashedPassword=pbkdf2(password);
     const user=await User.findOne({where:{id:userId}});
-    if(hashedPassword===user.password){
+    if(hashedPassword!==user.password) {
+        return res.send("fail");
+    }else{
         const changePassword=req.body.changePassword;
         const newPassword = pbkdf2(changePassword);
         await User.update({password: newPassword}, {where: {id: userId}});
@@ -104,16 +110,6 @@ exports.nickEdit = async (req, res) => {
     const newNick = req.body.nick;
     await User.update({nick: newNick}, {where: {id: userId}});
     console.log("닉네임 수정완료");
-    res.redirect("/");
-}
-
-//비밀번호 수정
-exports.passwordEdit = async (req, res) => {
-    const userId = req.user.id;
-    const newPassword = req.body.password;
-    const hashedPassword = pbkdf2(newPassword);
-    await User.update({password: hashedPassword}, {where: {id: userId}});
-    console.log("비밀번호 수정 성공");
     res.redirect("/");
 }
 

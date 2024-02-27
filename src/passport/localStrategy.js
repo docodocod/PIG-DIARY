@@ -6,6 +6,7 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const {pbkdf2} = require("../utils/encrypt");
 
+//일반 로그인
 module.exports = () => {
     passport.use(new LocalStrategy({
         usernameField: 'email',

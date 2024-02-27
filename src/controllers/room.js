@@ -3,6 +3,8 @@ const Chat=require("../models/chat.js");
 const {removeRoom} = require("../services/roomDelete");
 const {Op} = require("sequelize");
 const User = require("../models/user");
+const {formatDate, formatDateWithTime} = require("../utils/dateFormat");
+const {toJSON} = require("express-session/session/cookie");
 
 
 //채팅방 목록 불러오기
@@ -32,9 +34,6 @@ exports.renderRoom=async(req, res, next)=>{
                 [Chat, 'createdAt', 'DESC']
             ],
         });//현재 생성되어 있는 모든 방 찾아서 담기
-        rooms.forEach(room => {
-            console.log(room.toJSON()); // 데이터의 JSON 형태로 출력
-        });
         res.render('roomList', { rooms, title: "채팅방 목록" }); //데이터 담아서 채팅방 목록 페이지에 뿌려주기
     } catch (error) {
         console.error(error);
@@ -88,18 +87,17 @@ exports.enterRoom=async(req, res, next)=>{
         const room = await Room.findOne({
             include:[{
                 model:User,
-                attributes:['nick','profileImg'],
+                attributes:['id','nick','profileImg'],
                 as:"Owner",
             }, {
                 model: User,
-                attributes: ['nick', 'profileImg'],
+                attributes: ['id','nick', 'profileImg'],
                 as: "Friend",
             }],
             where:{
                 id:req.params.id,
             }
         });
-        console.log("room: "+room);
         if (!room) { //room data 없으면
             return res.redirect('/?error=존재하지 않는 방입니다.');
         }
@@ -112,9 +110,15 @@ exports.enterRoom=async(req, res, next)=>{
                 RoomId:room.id
             }
         });
+        const transFormChatTime=chats.map(chat=>{
+            return{
+                ...chat.toJSON(),
+                createdAt: formatDateWithTime(chat.createdAt),
+            }
+        })
         return res.render('chat', { //채팅 창에 데이터 뿌려주기
             room,
-            chats,
+            chats:transFormChatTime,
             user: req.user.id,
         });
     } catch (error) {
@@ -145,7 +149,8 @@ exports.sendChat=async(req, res, next)=>{
         const user=await User.findOne({
             where:{id:req.user.id},
         })
-        req.app.get('io').of('/chat').to(req.params.id).emit('chat',chat,user);
+        const dateTime= formatDateWithTime(chat.createdAt);
+        req.app.get('io').of('/chat').to(req.params.id).emit('chat',chat,user,dateTime);
         res.send('채팅을 정상적으로 전송');
     } catch (error) {
         console.error(error);

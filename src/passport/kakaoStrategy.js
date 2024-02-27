@@ -2,6 +2,7 @@ const passport = require("passport");
 const KakaoStrategy = require("passport-kakao").Strategy;
 const User = require("../models/user.js");
 
+//카카오 소셜 로그인
 module.exports = () => {
     passport.use(
         new KakaoStrategy({

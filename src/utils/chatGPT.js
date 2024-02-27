@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+//chat-gpt function
 async function callChatGPT(prompt) {
     const OpenAI = require("openai");
 

@@ -2,31 +2,38 @@ const Sequelize=require("sequelize");
 class Favorite extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
+            //가게 이름
             placeName: {
                 type: Sequelize.STRING(50),
                 allowNull: false,
                 unique: true,
             },
+            //도로명 주소
             roadAddressName: {
                 type: Sequelize.STRING(50),
                 allowNull: true,
             },
+            //지번 주소
             addressName: {
                 type: Sequelize.STRING(50),
                 allowNull: true,
             },
+            //핸드폰 번호
             phone: {
                 type: Sequelize.STRING(50),
                 allowNull: true,
             },
+            //가게 홈페이지(kakao)
             placeUrl:{
                 type:Sequelize.STRING(200),
                 allowNull:true,
             },
+            //위도
             lat:{
                 type:Sequelize.FLOAT(40),
                 allowNull:false,
             },
+            //경도
             lng:{
                 type:Sequelize.FLOAT(40),
                 allowNull:false,

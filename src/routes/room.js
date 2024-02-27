@@ -30,16 +30,23 @@ const upload = multer({
     limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-router.get('/',isLoggedIn,renderRoom); // 채팅방 리스트 호출
+/* 채팅방 */
+//채팅 목록 불러오기
+router.get('/',isLoggedIn,renderRoom);
 
-router.post('/create',createRoom); // 채팅방 생성
+//채팅방 생성
+router.post('/create',createRoom);
 
+//채팅방 입장
 router.get('/:id', enterRoom); //방 입장
 
-/*router.delete('/:id', removeRoom); //방 퇴장*/
 
+/* 채팅 */
+//채팅 전송
 router.post('/:id/chat',sendChat); //채팅 전송
 
+//채팅 이미지 전송
 router.post('/:id/img', upload.single('image'), sendImg);
+
 
 module.exports = router;

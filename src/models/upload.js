@@ -2,6 +2,7 @@ const Sequelize=require("sequelize");
 class Upload extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
+            //파일 이름
             fileName:{
                 type:Sequelize.STRING(500),
                 allowNull:true,

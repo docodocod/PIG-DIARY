@@ -27,28 +27,24 @@ const upload = multer({
     limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-// POST /post/img
-router.post('/img', isLoggedIn, upload.array('img',10), afterUploadImage);
 
-// POST /post
-const upload2 = multer();
-console.log("typeof upload2:"+typeof upload2)
-
-//포스트 업로드
+//피드 업로드
 router.post('/',isLoggedIn, uploadPost);
 
-//좋아요 기능
+//피드 업로드 파일 미리보기
+router.post('/img', isLoggedIn, upload.array('img',10), afterUploadImage);
+
+//좋아요
 router.post('/:id/like',isLoggedIn,like);
 
 //좋아요 해제
 router.delete('/:id/unlike',isLoggedIn,unlike);
 
-//게시글 삭제
-router.delete('/:id/delete',isLoggedIn,postDelete);
-
 //댓글 달기
 router.post('/:id/reply',isLoggedIn,postReply);
 
-router.post("/db/test",test);
+//게시글 삭제
+router.delete('/:id/delete',isLoggedIn,postDelete);
+
 
 module.exports = router;

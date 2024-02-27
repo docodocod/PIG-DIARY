@@ -2,6 +2,7 @@ const Sequelize=require("sequelize");
 class Room extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
+            //방 개설자
             owner: {
                 type: Sequelize.INTEGER(),
                 allowNull: false,
@@ -10,6 +11,7 @@ class Room extends Sequelize.Model {
                     key: 'id',      // 참조하는 모델의 기본 키
                 }
             },
+            //상대방
             friend:{
                 type:Sequelize.INTEGER(),
                 references: {

@@ -4,23 +4,16 @@ const Upload = require('../models/upload');
 const Hashtag = require("../models/hashtag.js");
 const Comment = require('../models/comment');
 const dotenv = require('dotenv');
+const {formatDate}=require("../utils/dateFormat");
+const {Op} = require("sequelize");
 dotenv.config();
 
-exports.renderProfile = (req, res) => {
-    res.render('profile', {title: '내 정보 - NodeBird'});
-};
-
-exports.renderJoin = (req, res) => {
-    res.render('join', {title: '회원가입 - NodeBird'});
-};
-exports.renderChat = (req, res) => {
-    res.render('chat', {title: "chat"});
-}
-
+//로그인 창 가기
 exports.renderLogin = (req, res) => {
     res.render("login", {title: "login"});
 }
 
+//카카오맵 검색
 exports.renderSearchPage = (req, res) => {
     const searchWord = req.body.searchWord;
     const userId = req.user.id;
@@ -32,12 +25,14 @@ exports.renderSearchPage = (req, res) => {
     });
 }
 
+//맛집 검색 페이지 가기
 exports.renderSearch = (req, res) => {
     res.render("search", {
         userId: req.user.id
     });
 }
 
+//모든 피드 불러오기
 exports.renderMain = async (req, res, next) => { //메인 페이지에서 정보 불러올 메서드
     try {
         const posts = await Post.findAll({ //해당 유저가 가지고 있는 게시글들을 담아줍니다.
@@ -52,8 +47,8 @@ exports.renderMain = async (req, res, next) => { //메인 페이지에서 정보
                 model: Comment,
                 attributes: ['id', 'comment', 'createdAt'],
                 include: [{
-                    model: User, // Comment 모델과 User 모델을 조인
-                    attributes: ['id', 'nick','profileImg'], // 필요한 속성만 선택
+                    model: User,
+                    attributes: ['id', 'nick','profileImg'],
                 }]
             }, {
                 model: Upload,
@@ -61,8 +56,15 @@ exports.renderMain = async (req, res, next) => { //메인 페이지에서 정보
             }],
             order: [['createdAt', 'DESC']],
         });
+        const transformedPosts = posts.map(post => {
+            return {
+                ...post.toJSON(),
+                createdAt: formatDate(post.createdAt),
+            };
+        });
+
         res.render("main", {
-            feeds: posts,
+            feeds: transformedPosts,
         });
     } catch (err) {
         console.error(err);
@@ -70,21 +72,44 @@ exports.renderMain = async (req, res, next) => { //메인 페이지에서 정보
     }
 }
 
-exports.renderHashtag = async (req, res, next) => {//
+//해시태그 검색
+exports.renderHashtag = async (req, res, next) => {
     const query = req.query.hashtag;
+    console.log(query);
     if (!query) {
         return res.redirect('/');
     }
     try {
-        const hashtag = await Hashtag.findOne({where: {title: query}});
+        const hashtag = await Hashtag.findOne({
+            where: {title: query}
+        });
         let posts = [];
         if (hashtag) {
-            posts = await hashtag.getPosts({include: [{model: User}]});
+            posts = await hashtag.getPosts({
+                include: [{
+                    model: User,
+                    attributes: ['id', 'nick', 'profileImg'],
+                }, {
+                    model: User,
+                    attributes: ['id', 'nick'],
+                    as: "Liker",
+                }, {
+                    model: Comment,
+                    attributes: ['id', 'comment', 'createdAt'],
+                    include: [{
+                        model: User,
+                        attributes: ['id', 'nick', 'profileImg'],
+                    }]
+                }, {
+                    model: Upload,
+                    attributes: ['fileName', 'PostId'],
+                }],
+                order: [['createdAt', 'DESC']],
+            })
+            return res.render('main', {
+                feeds: posts,
+            });
         }
-        return res.render('main', {
-            title: `${query} | PIG DIARY`,
-            twits: posts,
-        });
     } catch (error) {
         console.error(error);
         return next(error);

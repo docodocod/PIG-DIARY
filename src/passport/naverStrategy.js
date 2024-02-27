@@ -2,6 +2,7 @@ const passport = require('passport');
 const { Strategy: NaverStrategy, Profile: NaverProfile } = require('passport-naver-v2');
 const User = require('../models/user');
 
+//네이버 로그인
 module.exports = () => {
     passport.use(
         new NaverStrategy(

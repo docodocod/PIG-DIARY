@@ -5,6 +5,7 @@ exports.renderChatBot=(req,res)=>{
     res.render('chat-bot',{title:"AI 챗봇"});
 }
 
+//챗봇 대화 기능
 exports.sendChatBot=async (req,res)=> {
     const prompt = req.body.message;
     console.log(prompt);

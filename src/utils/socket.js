@@ -1,6 +1,7 @@
 const SocketIO=require('socket.io');
 const {removeRoom}=require("../services/roomDelete.js");
 
+//
 exports.webSocket=(server, app)=>{
     const io =SocketIO(server, { path: '/socket.io' });
     app.set('io', io); //라우터와 웹소켓을 연결해주기 위하여 app.js에서 app을 넘겨줌
