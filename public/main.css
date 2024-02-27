@@ -477,6 +477,12 @@ input[type=file]::file-selector-button {
     margin-right:10px;
     cursor:pointer;
 }
+.feed-date{
+    display: block;
+    padding-left: 460px;
+    font-size: 14px;
+}
+
 .feed-content{
     display:flex;
     font-size:15px;
@@ -552,4 +558,9 @@ input[type=file]::file-selector-button {
 .comment{
     padding-top: 5px;
     font-size: 13px;
+}
+.feed-time-zone{
+    padding-bottom: 5px;
+    font-size: 11px;
+    color: lightslategray;
 }
