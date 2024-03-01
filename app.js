@@ -25,6 +25,7 @@ const chatBotRouter = require('./src/routes/chatBot.js');
 
 const app = express();
 passportConfig();
+sanitizeHtml('');
 
 app.set('port', process.env.SERVER_PORT || 4161); //Config.PORT를 앞에 붙여준 이유는 배포와 개발할때 서로 다른 포트를 사용할거라서
 app.set('view engine', 'html');
@@ -53,7 +54,7 @@ const sessionOption = {
 }
 if(process.env.NODE_ENV==="production"){
     sessionOption.proxy=true;
-/*    sessionOption.cookie.secure=true; //https 사용시 주석 해제*/
+    /*sessionOption.cookie.secure=true; //https 사용시 주석 해제*/
 }
 app.use(session(sessionOption));
 
@@ -62,7 +63,7 @@ app.use(session(sessionOption));
 if (process.env.NODE_ENV === "production") {
     app.use(morgan('combined'))
     app.enable('trust proxy');
-    app.use(helmet({contentSecprityPolicy:false}));
+/*    app.use(helmet({contentSecprityPolicy:true}));*/
     app.use(hpp());
 } else {
     app.use(morgan("dev"));
@@ -96,7 +97,8 @@ app.use((req, res, next) => { //404 에러
 
 app.use((err, req, res, next) => {
     // set locals, only providing error in development
-    res.locals.message = err.message;
+    res.locals.message ="해당 페이지를 찾을 수 없습니다."
+    console.log("에러메세지:"+err.message);
     res.locals.error = req.app.get('env') === 'development' ? err : {};
     // render the error page
     res.status(err.status || 500);
