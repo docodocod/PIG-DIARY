@@ -1,6 +1,5 @@
 const Room=require("../models/room.js");
 const Chat=require("../models/chat.js");
-const {removeRoom} = require("../services/roomDelete");
 const {Op} = require("sequelize");
 const User = require("../models/user");
 const {formatDate, formatDateWithTime} = require("../utils/dateFormat");
@@ -136,8 +135,8 @@ exports.enterRoom=async(req, res, next)=>{
 //채팅방 제거
 exports.removeRoom=async(req, res, next)=>{
     try {
-        await removeRoom(req.params.id);
-        res.send('채팅방을 나갔습니다.');
+        await Room.destroy({where:{id:req.params.id}});
+        res.send('채팅방을 제거하였습니다.');
     } catch (error) {
         console.error(error);
         next(error);

@@ -14,7 +14,7 @@
     <main class="chat-container">
         <!-- 채팅 내용 시작 -->
         <div class="main-header" style="border:1px solid;">
-            {% if room.Owner.id==user.id %}
+            {% if room.Owner.id===user %}
             <img class="profile-img" src="/uploads/profiles/{{room.Friend.profileImg}}" alt="">
             <div class="profile-col">
                 <span class="profile-name">{{room.Friend.nick}}</span>
@@ -25,6 +25,9 @@
                 <span class="profile-name">{{room.Owner.nick}}</span>
             </div>
             {% endif %}
+            <div class="remove-chat-div">
+                <a class="remove-chat"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
+            </div>
         </div>
         <div class="main-chat">
             {% for chat in chats %}
@@ -70,24 +73,6 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-    /*const today = new Date();
-
-    // 날짜 포맷 설정 함수
-    function formatDate(date) {
-        let year = date.getFullYear();
-        let month = date.getMonth() + 1;
-        let day = date.getDate();
-        month = (month < 10 ? "0" : "") + month;
-        day = (day < 10 ? "0" : "") + day;
-        return year + "년 " + month + "월 " + day + "일";
-    }
-
-    let formattedDate = formatDate(today);
-    // 출력된 포맷된 날짜를 해당 타임 엘리먼트에 추가
-    let timeElement = document.querySelector('.date-line time');
-    timeElement.textContent = formattedDate;
-    /!*--------------------------------------------------------------------------*!/*/
-
     const socket = io.connect('http://localhost:4161/chat', {
         path: '/socket.io',
     });
@@ -109,11 +94,10 @@
         div.appendChild(chat);
         document.querySelector('.chat-list').appendChild(div);
     });
-    socket.on('chat', function (data, userData,dateTime) { //서버에서 'chat' 이벤트명으로 데이터 보낸걸 받는다.
+    socket.on('chat', function (data, userData, dateTime) { //서버에서 'chat' 이벤트명으로 데이터 보낸걸 받는다.
         const div = document.createElement('div');
         console.log("userData:" + userData);
-        if (data.user === {{user}})
-        {
+        if (data.user === {{user}}){
             div.classList.add('me-chat');
             if (data.chat) {
                 const chat = document.createElement('div');
@@ -121,9 +105,9 @@
                 const chat_span = document.createElement("span");
                 chat_span.classList.add('balloon');
                 chat_span.textContent = data.chat;
-                const date_span=document.createElement('span');
+                const date_span = document.createElement('span');
                 date_span.classList.add("me-date-time");
-                date_span.textContent=dateTime;
+                date_span.textContent = dateTime;
                 chat.appendChild(chat_span);
                 div.appendChild(chat);
                 div.appendChild(date_span);
@@ -135,7 +119,9 @@
                 chat.appendChild(gif);
                 div.appendChild(chat);
             }
-        }else{
+        }
+    else
+        {
             div.classList.add('friend-chat');
             const profile_img = document.createElement("img");
             profile_img.classList.add('profile-img');
@@ -150,9 +136,9 @@
                 const chat_span = document.createElement("span");
                 chat_span.classList.add('balloon');
                 chat_span.textContent = data.chat;
-                const date_span=document.createElement('span');
+                const date_span = document.createElement('span');
                 date_span.classList.add("friend-date-time");
-                date_span.textContent=dateTime;
+                date_span.textContent = dateTime;
                 chat.appendChild(profile_span);
                 chat.appendChild(chat_span);
                 div.appendChild(chat);
@@ -209,5 +195,16 @@
 
         // 페이지 로드시에도 맨 아래로 스크롤합니다.
         scrollToBottom();
+    });
+
+    $(".remove-chat").on("click", () => {
+            axios.delete('/room/{{room.id}}/remove')
+                .then(() => {
+                    console.log('채팅방을 나갔습니다.');
+                    location.href = "http://localhost:4161/room";
+                })
+                .catch(() => {
+                    console.log("채팅방 제거 실패");
+                });
     });
 </script>

@@ -40,10 +40,13 @@ router.post('/create',createRoom);
 //채팅방 입장
 router.get('/:id', enterRoom); //방 입장
 
+//채팅방 제거
+router.delete('/:id/remove',removeRoom);
+
 
 /* 채팅 */
 //채팅 전송
-router.post('/:id/chat',sendChat); //채팅 전송
+router.post('/:id/chat',sendChat);
 
 //채팅 이미지 전송
 router.post('/:id/img', upload.single('image'), sendImg);
