@@ -45,7 +45,7 @@
             {% if user %}
             <a href="/auth/logout" style="margin-left:10px;">로그아웃</a>
             {% else %}
-            <a href="/" style="margin-left:10px;">로그인</a>
+            <a href="/public" style="margin-left:10px;">로그인</a>
             {% endif %}
         </div>
 
@@ -154,8 +154,7 @@
         crossorigin="anonymous"></script>
 <script>
 function getMyList() {
-    const userId = $(".user-id").val();
-    console.log("userId:" + userId);
+    const userId={{user.id}};
     axios.get(`/user/${userId}/favoriteList`)
         .then((response) => {
             const tbody = $("#favorite-table tbody");
@@ -167,7 +166,7 @@ function getMyList() {
                 tr.append(`<td>${response.data[i].phone}</td>`);
                 tr.append(`<td><a href="${response.data[i].placeUrl}" target="_blank" class="btn btn-primary">바로가기</a></td>`);
                 tr.append(`<td><a href="https://map.kakao.com/link/search/${response.data[i].placeName}" class="btn btn-primary" target="_blank">지도보기</a></td>`);
-                tr.append(`<td><a href="" class="btn btn-secondary">삭제</a></td>`);
+                tr.append(`<td><a href="" onclick="removeList('${response.data[i].id}')" class="btn btn-secondary">삭제</a></td>`);
                 tbody.append(tr); // <tr>을 <tbody>에 추가
             }
         })
@@ -197,8 +196,28 @@ document.getElementById('img-uploads').addEventListener('change', function(e) {
                 console.log(err);
             });
 });
+
 $("#feed-submit").click(function(){
     $("#feed-form").submit();
 })
+
+function removeList(id){
+    const userId={{user.id}};
+    axios.delete(`/user/${userId}/removeFavorite`,{
+        data:{
+            "favoriteId":id
+        }
+    })
+        .then(()=>{
+            console.log('삭제 성공');
+            alert("삭제되었습니다.");
+            location.reload();
+        })
+        .catch((err)=>{
+            console.log(err);
+            alert("재시도 해주세요.");
+            location.reload();
+        })
+}
 </script>
 

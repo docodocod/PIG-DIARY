@@ -82,12 +82,13 @@
         if(myPosition){
             console.log("myPosition:"+myPosition);
             userMessage= myPosition;
+
         }else {
             userMessage = chatInput.value.trim();
         }
         if (!userMessage) return;
 
-
+        myPosition="";
         chatInput.value = "";
         chatInput.style.height = `${inputInitHeight}px`;
 

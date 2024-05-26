@@ -63,4 +63,5 @@ router.post("/changeNick",changeNick)
 
 //한줄 자기 소개
 router.post('/changeIntroduce',introduce);
+
 module.exports = router;

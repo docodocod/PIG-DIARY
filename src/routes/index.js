@@ -1,6 +1,6 @@
 const express = require('express');
 const { isLoggedIn, isNotLoggedIn } = require('../middlewares');
-const {renderMain, renderHashtag,renderLogin,renderSearch,renderSearchPage} = require('../controllers/index.js');
+const {renderMain, renderHashtag,renderLogin,renderSearch,renderSearchPage,getWeatherInfo} = require('../controllers/index.js');
 const {renderChat} = require("../controllers");
 const multer = require('multer');
 const path = require('path');
@@ -32,6 +32,7 @@ router.post('/searchPage',renderSearchPage);
 //해시태그 검색
 router.get('/hashtag', renderHashtag);
 
+router.get("/weather",getWeatherInfo);
 //테스트 경로
 router.get('/test',(req,res)=>{
     res.render('test');

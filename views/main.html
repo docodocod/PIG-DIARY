@@ -329,14 +329,14 @@
     navigator.geolocation.getCurrentPosition(success, fail);
 
     function getMyPosition(lat, lng) {
-        const apiKey = "71ba2b86d3d6f505572760d694c63b56";
-        const curLat = lat;
-        const curLng = lng;
-        const lang = "kr";
-        $.ajax({
-            type: "GET",
-            url: `https://api.openweathermap.org/data/2.5/\weather?lat=${curLat}&lon=${curLng}&appid=${apiKey}&lang=${lang}&units=metric`,
-            success: function (data) {
+        axios.get("/weather",{
+           params:{
+               lat,
+               lng,
+           }
+       })
+           .then((response)=>{
+               console.log(response);
                 let weatherIcon = {
                     '01': 'fas fa-sun fa-2xl',
                     '02': 'fas fa-cloud-sun fa-2xl',
@@ -348,13 +348,13 @@
                     '13': 'far fa-snowflake fa-2xl',
                     '50': 'fas fa-smog fa-2xl'
                 };
-                const city = data["name"];
-                const weather = data["weather"][0]["description"];
-                const icon = (data["weather"][0]["icon"]).substring(0, 2);
-                const temp = Math.floor(data["main"]["temp"]) + "°C";
-                const minTemp = Math.floor(data["main"]["temp_min"]) + "°C";
-                const maxTemp = Math.floor(data["main"]["temp_max"]) + "°C";
-                const humidity = data["main"]["humidity"];
+                const city = response.data.name;
+                const Weather = response.data.weather[0].description;
+                const icon = response.data.weather[0].icon.substring(0, 2);
+                const temp = Math.floor(response.data.main.temp) + "°C";
+                const minTemp = Math.floor(response.data.main.temp_min) + "°C";
+                const maxTemp = Math.floor(response.data.main.temp_max) + "°C";
+                const humidity = response.data.main.humidity;
                 $('.CurrIcon').append('<i class="' + weatherIcon[icon] + '"></i>');
                 $('.CurrTemp').prepend(temp);
                 $('.City').append(city);
@@ -362,13 +362,12 @@
                 $('.CurrTemp_max').append("최고 기온:" + maxTemp);
                 $('.CurrTemp_min').append("최저 기온:" + minTemp);
 
-                weatherClothe(Math.floor(data["main"]["temp"]),weather);
-            },
-            fail: function (err) {
-                console.log(err);
-            }
-        })
-    }
+                weatherClothe(Math.floor(response.data.main.temp),Weather);
+            })
+           .catch((err)=>{
+               console.log(err);
+           })
+    };
 
     function weatherClothe(temp,weather) {
         let imageUrl = '/img/weather/weather-1.jpg'; // 기본 이미지 URL

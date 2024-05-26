@@ -8,18 +8,20 @@ const Comment = require('../models/comment');
 exports.uploadPost = async (req, res, next) => { //게시글 업로드
     try {
         let uploadFiles=req.body.url;
+        console.log("uplooadFiles:"+uploadFiles);
 
         const post = await Post.create({
             title: req.body.title || "안녕하세요",
             content: req.body.content || "",
             UserId: req.user.id,
         });
-
-        for (var i=0; i<uploadFiles.length; i++){
-            await postUpload.create({
-                fileName: uploadFiles[i],
-                PostId: post.id,
-            })
+        if(uploadFiles!=null) {
+            for (var i = 0; i < uploadFiles.length; i++) {
+                await postUpload.create({
+                    fileName: uploadFiles[i],
+                    PostId: post.id,
+                })
+            }
         }
         const hashtags = req.body.content.match(/#[^\s#]*/g);
         if (hashtags) {

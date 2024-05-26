@@ -13,7 +13,6 @@ const passportConfig = require("./src/passport/index.js");
 const path = require("path");
 const {webSocket} = require("./src/utils/socket");
 const {morganMiddleware} = require("./src/middlewares/morganMiddleware");
-const sanitizeHtml=require('sanitize-html');
 dotenv.config();
 
 const indexRouter = require("./src/routes/index.js");
@@ -25,9 +24,8 @@ const chatBotRouter = require('./src/routes/chatBot.js');
 
 const app = express();
 passportConfig();
-sanitizeHtml('');
 
-app.set('port', process.env.SERVER_PORT || 4161); //Config.PORT를 앞에 붙여준 이유는 배포와 개발할때 서로 다른 포트를 사용할거라서
+app.set('port', process.env.SERVER_PORT || 5000); //Config.PORT를 앞에 붙여준 이유는 배포와 개발할때 서로 다른 포트를 사용할거라서
 app.set('view engine', 'html');
 nunjucks.configure('views', {
     express: app,
@@ -51,7 +49,7 @@ const sessionOption = {
         httpOnly: true,
         secure: false,
     },
-}
+};
 if(process.env.NODE_ENV==="production"){
     sessionOption.proxy=true;
     /*sessionOption.cookie.secure=true; //https 사용시 주석 해제*/
@@ -62,9 +60,9 @@ app.use(session(sessionOption));
 /* 배포 환경 설정*/
 if (process.env.NODE_ENV === "production") {
     app.use(morgan('combined'))
-    app.enable('trust proxy');
-/*    app.use(helmet({contentSecprityPolicy:true}));*/
+    app.use(helmet({contentSecurityPolicy:false}));
     app.use(hpp());
+/*    app.use(helmet({contentSecprityPolicy:true}));*/
 } else {
     app.use(morgan("dev"));
 }

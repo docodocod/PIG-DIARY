@@ -289,3 +289,13 @@ form[name="chatform"] > textarea{
     padding-top: 40px;
     font-size: 12px;
 }
+.remove-chat-div{
+    display: inline-block;
+    float: right;
+    padding-top: 12px;
+    padding-right: 10px;
+    cursor:pointer;
+}
+.profile-col{
+    display:inline-block;
+}

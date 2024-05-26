@@ -6,6 +6,7 @@ const Comment = require('../models/comment');
 const dotenv = require('dotenv');
 const {formatDate}=require("../utils/dateFormat");
 const {Op} = require("sequelize");
+const axios=require('axios');
 dotenv.config();
 
 //로그인 창 가기
@@ -62,7 +63,6 @@ exports.renderMain = async (req, res, next) => { //메인 페이지에서 정보
                 createdAt: formatDate(post.createdAt),
             };
         });
-
         res.render("main", {
             feeds: transformedPosts,
         });
@@ -113,5 +113,20 @@ exports.renderHashtag = async (req, res, next) => {
     } catch (error) {
         console.error(error);
         return next(error);
+    }
+};
+
+exports.getWeatherInfo=async(req,res,next)=>{
+    const {lat,lng}=req.query;
+    const apiKey = process.env.weather_api_key;
+    const lang = "kr";
+    const units="metric"
+    const url=`https://api.openweathermap.org/data/2.5/\weather?lat=${lat}&lon=${lng}&appid=${apiKey}&lang=${lang}&units=${units}`
+    try {
+        const response=await axios.get(url);
+        res.json(response.data);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({ error: 'Error fetching weather data' });
     }
 };

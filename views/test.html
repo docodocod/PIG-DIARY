@@ -1,75 +1,449 @@
 <head>
-    <title>asd</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+    <title>main</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/main.css">
+    <link rel="stylesheet" href="/profileCard.css">
     <link rel="stylesheet" href="/slider.css">
+    <link rel="stylesheet" href="/test.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 </head>
-{% for feed in feeds %}
-<div class="slider-2">
-    <div class="side-btns">
-        <div><span><i class="fas fa-caret-left"></i></span></div>
-        <div><span><i class="fas fa-caret-right"></i></span></div>
-    </div>
-    <div class="slides">
-        {% for upload in feed.Uploads %}
-        <div class=""><img src="/img/{{upload.files}}" alt=""/></div>
+{% block content %}
+<body>
+{% include "header.html" %}
+<div class="main">
+    <div class="center-container">
+        <div class="nav-2">
+            <input id="searchInput" type="search" class="input-search" placeholder="검색">
+        </div>
+        {% for feed in feeds %}
+        <div class="feed-container">
+            <div class="modal fade" id="profileModal{{feed.id}}" role="dialog" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body" style="padding:0px;">
+                            <div class="wrapper" style="margin-top:50px">
+                                <div class="img-area">
+                                    <div class="inner-area">
+                                        <img src="/uploads/profiles/{{feed.User.profileImg}}"
+                                             style="width:125px; height:125px;"
+                                             alt="">
+                                    </div>
+                                </div>
+                                <div class="name">{{feed.User.nick}}</div>
+                                <div class="about" style="margin-bottom:10px;">현재 회사에서 근무중입니다.</div>
+                                <div class="buttons">
+                                    <form action="/room/create" method="post" style="width:130px;">
+                                        <input type="hidden" name="friend"
+                                               value="{{feed.User.nick}}"/>
+                                        <button>메세지 보내기</button>
+                                    </form>
+                                    {% if not followingIdList.includes(feed.User.id) and feed.User.id !== user.id %}
+                                    <button style="width:130px;" class="friend-follow-{{feed.User.id}}"
+                                            onclick="friendFollow(`{{feed.User.id}}`)">팔로우
+                                    </button>
+                                    {% endif %}
+                                    {% if followingIdList.includes(feed.User.id) and feed.User.id !== user.id %}
+                                    <button style="width:130px;" class="friend-unfollow"
+                                            onclick="friendUnFollow(`{{feed.User.id}}`)">팔로잉
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-box">
+                <div data-toggle="modal" data-target=#profileModal{{feed.id}} class="profile-img"><img
+                        src="/uploads/profiles/{{feed.User.profileImg}}" alt=""
+                        style="width:40px; height:40px;"/></div>
+                <a data-toggle="modal" data-target="#profileModal{{feed.id}}"
+                   style="cursor:pointer">{{feed.User.nick}}</a>
+            </div>
+            <div class="hl"></div>
+            <div class="note">
+                <div class="slider-2">
+                    <div class="side-btns">
+                        <div><span><i class="fas fa-caret-left"></i></span></div>
+                        <div><span><i class="fas fa-caret-right"></i></span></div>
+                    </div>
+                    <div class="slides">
+                        {% set i = 0 %}
+                        {% for upload in feed.Uploads %}
+                        {% if i == 0 %}
+                        <div class="active"><img src="/uploads/posts/{{upload.files}}" alt=""/></div>
+                        {% else %}
+                        <div class=""><img src="/uploads/posts/{{upload.files}}" alt=""/></div>
+                        {% endif %}
+                        {% set i = i + 1 %}
+                        {% endfor %}
+                    </div>
+                    <div class="page-nav">
+                        {% set i = 0 %}
+                        {% for upload in feed.Uploads %}
+                        {% if i == 0 %}
+                        <div class="active"></div>
+                        {% else %}
+                        <div class=""></div>
+                        {% endif %}
+                        {% set i = i+1 %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="icons-react">
+                    {% set Likers = [] %}
+                    <div class="icons-left">
+                        {% for item in feed.Liker %}
+                        {% set Likers=(Likers.push(item.id),Likers) %}
+                        {% endfor %}
+                        {% if not Likers.includes(user.id) and twit.User.id !== user.id and user %}
+                        <button class="like_button" onclick="addLike('{{feed.id}}')">
+                            <i class="fa-regular fa-heart fa-xl"></i>
+                        </button>
+                        {% endif %}
+                        {% if Likers.includes(user.id) and twit.User.id !== user.id and user %}
+                        <button class="like_button" onclick="removeLike('{{feed.id}}')">
+                            <i class="fa-solid fa-heart fa-xl"></i>
+                        </button>
+                        {% endif %}
+                        <img class="icon-react"
+                             src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/comment.png" alt="말풍선">
+                        <!--                        <img class="icon-react" src="../static/img/dm.png" alt="DM">-->
+                    </div>
+                </div>
+                <!-- article text data -->
+                <div class="reaction">
+                    <!--<div class="liked-people">
+                        <p><span class="like_size">좋아요</span> <span class="point-span-like">{{feed.likeCount}}</span></p>
+                    </div>-->
+                    <div class="description">
+                        <div>
+                            <span class="point-span userID" style="font-size:20px;">{{feed.User.nick}}</span>
+                            <span class="feed-title" style="font-size:17px;">{{feed.title}}</span>
+                            <span class="feed-content" style="font-size:15px;">{{feed.content}}</span>
+                        </div>
+                    </div>
+                    <div class="comment-section" style="width:560px;">
+                        {% for comment in feed.Comments %}
+                        <div class="comments" id="commentappend${i}">
+                            <span class="writer-box">{{comment.writer}}</span>
+                            <span class="comment-box">{{comment.comment}}</span>
+                        </div>
+                        <div class="time-log">
+                            <!--<span>${timeForToday(created_at)}</span>-->
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="hl"></div>
+                <div class="comment">
+                    <input id="input-comment-{{feed.id}}" class="input-comment" type="text" placeholder="댓글 달기...">
+                    <button type="submit" class="submit-comment" onclick="saveComment('{{feed.id}}')">게시</button>
+                </div>
+            </div>
+        </div>
         {% endfor %}
     </div>
-    <div class="page-nav">
-        {% for upload in feed.Uploads %}
-        <div class=""></div>
-        {% endfor %}
+    <div class="right-container">
+        <div class="weather-container">
+            <div class="City"></div>
+            <div class="weather-box">
+                <div class="CurrIcon"></div>
+                <div class="CurrTemp"></div>
+            </div>
+            <div class="Temp_container">
+                <div class="CurrTemp_max"></div>
+                <div class="CurrTemp_min"></div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="img-area">
+                <div class="inner-area">
+                    <img src="/uploads/profiles/{{user.profileImg}}" style="width:125px; height:125px;" alt="">
+                </div>
+            </div>
+            <div class="name">{{user.nick}}</div>
+            {% if user %}
+            <div class="about" style="margin-bottom:10px;">Designer & Developer</div>
+            {% else %}
+            <div class="about" style="margin-bottom:10px;">로그인을 해주세요.</div>
+            {% endif %}
+            {% if user %}
+            <div class="buttons">
+                <button><a href="/room">채팅 목록</a></button>
+                <button data-bs-toggle="modal" data-bs-target="#following-list">친구 목록</button>
+            </div>
+            <div class="social-share">
+                <div class="row">
+                    <div style="text-align:center;
+                         width: 150px;">팔로잉
+                    </div>
+                    <div>{{followingCount}}</div>
+                </div>
+                <div class="row">
+                    <div>팔로워</div>
+                    <div>{{followerCount}}</div>
+                </div>
+            </div>
+            {% else %}
+            <div class="buttons">
+                <button><a href="/">로그인</a></button>
+                <button><a href="/">회원가입</a></button>
+            </div>
+            <div class="social-share">
+                <div class="row">
+                    <a href="/auth/kakao"><img src="/img/kakao_login.png" width="50px" height="50px"/></a>
+                </div>
+                <div class="row">
+                    <a href="/auth/naver"><img src="/img/naver_login.png" width="50px" height="50px"/></a>
+                </div>
+                <div class="row">
+                    <a href="/auth/google"><img src="/img/google_login.png" width="50px" height="50px"/></a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="following-list" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="following-listLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="following-listLabel">친구 목록</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="followings-half">
+                        <h5>팔로잉 목록</h5>
+                        {% if user.Followings %}
+                        {% for following in user.Followings %}
+                        <div class="following-container">
+                            <div style="display:inline-block"><img src="/uploads/profiles/{{following.profileImg}}"
+                                                                   width="30px;" height="30px;" alt="img"/></div>
+                            <div style="display:inline-block">{{following.nick}}</div>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="followers-half">
+                        <h5>팔로워 목록</h5>
+                        {% if user.Followers %}
+                        {% for follower in user.Followers %}
+                        <div class="followers-container">
+                            <div style="display:inline-block"><img src="/uploads/profiles/{{follower.profileImg}}"
+                                                                   width="30px;" height="30px;" alt="img"/></div>
+                            <div style="display:inline-block">{{follower.nick}}</div>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-{% endfor %}
+<div class="chat-bot-container">
+    {% include "chat-bot.html" %}
+</div>
+{% endblock %}
+</body>
+{% block script %}
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 <script>
-    $(document).ready(function(){
-        $('.slider-2 .slides > div:nth-child(1)').classList.add('active');
+    //이미지 첨부 기능 script
+    if (document.getElementById('img')) {
+        document.getElementById('img').addEventListener('change', function (e) {
+            const formData = new FormData();
+            console.log(this, this.files);
+            formData.append('img', this.files[0]);
+            axios.post('/post/img', formData)
+                .then((res) => {
+                    document.getElementById('img-url').value = res.data.url;
+                    document.getElementById('img-preview').src = res.data.url;
+                    document.getElementById('img-preview').style.display = 'inline';
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        });
+    }
+
+    //게시글 삭제 script
+    document.querySelectorAll('.twit-delete').forEach(function (tag) {
+        tag.addEventListener('click', function () {
+            const postId = tag.parentNode.querySelector('.twit-id').value;
+            if (confirm("게시글을 삭제하시겠습니까?")) {
+                axios.delete(`/post/${postId}/delete`)
+                    .then(() => {
+                        console.log("게시글 삭제 성공");
+                        location.reload();
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            }
+        });
     });
 
-    $('.slider-2 .page-nav > div').click(function() {
+    function success(pos) { // 위치 정보를 가져오는데 성공했을 때 호출되는 콜백 함수 (pos : 위치 정보 객체)
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        console.log(`현위치 : ${lat}, ${lng}`);
+        getMyPosition(pos.coords.latitude, pos.coords.longitude);
+    }
 
+    function fail(err) { // 위치 정보를 가져오는데 실패했을 때 호출되는 콜백 함수
+        alert('현위치를 찾을 수 없습니다.');
+    }
+
+    navigator.geolocation.getCurrentPosition(success, fail);
+
+    function getMyPosition(lat, lng) {
+        const apiKey = "71ba2b86d3d6f505572760d694c63b56";
+        const curLat = lat;
+        const curLng = lng;
+        const lang = "kr";
+        $.ajax({
+            type: "GET",
+            url: `https://api.openweathermap.org/data/2.5/\weather?lat=${curLat}&lon=${curLng}&appid=${apiKey}&lang=${lang}&units=metric`,
+            success: function (data) {
+                let weatherIcon = {
+                    '01': 'fas fa-sun fa-2xl',
+                    '02': 'fas fa-cloud-sun fa-2xl',
+                    '03': 'fas fa-cloud fa-2xl',
+                    '04': 'fas fa-cloud-meatball fa-2xl',
+                    '09': 'fas fa-cloud-sun-rain fa-2xl',
+                    '10': 'fas fa-cloud-showers-heavy fa-2xl',
+                    '11': 'fas fa-poo-storm fa-2xl',
+                    '13': 'far fa-snowflake fa-2xl',
+                    '50': 'fas fa-smog fa-2xl'
+                };
+                const city = data["name"];
+                const weather = data["weather"][0]["description"];
+                const icon = (data["weather"][0]["icon"]).substring(0, 2);
+                const temp = Math.floor(data["main"]["temp"]) + "°C";
+                const minTemp = Math.floor(data["main"]["temp_min"]) + "°C";
+                const maxTemp = Math.floor(data["main"]["temp_max"]) + "°C";
+                const humidity = data["main"]["humidity"];
+                $('.CurrIcon').append('<i class="' + weatherIcon[icon] + '"></i>');
+                $('.CurrTemp').prepend(temp);
+                $('.City').append(city);
+                $('.CurrTemp_max').append("최고 기온:" + maxTemp);
+                $('.CurrTemp_min').append("최저 기온:" + minTemp);
+            },
+            fail: function (err) {
+                console.log(err);
+            }
+        })
+    }
+
+    $('.slider-2 .page-nav > div').click(function () {
         var $this = $(this);
         var $pagenav = $this.parent()
         var $current = $pagenav.find('.active');
-
         $current.removeClass('active');
         $this.addClass('active');
-
         var index = $this.index();
         var $슬라이더 = $this.closest('.slider-2');
-
         $슬라이더.find('.slides > div.active').removeClass('active');
         $슬라이더.find('.slides > div').eq(index).addClass('active');
-
-
     });
 
-    $('.slider-2 > .side-btns > div:first-child').click(function() {
+    $('.slider-2 > .side-btns > div:first-child').click(function () {
         var $this = $(this);
         var $slider = $this.closest('.slider-2');
-
         var $current = $slider.find('.page-nav > div.active');
         var $post = $current.prev();
-
-        if ( $post.length == 0 ) {
+        if ($post.length == 0) {
             $post = $slider.find('.page-nav > div:last-child');
         }
-
         $post.click();
     });
 
-    $('.slider-2 > .side-btns > div:last-child').click(function() {
+    $('.slider-2 > .side-btns > div:last-child').click(function () {
         var $this = $(this);
         var $slider = $this.closest('.slider-2');
-
         var $current = $slider.find('.page-nav > div.active');
         var $post = $current.next();
-
-        if ( $post.length == 0 ) {
+        if ($post.length == 0) {
             $post = $slider.find('.page-nav > div:first-child');
         }
-
         $post.click();
     });
+
+    function addLike(idx) {
+        axios.post(`/post/${idx}/like`)
+            .then(() => {
+                console.log("좋아요 성공");
+                location.reload();
+            })
+            .catch(() => {
+                console.log("좋아요 실패")
+            })
+    }
+
+    function removeLike(idx) {
+        axios.delete(`/post/${idx}/unlike`)
+            .then(() => {
+                console.log("좋아요 삭제 성공");
+                location.reload();
+            })
+            .catch((err) => {
+                console.log("삭제 실패");
+            })
+    }
+
+    function friendFollow(userId) {
+        axios.post(`/user/${userId}/follow`)
+            .then(() => {
+                console.log("팔로잉 완료");
+                location.reload();
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+
+    }
+
+    function friendUnFollow(userId) {
+        axios.delete(`/user/${userId}/unfollow`)
+            .then(() => {
+                console.log("언팔로우 완료");
+                location.reload();
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }
+
+    function saveComment(feedId) {
+        const comment = $(`#input-comment-${feedId}`).val();
+        axios.post(`/post/${feedId}/reply`, {
+            comment: comment,
+        })
+            .then(() => {
+                console.log("댓글달기 성공");
+                location.reload();
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }
 </script>
+{% endblock %}

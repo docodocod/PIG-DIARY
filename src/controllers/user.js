@@ -51,9 +51,8 @@ exports.addFavorite=async(req,res,next)=>{
 
 //맛집 리스트 제거
 exports.removeFavorite=async(req,res,next)=>{
-    const favoriteId=req.body.favoriteId;
     await Favorite.destroy({
-        where:{id:favoriteId}
+        where:{id:req.body.favoriteId}
     });
     res.send("success");
 };
@@ -87,7 +86,7 @@ exports.getMyProfile=async(req,res,next)=>{
 exports.introduce=async(req,res,next)=> {
     try {
         const description = req.body.introduce;
-        await User.update({introduce: description}, {where: {id: {req.user.id}}});
+        await User.update({introduce: description}, {where:{id:req.user.id}});
         res.send("success");
     } catch (err) {
         console.log(err)
@@ -99,7 +98,10 @@ exports.changeNick=async(req,res,next)=>{
     try{
         const changeNick=req.body.nick;
         console.log(changeNick);
-        await User.update({nick:changeNick},{where:{id:req.user.id}});
+        await User.update(
+            {nick:changeNick},
+            {where:{id:req.user.id}}
+        );
         res.send("success");
     }catch(err){
         console.log(err);
